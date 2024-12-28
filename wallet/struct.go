@@ -60,12 +60,31 @@ type FeeBuilder struct {
 	Value      *uint64  `json:"value,omitempty"`
 }
 
+type MutliSigBuilder struct {
+	Participants []string `json:"participants"`
+	Threshold    uint8    `json:"threshold"`
+}
+
+type InvokeContractBuilder struct {
+}
+
+type SignerId struct {
+	Id         uint8  `json:"id"`
+	PrivateKey []byte `json:"private_key"`
+}
+
 type BuildTransactionParams struct {
-	Transfers []TransferOut `json:"transfers"`
-	Burn      *daemon.Burn  `json:"burn,omitempty"`
-	Broadcast bool          `json:"broadcast"`
-	TxAsHex   bool          `json:"tx_as_hex"`
-	Fee       *FeeBuilder   `json:"fee,omitempty"`
+	Transfers      []TransferOut          `json:"transfers"`
+	Burn           *daemon.Burn           `json:"burn,omitempty"`
+	MultiSig       *MutliSigBuilder       `json:"multi_sig,omitempty"`
+	InvokeContract *InvokeContractBuilder `json:"invoke_contract,omitempty"`
+	DeployContract *string                `json:"deploy_contract,omitempty"`
+	Fee            *FeeBuilder            `json:"fee,omitempty"`
+	Nonce          *uint64                `json:"nonce,omitempty"`
+	TxVersion      *uint8                 `json:"tx_version,omitempty"`
+	Broadcast      bool                   `json:"broadcast"`
+	TxAsHex        bool                   `json:"tx_as_hex"`
+	Signers        *[]SignerId            `json:"signers,omitempty"`
 }
 
 // !!! not the same as daemon.Transfer
@@ -85,7 +104,7 @@ type TransactionData struct {
 	Burn      *daemon.Burn `json:"burn"`
 }
 
-type BuildTransactionResult struct {
+type TransactionResponse struct {
 	Data              TransactionData           `json:"data"`
 	Fee               uint64                    `json:"fee"`
 	Hash              string                    `json:"hash"`
@@ -143,44 +162,109 @@ type BalanceChangedResult struct {
 	Balance uint64 `json:"balance"`
 }
 
-// Methods
-const (
-	GetVersion        string = "get_version"
-	GetNetwork        string = "get_network"
-	GetNonce          string = "get_nonce"
-	GetTopoheight     string = "get_topoheight"
-	GetAddress        string = "get_address"
-	SplitAddress      string = "split_address"
-	Rescan            string = "rescan"
-	GetBalance        string = "get_balance"
-	HasBalance        string = "has_balance"
-	GetTrackedAssets  string = "get_tracked_assets"
-	GetAssetPrecision string = "get_asset_precision"
-	GetTransaction    string = "get_transaction"
-	BuildTransaction  string = "build_transaction"
-	ListTransactions  string = "list_transactions"
-	IsOnline          string = "is_online"
-	SetOnlineMode     string = "set_online_mode"
-	SetOfflineMode    string = "set_offline_mode"
-	SignData          string = "sign_data"
-	EstimateFees      string = "estimate_fees"
+type BuildTransactionOfflineParams struct {
+	Transfers      []TransferOut          `json:"transfers"`
+	Burn           *daemon.Burn           `json:"burn,omitempty"`
+	MultiSig       *MutliSigBuilder       `json:"multi_sig,omitempty"`
+	InvokeContract *InvokeContractBuilder `json:"invoke_contract,omitempty"`
+	DeployContract *string                `json:"deploy_contract,omitempty"`
+	Fee            *FeeBuilder            `json:"fee,omitempty"`
+	TxVersion      *uint8                 `json:"tx_version,omitempty"`
+	TxAsHex        bool                   `json:"tx_as_hex"`
+	Reference      daemon.Reference       `json:"reference"`
+	Nonce          uint64                 `json:"nonce"`
+	Signers        *[]SignerId            `json:"signers,omitempty"`
+}
 
-	// Interact with wallet encrypted database
-	GetMatchingKeys string = "get_matching_keys"
-	GetValueFromKey string = "get_value_from_key"
-	Store           string = "store"
-	Delete          string = "delete"
-	HasKey          string = "has_key"
-	QueryDB         string = "query_db"
+type BuildUnsignedTransactionParams struct {
+	Transfers      []TransferOut          `json:"transfers"`
+	Burn           *daemon.Burn           `json:"burn,omitempty"`
+	MultiSig       *MutliSigBuilder       `json:"multi_sig,omitempty"`
+	InvokeContract *InvokeContractBuilder `json:"invoke_contract,omitempty"`
+	DeployContract *string                `json:"deploy_contract,omitempty"`
+	Nonce          *uint64                `json:"nonce,omitempty"`
+	Fee            *FeeBuilder            `json:"fee,omitempty"`
+	TxVersion      *uint8                 `json:"tx_version,omitempty"`
+	TxAsHex        bool                   `json:"tx_as_hex"`
+}
+
+type InnerProductProof struct {
+}
+
+type RangeProof struct {
+	A            []byte            `json:"A"`
+	S            []byte            `json:"S"`
+	T_1          []byte            `json:"T_1"`
+	T_2          []byte            `json:"T_2"`
+	T_X          []byte            `json:"t_x"`
+	T_X_Blinding []byte            `json:"t_x_blinding"`
+	E_Blinding   []byte            `json:"e_blinding"`
+	IppProof     InnerProductProof `json:"ipp_proof"`
+}
+
+type UnsignedTransactionResponse struct {
+	Version           uint8                     `json:"version"`
+	Source            string                    `json:"source"`
+	Data              interface{}               `json:"data"`
+	Fee               uint64                    `json:"fee"`
+	Nonce             uint64                    `json:"nonce"`
+	SourceCommitments []daemon.SourceCommitment `json:"source_commitments"`
+	Reference         daemon.Reference          `json:"reference"`
+	RangeProof        RangeProof                `json:"range_proof"`
+	MultiSig          []string                  `json:"multisig"`
+	Hash              string                    `json:"hash"`
+	Threshold         uint8                     `json:"threshold"`
+	TxAsHex           bool                      `json:"tx_as_hex"`
+}
+
+type SignUnsignedTransactionParams struct {
+	Hash     string `json:"hash"`
+	SignerId uint8  `json:"signer_id"`
+}
+
+type SignatureId struct {
+	Id        uint8  `json:"id"`
+	Signature string `json:"signature"`
+}
+
+type FinalizeUnsignedTransactionParams struct {
+	Unsigned   string        `json:"unsigned"`
+	Signatures []SignatureId `json:"signatures"`
+	Broadcast  bool          `json:"broadcast"`
+	TxAsHex    bool          `json:"tx_as_hex"`
+}
+
+type Address struct {
+	Mainnet  string      `json:"mainnet"`
+	AddrType interface{} `json:"addr_type"`
+	Key      string      `json:"key"`
+}
+
+type EstimateExtraDataSizeParams struct {
+	Destinations []Address `json:"destinations"`
+}
+
+type EstimateExtraDataSizeResult struct {
+	Size uint8 `json:"size"`
+}
+
+type NetworkInfoResult struct {
+	// TODO
+	ConnectedTo string `json:"connected_to"`
+}
+
+type DecryptCiphertextParams struct {
+	Ciphertext string `json:"ciphertext"`
+}
+
+type TxRole string
+
+const (
+	TxSenderRole   TxRole = "sender"
+	TxReceiverRole TxRole = "receiver"
 )
 
-// Events
-const (
-	NewTopoheight  string = `new_topo_height`
-	NewAsset       string = `new_asset`
-	NewTransaction string = `new_transaction`
-	BalanceChanged string = `balance_changed`
-	//Rescan         string = `rescan`
-	Online  string = `online`
-	Offline string = `offline`
-)
+type DecryptExtraDataParams struct {
+	ExtraData interface{} `json:"extra_data"`
+	Role      TxRole      `json:"role"`
+}

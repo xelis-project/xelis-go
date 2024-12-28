@@ -7,22 +7,11 @@ import (
 	"github.com/xelis-project/xelis-go-sdk/config"
 )
 
-const TESTING_ADDR = "xet:62wnkswt0rmrdd9d2lawgpzuh87fkpmp4gx9j3g4u24yrdkdxgksqnuuucf"
-const MAINNET_ADDR = "xel:as3mgjlevw5ve6k70evzz8lwmsa5p0lgws2d60fulxylnmeqrp9qqukwdfg"
+const WALLET_ADDR = "xet:62wnkswt0rmrdd9d2lawgpzuh87fkpmp4gx9j3g4u24yrdkdxgksqnuuucf"
 
-func useRPCTestnet(t *testing.T) (daemon *RPC, ctx context.Context) {
+func prepareRPC(t *testing.T) (daemon *RPC, ctx context.Context) {
 	ctx = context.Background()
-	daemon, err := NewRPC(ctx, config.TESTNET_NODE_RPC)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	return
-}
-
-func useRPCMainnet(t *testing.T) (daemon *RPC, ctx context.Context) {
-	ctx = context.Background()
-	daemon, err := NewRPC(ctx, config.MAINNET_NODE_RPC)
+	daemon, err := NewRPC(ctx, config.LOCAL_NODE_RPC)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -31,7 +20,7 @@ func useRPCMainnet(t *testing.T) (daemon *RPC, ctx context.Context) {
 }
 
 func TestGetVersion(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	version, err := daemon.GetVersion()
 	if err != nil {
@@ -41,7 +30,7 @@ func TestGetVersion(t *testing.T) {
 }
 
 func TestGetHeight(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	height, err := daemon.GetHeight()
 	if err != nil {
@@ -51,7 +40,7 @@ func TestGetHeight(t *testing.T) {
 }
 
 func TestGetTopoheight(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	topoheight, err := daemon.GetTopoheight()
 	if err != nil {
@@ -61,7 +50,7 @@ func TestGetTopoheight(t *testing.T) {
 }
 
 func TestGetStableHeight(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	stableheight, err := daemon.GetStableHeight()
 	if err != nil {
@@ -71,9 +60,9 @@ func TestGetStableHeight(t *testing.T) {
 }
 
 func TestGetBlockTemplate(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
-	template, err := daemon.GetBlockTemplate(TESTING_ADDR)
+	template, err := daemon.GetBlockTemplate(WALLET_ADDR)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -81,7 +70,7 @@ func TestGetBlockTemplate(t *testing.T) {
 }
 
 func TestGetBlockAtTopoheight(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	genesisBlock, err := daemon.GetBlockAtTopoheight(GetBlockAtTopoheightParams{Topoheight: 0})
 	if err != nil {
@@ -91,7 +80,7 @@ func TestGetBlockAtTopoheight(t *testing.T) {
 }
 
 func TestGetBlocksAtHeight(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	blocks, err := daemon.GetBlocksAtHeight(GetBlocksAtHeightParams{Height: 0})
 	if err != nil {
@@ -101,7 +90,7 @@ func TestGetBlocksAtHeight(t *testing.T) {
 }
 
 func TestGetBlockByHash(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	block, err := daemon.GetBlockByHash(GetBlockByHashParams{Hash: `23827b240a9e6aeb0e7164a4e402838ffc383efdc92789d705921fccfed516b5`})
 	if err != nil {
@@ -111,7 +100,7 @@ func TestGetBlockByHash(t *testing.T) {
 }
 
 func TestGetTopBlock(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	topBlock, err := daemon.GetTopBlock(GetTopBlockParams{})
 	if err != nil {
@@ -121,7 +110,7 @@ func TestGetTopBlock(t *testing.T) {
 }
 
 func TestGetInfo(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	info, err := daemon.GetInfo()
 	if err != nil {
@@ -131,7 +120,7 @@ func TestGetInfo(t *testing.T) {
 }
 
 func TestGetAsset(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	asset, err := daemon.GetAsset(config.XELIS_ASSET)
 	if err != nil {
@@ -141,7 +130,7 @@ func TestGetAsset(t *testing.T) {
 }
 
 func TestGetAssets(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	assets, err := daemon.GetAssets(GetAssetsParams{})
 	if err != nil {
@@ -151,7 +140,7 @@ func TestGetAssets(t *testing.T) {
 }
 
 func TestCountAssets(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	countAssets, err := daemon.CountAssets()
 	if err != nil {
@@ -161,7 +150,7 @@ func TestCountAssets(t *testing.T) {
 }
 
 func TestCountAccounts(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	countAccounts, err := daemon.CountAccounts()
 	if err != nil {
@@ -171,7 +160,7 @@ func TestCountAccounts(t *testing.T) {
 }
 
 func TestCountTransactions(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	countTransactions, err := daemon.CountTransactions()
 	if err != nil {
@@ -182,7 +171,7 @@ func TestCountTransactions(t *testing.T) {
 }
 
 func TestP2PStatus(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	status, err := daemon.P2PStatus()
 	if err != nil {
@@ -192,7 +181,7 @@ func TestP2PStatus(t *testing.T) {
 }
 
 func TestGetPeers(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	result, err := daemon.GetPeers()
 	if err != nil {
@@ -203,7 +192,7 @@ func TestGetPeers(t *testing.T) {
 }
 
 func TestGetMempool(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	mempool, err := daemon.GetMempool()
 	if err != nil {
@@ -213,7 +202,7 @@ func TestGetMempool(t *testing.T) {
 }
 
 func TestGetTips(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	tips, err := daemon.GetTips()
 	if err != nil {
@@ -223,7 +212,7 @@ func TestGetTips(t *testing.T) {
 }
 
 func TestGetDAGOrder(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	dagOrder, err := daemon.GetDAGOrder(GetTopoheightRangeParams{})
 	if err != nil {
@@ -233,7 +222,7 @@ func TestGetDAGOrder(t *testing.T) {
 }
 
 func TestGetAccounts(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	accounts, err := daemon.GetAccounts(GetAccountsParams{Maximum: 5})
 	if err != nil {
@@ -243,7 +232,7 @@ func TestGetAccounts(t *testing.T) {
 }
 
 func TestGetDevFeeThresholds(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	fees, err := daemon.GetDevFeeThresholds()
 	if err != nil {
@@ -253,7 +242,7 @@ func TestGetDevFeeThresholds(t *testing.T) {
 }
 
 func TestGetSizeOnDisk(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	size, err := daemon.GetSizeOnDisk()
 	if err != nil {
@@ -263,7 +252,7 @@ func TestGetSizeOnDisk(t *testing.T) {
 }
 
 func TestGetDifficulty(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	diff, err := daemon.GetDifficulty()
 	if err != nil {
@@ -273,10 +262,10 @@ func TestGetDifficulty(t *testing.T) {
 }
 
 func TestValidateAddress(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	validAddr, err := daemon.ValidateAddress(ValidateAddressParams{
-		Address:         TESTING_ADDR,
+		Address:         WALLET_ADDR,
 		AllowIntegrated: false,
 	})
 	if err != nil {
@@ -285,7 +274,7 @@ func TestValidateAddress(t *testing.T) {
 	t.Logf("%+v", validAddr)
 
 	bytePublicKey, err := daemon.ExtractKeyFromAddress(ExtractKeyFromAddressParams{
-		Address: TESTING_ADDR,
+		Address: WALLET_ADDR,
 		AsHex:   false,
 	})
 	if err != nil {
@@ -294,7 +283,7 @@ func TestValidateAddress(t *testing.T) {
 	t.Logf("%+v", bytePublicKey)
 
 	hexPublicKey, err := daemon.ExtractKeyFromAddress(ExtractKeyFromAddressParams{
-		Address: TESTING_ADDR,
+		Address: WALLET_ADDR,
 		AsHex:   true,
 	})
 	if err != nil {
@@ -304,7 +293,7 @@ func TestValidateAddress(t *testing.T) {
 }
 
 func TestRPCUnknownMethod(t *testing.T) {
-	daemon, ctx := useRPCTestnet(t)
+	daemon, ctx := prepareRPC(t)
 	res, err := daemon.Client.Call(ctx, "UnknownMethod", nil)
 	if err == nil {
 		t.Fatal("Expected an error")
@@ -314,8 +303,8 @@ func TestRPCUnknownMethod(t *testing.T) {
 }
 
 func TestRPCNonceAndBalance(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
-	has, err := daemon.HasNonce(TESTING_ADDR)
+	daemon, _ := prepareRPC(t)
+	has, err := daemon.HasNonce(WALLET_ADDR)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -323,7 +312,7 @@ func TestRPCNonceAndBalance(t *testing.T) {
 	t.Log(has)
 
 	has, err = daemon.HasBalance(GetBalanceParams{
-		Address: TESTING_ADDR,
+		Address: WALLET_ADDR,
 		Asset:   config.XELIS_ASSET,
 	})
 	if err != nil {
@@ -332,7 +321,7 @@ func TestRPCNonceAndBalance(t *testing.T) {
 
 	t.Log(has)
 
-	nonce, err := daemon.GetNonce(TESTING_ADDR)
+	nonce, err := daemon.GetNonce(WALLET_ADDR)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -340,7 +329,7 @@ func TestRPCNonceAndBalance(t *testing.T) {
 	t.Log(nonce)
 
 	versionedNonce, err := daemon.GetNonceAtTopoheight(GetNonceAtTopoheightParams{
-		Address:    TESTING_ADDR,
+		Address:    WALLET_ADDR,
 		Topoheight: nonce.Topoheight,
 	})
 	if err != nil {
@@ -350,7 +339,7 @@ func TestRPCNonceAndBalance(t *testing.T) {
 	t.Log(versionedNonce)
 
 	balance, err := daemon.GetBalance(GetBalanceParams{
-		Address: TESTING_ADDR,
+		Address: WALLET_ADDR,
 		Asset:   config.XELIS_ASSET,
 	})
 	if err != nil {
@@ -360,7 +349,7 @@ func TestRPCNonceAndBalance(t *testing.T) {
 	t.Log(balance)
 
 	stableBalance, err := daemon.GetStableBalance(GetBalanceParams{
-		Address: TESTING_ADDR,
+		Address: WALLET_ADDR,
 		Asset:   config.XELIS_ASSET,
 	})
 	if err != nil {
@@ -370,7 +359,7 @@ func TestRPCNonceAndBalance(t *testing.T) {
 	t.Log(stableBalance)
 
 	versionedBalance, err := daemon.GetBalanceAtTopoheight(GetBalanceAtTopoheightParams{
-		Address:    TESTING_ADDR,
+		Address:    WALLET_ADDR,
 		Asset:      config.XELIS_ASSET,
 		Topoheight: nonce.Topoheight, // the testing addr does not have a balance before 322
 	})
@@ -382,7 +371,7 @@ func TestRPCNonceAndBalance(t *testing.T) {
 }
 
 func TestRPCGetBlocksRange(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	topoheight, err := daemon.GetTopoheight()
 	if err != nil {
@@ -416,7 +405,7 @@ func TestRPCGetBlocksRange(t *testing.T) {
 }
 
 func TestRPCGetTransactions(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 	txHash := "d9a6810d667c212e499ceb2acf60a8fbc0096da66b1e7a59fb3ae5d412ad58f2"
 
 	txs, err := daemon.GetTransactions(GetTransactionsParams{
@@ -437,7 +426,7 @@ func TestRPCGetTransactions(t *testing.T) {
 }
 
 func TestRPCGetTransaction(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 	txHash := "5f5e2ff1677860ee1f3e3c58ba188f427fbcb2f344dfb15dd0f7ca60b03f624c"
 
 	tx, err := daemon.GetTransaction(txHash)
@@ -450,7 +439,7 @@ func TestRPCGetTransaction(t *testing.T) {
 
 func TestRPCExecutedInBlock(t *testing.T) {
 	// https://testnet-explorer.xelis.io/blocks/000000001849d07bbb4165c8ba1d1fc472a0629f56895efb8689e06ce62b3ca8
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 	executed, err := daemon.IsTxExecutedInBlock(IsTxExecutedInBlockParams{
 		TxHash:    "6e4bbd77b305fb68e2cc7576b4846d2db3617e3cbc2eb851cb2ae69b879e9d0f",
 		BlockHash: "000000001849d07bbb4165c8ba1d1fc472a0629f56895efb8689e06ce62b3ca8",
@@ -467,22 +456,22 @@ func TestRPCExecutedInBlock(t *testing.T) {
 }
 
 func TestRPCAccount(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
-	history, err := daemon.GetAccountHistory(TESTING_ADDR)
+	daemon, _ := prepareRPC(t)
+	history, err := daemon.GetAccountHistory(WALLET_ADDR)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Log(history)
 
-	assets, err := daemon.GetAccountAssets(TESTING_ADDR)
+	assets, err := daemon.GetAccountAssets(WALLET_ADDR)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Log(assets)
 
-	topoheight, err := daemon.GetAccountRegistrationTopoheight(TESTING_ADDR)
+	topoheight, err := daemon.GetAccountRegistrationTopoheight(WALLET_ADDR)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -493,9 +482,9 @@ func TestRPCAccount(t *testing.T) {
 func TestRPCRegistration(t *testing.T) {
 	// using mainnet for this test
 	// we need to resync the blockchain to work on testnet
-	daemon, _ := useRPCMainnet(t)
+	daemon, _ := prepareRPC(t)
 
-	topoheight, err := daemon.GetAccountRegistrationTopoheight(MAINNET_ADDR)
+	topoheight, err := daemon.GetAccountRegistrationTopoheight(WALLET_ADDR)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -503,7 +492,7 @@ func TestRPCRegistration(t *testing.T) {
 	t.Log(topoheight)
 
 	exists, err := daemon.IsAccountRegistered(IsAccountRegisteredParams{
-		Address:        MAINNET_ADDR,
+		Address:        WALLET_ADDR,
 		InStableHeight: true,
 	})
 	if err != nil {
@@ -514,7 +503,7 @@ func TestRPCRegistration(t *testing.T) {
 }
 
 func TestGetMinerWork(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	var addr = "xet:w64wu066sq7jq4v9f37a5gy8hgyvc2gvt237u2457mme2m2r7avqqtmufz3"
 
@@ -535,9 +524,150 @@ func TestGetMinerWork(t *testing.T) {
 }
 
 func TestSplitAddress(t *testing.T) {
-	daemon, _ := useRPCTestnet(t)
+	daemon, _ := prepareRPC(t)
 
 	result, err := daemon.SplitAddress(SplitAddressParams{Address: "xet:upqflhm65lmjtukavf4de93kphk4j990hw9x9hhrc8rwleduruhqzqqpqvcnydgd3plda"})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetEstimatedFeeRates(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetEstimatedFeeRates()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetPrunedTopoheight(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetPrunedTopoheight()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetHardForks(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetHardForks()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetTransactionExecutor(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetTransactionExecutor(GetTransactionExecutorParams{
+		Hash: "",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestHasMultisigAtTopoheight(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.HasMultisigAtTopoheight(HasMultisigAtTopoheightParams{
+		Address:    WALLET_ADDR,
+		Topoheight: 0,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetMultisigAtTopoheight(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetMultisigAtTopoheight(GetMultisigAtTopoheightParams{
+		Address:    WALLET_ADDR,
+		Topoheight: 0,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetMultisig(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetMultisig(GetMultisigParams{
+		Address: WALLET_ADDR,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestHasMultisig(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.HasMultisig(HasMultisigParams{
+		Address: WALLET_ADDR,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetContractOutputs(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetContractOutputs(GetContractOutputsParams{
+		Transaction: "",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetContractModule(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetContractModule(GetContractModuleParams{
+		Contract: "",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetContractDataWithKey(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetContractDataWithKey(GetContractDataWithKeyParams{
+		Contract:   "",
+		Key:        nil,
+		Topoheight: nil,
+	})
 	if err != nil {
 		t.Fatal(err)
 	}

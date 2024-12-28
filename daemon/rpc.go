@@ -333,3 +333,8 @@ func (d *RPC) GetContractDataWithKey(params GetContractDataWithKeyParams) (resul
 	err = d.Client.CallResult(d.ctx, methods.GetContractDataWithKey, params, &result)
 	return
 }
+
+func (d *RPC) CountContracts() (result uint64, err error) {
+	err = d.Client.CallResult(d.ctx, methods.CountAccounts, nil, &result)
+	return
+}

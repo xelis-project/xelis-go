@@ -565,3 +565,9 @@ func (w *WebSocket) GetContractDataWithKey(params GetContractDataWithKeyParams) 
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
+
+func (w *WebSocket) CountContracts() (result uint64, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.CountContracts, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}

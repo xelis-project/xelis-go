@@ -5,20 +5,12 @@ import (
 	"testing"
 
 	"github.com/xelis-project/xelis-go-sdk/config"
+	"github.com/xelis-project/xelis-go-sdk/daemon/events"
 	"github.com/xelis-project/xelis-go-sdk/rpc"
 )
 
-func useWSTestnet(t *testing.T) (daemon *WebSocket) {
-	daemon, err := NewWebSocket(config.TESTNET_NODE_WS)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	return
-}
-
-func useWSMainnet(t *testing.T) (daemon *WebSocket) {
-	daemon, err := NewWebSocket(config.MAINNET_NODE_WS)
+func prepareWS(t *testing.T) (daemon *WebSocket) {
+	daemon, err := NewWebSocket(config.LOCAL_NODE_WS)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -27,7 +19,7 @@ func useWSMainnet(t *testing.T) (daemon *WebSocket) {
 }
 
 func TestWSGetVersion(t *testing.T) {
-	daemon := useWSTestnet(t)
+	daemon := prepareWS(t)
 
 	version, err := daemon.GetVersion()
 	if err != nil {
@@ -39,7 +31,7 @@ func TestWSGetVersion(t *testing.T) {
 }
 
 func TestWSGetInfo(t *testing.T) {
-	daemon := useWSTestnet(t)
+	daemon := prepareWS(t)
 
 	info, err := daemon.GetInfo()
 	if err != nil {
@@ -51,7 +43,7 @@ func TestWSGetInfo(t *testing.T) {
 }
 
 func TestWSGetDevFeeThresholds(t *testing.T) {
-	daemon := useWSTestnet(t)
+	daemon := prepareWS(t)
 
 	fees, err := daemon.GetDevFeeThresholds()
 	if err != nil {
@@ -63,7 +55,7 @@ func TestWSGetDevFeeThresholds(t *testing.T) {
 }
 
 func TestWSGetSizeOnDisk(t *testing.T) {
-	daemon := useWSTestnet(t)
+	daemon := prepareWS(t)
 
 	size, err := daemon.GetSizeOnDisk()
 	if err != nil {
@@ -98,7 +90,7 @@ retry:
 }
 
 func TestWSNewBlock(t *testing.T) {
-	daemon := useWSTestnet(t)
+	daemon := prepareWS(t)
 	var wg sync.WaitGroup
 	wg.Add(1)
 	err := daemon.NewBlockFunc(func(newBlock Block, err error) {
@@ -115,7 +107,7 @@ func TestWSNewBlock(t *testing.T) {
 }
 
 func TestWSUnsubscribe(t *testing.T) {
-	daemon := useWSTestnet(t)
+	daemon := prepareWS(t)
 
 	err := daemon.NewBlockFunc(func(block Block, err error) {
 		t.Logf("%+v", block)
@@ -125,7 +117,7 @@ func TestWSUnsubscribe(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = daemon.CloseEvent(NewBlock)
+	err = daemon.CloseEvent(events.NewBlock)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -134,11 +126,11 @@ func TestWSUnsubscribe(t *testing.T) {
 }
 
 func TestWSCallAndMultiSubscribe(t *testing.T) {
-	daemon := useWSTestnet(t)
+	daemon := prepareWS(t)
 	var wg sync.WaitGroup
 
 	wg.Add(1)
-	err := daemon.WS.ListenEventFunc(NewBlock, func(res rpc.RPCResponse) {
+	err := daemon.WS.ListenEventFunc(events.NewBlock, func(res rpc.RPCResponse) {
 		t.Logf("%+v", res)
 		wg.Done()
 	})
@@ -147,7 +139,7 @@ func TestWSCallAndMultiSubscribe(t *testing.T) {
 	}
 
 	wg.Add(1)
-	err = daemon.WS.ListenEventFunc(NewBlock, func(res rpc.RPCResponse) {
+	err = daemon.WS.ListenEventFunc(events.NewBlock, func(res rpc.RPCResponse) {
 		t.Logf("%+v", res)
 		wg.Done()
 	})
@@ -167,7 +159,7 @@ func TestWSCallAndMultiSubscribe(t *testing.T) {
 }
 
 func TestWSPeers(t *testing.T) {
-	daemon := useWSTestnet(t)
+	daemon := prepareWS(t)
 	var wg sync.WaitGroup
 
 	wg.Add(1)
@@ -187,7 +179,7 @@ func TestWSPeers(t *testing.T) {
 }
 
 func TestWSPeerUpdated(t *testing.T) {
-	daemon := useWSTestnet(t)
+	daemon := prepareWS(t)
 	var wg sync.WaitGroup
 
 	wg.Add(1)
@@ -201,11 +193,9 @@ func TestWSPeerUpdated(t *testing.T) {
 }
 
 func TestWSRegistration(t *testing.T) {
-	// using mainnet for this test
-	// we need to resync the blockchain to work on testnet
-	daemon := useWSMainnet(t)
+	daemon := prepareWS(t)
 
-	topoheight, err := daemon.GetAccountRegistrationTopoheight(MAINNET_ADDR)
+	topoheight, err := daemon.GetAccountRegistrationTopoheight(WALLET_ADDR)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -213,7 +203,7 @@ func TestWSRegistration(t *testing.T) {
 	t.Log(topoheight)
 
 	exists, err := daemon.IsAccountRegistered(IsAccountRegisteredParams{
-		Address:        MAINNET_ADDR,
+		Address:        WALLET_ADDR,
 		InStableHeight: true,
 	})
 
@@ -225,7 +215,7 @@ func TestWSRegistration(t *testing.T) {
 }
 
 func TestNewBlockChannel(t *testing.T) {
-	daemon := useWSMainnet(t)
+	daemon := prepareWS(t)
 
 	newBlock, newBlockErr, err := daemon.NewBlockChannel()
 	if err != nil {

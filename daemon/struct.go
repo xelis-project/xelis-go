@@ -192,21 +192,23 @@ type Transaction struct {
 }
 
 type GetInfoResult struct {
-	AverageBlocktime uint64 `json:"average_block_time"`
-	BlockReward      uint64 `json:"block_reward"`
-	MinerReward      uint64 `json:"miner_reward"`
-	DevReward        uint64 `json:"dev_reward"`
-	BlockTimeTarget  uint64 `json:"block_time_target"`
-	Difficulty       string `json:"difficulty"`
-	Height           uint64 `json:"height"`
-	MempoolSize      uint64 `json:"mempool_size"`
-	NativeSupply     uint64 `json:"native_supply"`
-	Network          string `json:"network"`
-	PrunedTopoheight uint64 `json:"pruned_topoheight"`
-	Stableheight     uint64 `json:"stableheight"`
-	TopHash          string `json:"top_hash"`
-	Topoheight       uint64 `json:"topoheight"`
-	Version          string `json:"version"`
+	Height            uint64 `json:"height"`
+	Topoheight        uint64 `json:"topoheight"`
+	Stableheight      uint64 `json:"stableheight"`
+	PrunedTopoheight  uint64 `json:"pruned_topoheight"`
+	TopBlockHash      string `json:"top_block_hash"`
+	CirculatingSupply uint64 `json:"circulating_supply"`
+	BurnedSupply      uint64 `json:"burned_supply"`
+	EmittedSupply     uint64 `json:"emitted_supply"`
+	MaximumSupply     uint64 `json:"maximum_supply"`
+	Difficulty        string `json:"difficulty"`
+	BlockTimeTarget   uint64 `json:"block_time_target"`
+	BlockReward       uint64 `json:"block_reward"`
+	DevReward         uint64 `json:"dev_reward"`
+	MinerReward       uint64 `json:"miner_reward"`
+	MempoolSize       uint64 `json:"mempool_size"`
+	Version           string `json:"version"`
+	Network           string `json:"network"`
 }
 
 type GetBlockTemplateResult struct {
@@ -370,62 +372,90 @@ type SplitAddressResult struct {
 	IntegratedData interface{} `json:"integrated_data"`
 }
 
-const (
-	NewBlock                  string = `new_block`
-	TransactionAddedInMempool string = `transaction_added_in_mempool`
-	TransactionExecuted       string = `transaction_executed`
-	BlockOrdered              string = `block_ordered`
-	PeerConnected             string = `peer_connected`
-	PeerDisconnected          string = `peer_disconnect`
-	PeerStateUpdated          string = `peer_state_updated`
-)
+type GetTransactionExecutorParams struct {
+	Hash string `json:"hash"`
+}
 
-const (
-	GetVersion                       string = "get_version"
-	GetInfo                          string = "get_info"
-	GetHeight                        string = "get_height"
-	GetTopoHeight                    string = "get_topoheight"
-	GetStableHeight                  string = "get_stable_height"
-	GetStableTopoheight              string = "get_stable_topoheight"
-	GetStableBalance                 string = "get_stable_balance"
-	GetBlockTemplate                 string = "get_block_template"
-	GetBlockAtTopoheight             string = "get_block_at_topoheight"
-	GetBlocksAtHeight                string = "get_blocks_at_height"
-	GetBlockByHash                   string = "get_block_by_hash"
-	GetTopBlock                      string = "get_top_block"
-	GetNonce                         string = "get_nonce"
-	HasNonce                         string = "has_nonce"
-	GetNonceAtTopoheight             string = "get_nonce_at_topoheight"
-	GetBalance                       string = "get_balance"
-	HasBalance                       string = "has_balance"
-	GetBalanceAtTopoheight           string = "get_balance_at_topoheight"
-	GetAsset                         string = "get_asset"
-	GetAssets                        string = "get_assets"
-	CountAssets                      string = "count_assets"
-	CountTransactions                string = "count_transactions"
-	CountAccounts                    string = "count_accounts"
-	GetTips                          string = "get_tips"
-	P2PStatus                        string = "p2p_status"
-	GetDAGOrder                      string = "get_dag_order"
-	SubmitBlock                      string = "submit_block"
-	SubmitTransaction                string = "submit_transaction"
-	GetMempool                       string = "get_mempool"
-	GetTransaction                   string = "get_transaction"
-	GetTransactions                  string = "get_transactions"
-	GetBlocksRangeByHeight           string = "get_blocks_range_by_height"
-	GetBlocksRangeByTopoheight       string = "get_blocks_range_by_topoheight"
-	GetAccounts                      string = "get_accounts"
-	GetAccountHistory                string = "get_account_history"
-	GetAccountAssets                 string = "get_account_assets"
-	GetPeers                         string = "get_peers"
-	GetDevFeeThresholds              string = "get_dev_fee_thresholds"
-	GetSizeOnDisk                    string = "get_size_on_disk"
-	IsTxExecutedInBlock              string = "is_tx_executed_in_block"
-	GetAccountRegistrationTopoheight string = "get_account_registration_topoheight"
-	IsAccountRegistered              string = "is_account_registered"
-	GetDifficulty                    string = "get_difficulty"
-	ValidateAddress                  string = "validate_address"
-	ExtractKeyFromAddress            string = "extract_key_from_address"
-	GetMinerWork                     string = "get_miner_work"
-	SplitAddress                     string = "split_address"
-)
+type GetTransactionExecutorResult struct {
+	BlockTopoheight uint64 `json:"block_topoheight"`
+	BlockHash       string `json:"block_hash"`
+	BlockTimestamp  uint64 `json:"block_timestamp"`
+}
+
+type HasMultisigAtTopoheightParams struct {
+	Address    string `json:"address"`
+	Topoheight uint32 `json:"topoheight"`
+}
+
+type GetMultisigAtTopoheightParams struct {
+	Address    string `json:"address"`
+	Topoheight uint32 `json:"topoheight"`
+}
+
+type GetMultisigAtTopoHeightResult struct {
+	State string `json:"state"`
+}
+
+type GetMultisigParams struct {
+	Address string `json:"address"`
+}
+
+type GetMultisigResult struct {
+	State      string `json:"state"`
+	Topoheight uint64 `json:"topoheight"`
+}
+
+type HasMultisigParams struct {
+	Address    string  `json:"address"`
+	Topoheight *uint32 `json:"topoheight,omitempty"`
+}
+
+type GetContractOutputsParams struct {
+	Transaction string `json:"transaction"`
+}
+
+type GetContractModuleParams struct {
+	Contract string `json:"contract"`
+}
+
+type GetContractDataWithKeyParams struct {
+	Contract   string      `json:"contract"`
+	Key        interface{} `json:"key"`
+	Topoheight *uint64     `json:"topoheight,omitempty"`
+}
+
+type ContractOutputRefundGas struct {
+	Amount uint64 `json:"amount"`
+}
+
+type ContractOutputTransfer struct {
+	Amount      uint64 `json:"amount"`
+	Asset       string `json:"asset"`
+	Destination string `json:"destination"`
+}
+
+type ContractOutputExitCode uint64
+
+type GetContractModuleResult struct {
+	PreviousTopoheight *uint64      `json:"previous_topoheight"`
+	Data               *interface{} `json:"data"`
+}
+
+type GetContractDataWithKeyResult struct {
+	PreviousTopoheight *uint64      `json:"previous_topoheight"`
+	Data               *interface{} `json:"data"`
+}
+
+type HardFork struct {
+	Height             uint64  `json:"height"`
+	Version            uint8   `json:"version"`
+	Changelog          string  `json:"changelog"`
+	VersionRequirement *string `json:"version_requirement"`
+}
+
+type FeeRatesEstimated struct {
+	Low     uint64 `json:"low"`
+	Medium  uint64 `json:"medium"`
+	High    uint64 `json:"high"`
+	Default uint64 `json:"default"`
+}

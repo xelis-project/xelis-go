@@ -519,49 +519,49 @@ func (w *WebSocket) GetPrunedTopoheight() (result uint64, err error) {
 }
 
 func (w *WebSocket) GetTransactionExecutor(params GetTransactionExecutorParams) (result GetTransactionExecutorResult, err error) {
-	res, err := w.WS.Call(w.Prefix+methods.GetTransactionExecutor, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetTransactionExecutor, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) HasMultisigAtTopoheight(params HasMultisigAtTopoheightParams) (result bool, err error) {
-	res, err := w.WS.Call(w.Prefix+methods.HasMultisigAtTopoheight, nil)
+	res, err := w.WS.Call(w.Prefix+methods.HasMultisigAtTopoheight, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) GetMultisigAtTopoheight(params GetMultisigAtTopoheightParams) (result GetMultisigAtTopoHeightResult, err error) {
-	res, err := w.WS.Call(w.Prefix+methods.GetMultisigAtTopoheight, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetMultisigAtTopoheight, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) GetMultisig(params GetMultisigParams) (result GetMultisigResult, err error) {
-	res, err := w.WS.Call(w.Prefix+methods.GetMultisig, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetMultisig, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) HasMultisig(params HasMultisigParams) (result bool, err error) {
-	res, err := w.WS.Call(w.Prefix+methods.HasMultisig, nil)
+	res, err := w.WS.Call(w.Prefix+methods.HasMultisig, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) GetContractOutputs(params GetContractOutputsParams) (result []interface{}, err error) {
-	res, err := w.WS.Call(w.Prefix+methods.GetContractOutputs, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetContractOutputs, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) GetContractModule(params GetContractModuleParams) (result GetContractModuleResult, err error) {
-	res, err := w.WS.Call(w.Prefix+methods.GetContractModule, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetContractModule, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) GetContractDataWithKey(params GetContractDataWithKeyParams) (result GetContractDataWithKeyResult, err error) {
-	res, err := w.WS.Call(w.Prefix+methods.GetContractDataWithKey, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetContractDataWithKey, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }

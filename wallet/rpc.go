@@ -10,6 +10,7 @@ import (
 
 	"github.com/creachadair/jrpc2"
 	"github.com/creachadair/jrpc2/jhttp"
+	"github.com/xelis-project/xelis-go-sdk/wallet/methods"
 )
 
 type RPC struct {
@@ -64,101 +65,156 @@ func NewRPC(ctx context.Context, url string, username string, password string) (
 }
 
 func (d *RPC) GetVersion() (version string, err error) {
-	err = d.Client.CallResult(d.ctx, string(GetVersion), nil, &version)
+	err = d.Client.CallResult(d.ctx, methods.GetVersion, nil, &version)
 	return
 }
 
 func (d *RPC) GetNetwork() (network string, err error) {
-	err = d.Client.CallResult(d.ctx, string(GetNetwork), nil, &network)
+	err = d.Client.CallResult(d.ctx, methods.GetNetwork, nil, &network)
 	return
 }
 
 func (d *RPC) GetNonce() (nonce uint64, err error) {
-	err = d.Client.CallResult(d.ctx, string(GetNonce), nil, &nonce)
+	err = d.Client.CallResult(d.ctx, methods.GetNonce, nil, &nonce)
 	return
 }
 
 func (d *RPC) GetTopoheight() (topoheight uint64, err error) {
-	err = d.Client.CallResult(d.ctx, string(GetTopoheight), nil, &topoheight)
+	err = d.Client.CallResult(d.ctx, methods.GetTopoheight, nil, &topoheight)
 	return
 }
 
 func (d *RPC) GetAddress(params GetAddressParams) (address string, err error) {
-	err = d.Client.CallResult(d.ctx, string(GetAddress), params, &address)
+	err = d.Client.CallResult(d.ctx, methods.GetAddress, params, &address)
 	return
 }
 
 func (d *RPC) SplitAddress(params SplitAddressParams) (result SplitAddressResult, err error) {
-	err = d.Client.CallResult(d.ctx, string(SplitAddress), params, &result)
+	err = d.Client.CallResult(d.ctx, methods.SplitAddress, params, &result)
 	return
 }
 
 func (d *RPC) Rescan(params RescanParams) (success bool, err error) {
-	err = d.Client.CallResult(d.ctx, string(Rescan), params, &success)
+	err = d.Client.CallResult(d.ctx, methods.Rescan, params, &success)
 	return
 }
 
 func (d *RPC) GetBalance(params GetBalanceParams) (balance uint64, err error) {
-	err = d.Client.CallResult(d.ctx, string(GetBalance), params, &balance)
+	err = d.Client.CallResult(d.ctx, methods.GetBalance, params, &balance)
 	return
 }
 
 func (d *RPC) HasBalance(params GetBalanceParams) (exists bool, err error) {
-	err = d.Client.CallResult(d.ctx, string(HasBalance), params, &exists)
+	err = d.Client.CallResult(d.ctx, methods.HasBalance, params, &exists)
 	return
 }
 
 func (d *RPC) GetTrackedAssets() (assets []string, err error) {
-	err = d.Client.CallResult(d.ctx, string(GetTrackedAssets), nil, &assets)
+	err = d.Client.CallResult(d.ctx, methods.GetTrackedAssets, nil, &assets)
 	return
 }
 
 func (d *RPC) GetAssetPrecision(params GetAssetPrecisionParams) (decimals int, err error) {
-	err = d.Client.CallResult(d.ctx, string(GetAssetPrecision), params, &decimals)
+	err = d.Client.CallResult(d.ctx, methods.GetAssetPrecision, params, &decimals)
+	return
+}
+
+func (d *RPC) GetAssets() (assets []string, err error) {
+	err = d.Client.CallResult(d.ctx, methods.GetAssets, nil, &assets)
+	return
+}
+
+func (d *RPC) GetAsset(params GetAssetPrecisionParams) (asset string, err error) {
+	err = d.Client.CallResult(d.ctx, methods.GetAsset, params, &asset)
 	return
 }
 
 func (d *RPC) GetTransaction(params GetTransactionParams) (transaction TransactionEntry, err error) {
-	err = d.Client.CallResult(d.ctx, string(GetTransaction), params, &transaction)
+	err = d.Client.CallResult(d.ctx, methods.GetTransaction, params, &transaction)
 	return
 }
 
-func (d *RPC) BuildTransaction(params BuildTransactionParams) (result BuildTransactionResult, err error) {
+func (d *RPC) BuildTransaction(params BuildTransactionParams) (result TransactionResponse, err error) {
 	if err = checkFeeBuilder(params.Fee); err != nil {
 		return
 	}
 
-	err = d.Client.CallResult(d.ctx, string(BuildTransaction), params, &result)
+	err = d.Client.CallResult(d.ctx, methods.BuildTransaction, params, &result)
+	return
+}
+
+func (d *RPC) BuildTransactionOffline(params BuildTransactionOfflineParams) (result TransactionResponse, err error) {
+	err = d.Client.CallResult(d.ctx, methods.BuildTransactionOffline, params, &result)
+	return
+}
+
+func (d *RPC) BuildUnsignedTransaction(params BuildUnsignedTransactionParams) (result UnsignedTransactionResponse, err error) {
+	err = d.Client.CallResult(d.ctx, methods.BuildUnsignedTransaction, params, &result)
+	return
+}
+
+func (d *RPC) SignUnsignedTransaction(params SignUnsignedTransactionParams) (result SignatureId, err error) {
+	err = d.Client.CallResult(d.ctx, methods.SignUnsignedTransaction, params, &result)
+	return
+}
+
+func (d *RPC) FinalizeUnsignedTransaction(params FinalizeUnsignedTransactionParams) (result TransactionResponse, err error) {
+	err = d.Client.CallResult(d.ctx, methods.FinalizeUnsignedTransaction, params, &result)
+	return
+}
+
+func (d *RPC) ClearTxCache() (result bool, err error) {
+	err = d.Client.CallResult(d.ctx, methods.ClearTxCache, nil, &result)
 	return
 }
 
 func (d *RPC) ListTransactions(params ListTransactionsParams) (txs []TransactionEntry, err error) {
-	err = d.Client.CallResult(d.ctx, string(ListTransactions), params, &txs)
+	err = d.Client.CallResult(d.ctx, methods.ListTransactions, params, &txs)
 	return
 }
 
 func (d *RPC) IsOnline() (online bool, err error) {
-	err = d.Client.CallResult(d.ctx, string(IsOnline), nil, &online)
+	err = d.Client.CallResult(d.ctx, methods.IsOnline, nil, &online)
 	return
 }
 
 func (d *RPC) SetOnlineMode() (success bool, err error) {
-	err = d.Client.CallResult(d.ctx, string(SetOnlineMode), nil, &success)
+	err = d.Client.CallResult(d.ctx, methods.SetOnlineMode, nil, &success)
 	return
 }
 
 func (d *RPC) SetOfflineMode() (success bool, err error) {
-	err = d.Client.CallResult(d.ctx, string(SetOfflineMode), nil, &success)
+	err = d.Client.CallResult(d.ctx, methods.SetOfflineMode, nil, &success)
 	return
 }
 
 func (d *RPC) SignData(data interface{}) (signature string, err error) {
-	err = d.Client.CallResult(d.ctx, string(SignData), data, &signature)
+	err = d.Client.CallResult(d.ctx, methods.SignData, data, &signature)
 	return
 }
 
 func (d *RPC) EstimateFees(params EstimateFeesParams) (amount uint64, err error) {
-	err = d.Client.CallResult(d.ctx, string(EstimateFees), params, &amount)
+	err = d.Client.CallResult(d.ctx, methods.EstimateFees, params, &amount)
+	return
+}
+
+func (d *RPC) EstimateExtraDataSize(params EstimateExtraDataSizeParams) (result EstimateExtraDataSizeResult, err error) {
+	err = d.Client.CallResult(d.ctx, methods.EstimateExtraDataSize, params, &result)
+	return
+}
+
+func (d *RPC) NetworkInfo() (result NetworkInfoResult, err error) {
+	err = d.Client.CallResult(d.ctx, methods.NetworkInfo, nil, &result)
+	return
+}
+
+func (d *RPC) DecryptExtraData(params DecryptExtraDataParams) (result interface{}, err error) {
+	err = d.Client.CallResult(d.ctx, methods.DecryptExtraData, params, &result)
+	return
+}
+
+func (d *RPC) DecryptCiphertext(params DecryptCiphertextParams) (result uint64, err error) {
+	err = d.Client.CallResult(d.ctx, methods.DecryptCiphertext, nil, &result)
 	return
 }
 

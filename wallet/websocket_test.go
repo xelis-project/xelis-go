@@ -8,7 +8,7 @@ import (
 	"github.com/xelis-project/xelis-go-sdk/config"
 )
 
-func useWSLocal(t *testing.T) (wallet *WebSocket) {
+func prepareWS(t *testing.T) (wallet *WebSocket) {
 	wallet, err := NewWebSocket(config.LOCAL_WALLET_WS, "test", "test")
 	if err != nil {
 		t.Fatal(err)
@@ -18,7 +18,7 @@ func useWSLocal(t *testing.T) (wallet *WebSocket) {
 }
 
 func TestWSGetVersion(t *testing.T) {
-	wallet := useWSLocal(t)
+	wallet := prepareWS(t)
 	version, err := wallet.GetVersion()
 	if err != nil {
 		log.Fatal(err)
@@ -29,7 +29,7 @@ func TestWSGetVersion(t *testing.T) {
 }
 
 func TestWSGetNetwork(t *testing.T) {
-	wallet := useWSLocal(t)
+	wallet := prepareWS(t)
 	network, err := wallet.GetNetwork()
 	if err != nil {
 		log.Fatal(err)
@@ -40,7 +40,7 @@ func TestWSGetNetwork(t *testing.T) {
 }
 
 func TestWSNewTopoheight(t *testing.T) {
-	wallet := useWSLocal(t)
+	wallet := prepareWS(t)
 
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -61,7 +61,7 @@ func TestWSNewTopoheight(t *testing.T) {
 }
 
 func TestWSNewTopoheightChannel(t *testing.T) {
-	wallet := useWSLocal(t)
+	wallet := prepareWS(t)
 
 	newTopoheight, newTopoheightErr, err := wallet.NewTopoheightChannel()
 	if err != nil {
@@ -81,7 +81,7 @@ func TestWSNewTopoheightChannel(t *testing.T) {
 }
 
 func TestWSOnlineOffline(t *testing.T) {
-	wallet := useWSLocal(t)
+	wallet := prepareWS(t)
 
 	var wg sync.WaitGroup
 	wg.Add(2)
@@ -107,7 +107,7 @@ func TestWSOnlineOffline(t *testing.T) {
 }
 
 func TestConnectionErr(t *testing.T) {
-	wallet := useWSLocal(t)
+	wallet := prepareWS(t)
 
 	err := <-wallet.ConnectionErr()
 	t.Log(err)

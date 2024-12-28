@@ -168,6 +168,32 @@ func (w *WebSocket) RescanFunc(onData func(uint64, error)) error {
 	})
 }
 
+func (w *WebSocket) HistorySyncedChannel() (chan uint64, chan error, error) {
+	chanTopoheight := make(chan uint64)
+	chanErr := make(chan error)
+
+	err := w.WS.ListenEventFunc(events.HistorySynced, func(res rpc.RPCResponse) {
+		var result map[string]interface{}
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		if err != nil {
+			chanErr <- err
+		} else {
+			chanTopoheight <- uint64(result["topoheight"].(float64))
+		}
+	})
+
+	return chanTopoheight, chanErr, err
+}
+
+func (w *WebSocket) HistorySyncedFunc(onData func(uint64, error)) error {
+	return w.WS.ListenEventFunc(events.HistorySynced, func(res rpc.RPCResponse) {
+		var result map[string]interface{}
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		startTopoheight := uint64(result["topoheight"].(float64))
+		onData(startTopoheight, err)
+	})
+}
+
 func (w *WebSocket) OnlineChannel() (chan bool, chan error, error) {
 	chanOnline := make(chan bool)
 	chanErr := make(chan error)

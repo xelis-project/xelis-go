@@ -1,6 +1,8 @@
 package daemon
 
 import (
+	"github.com/xelis-project/xelis-go-sdk/daemon/events"
+	"github.com/xelis-project/xelis-go-sdk/daemon/methods"
 	"github.com/xelis-project/xelis-go-sdk/rpc"
 )
 
@@ -36,7 +38,7 @@ func (w *WebSocket) NewBlockChannel() (chan Block, chan error, error) {
 	chanBlock := make(chan Block)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(NewBlock, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(events.NewBlock, func(res rpc.RPCResponse) {
 		var result Block
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -50,7 +52,7 @@ func (w *WebSocket) NewBlockChannel() (chan Block, chan error, error) {
 }
 
 func (w *WebSocket) NewBlockFunc(onData func(Block, error)) error {
-	return w.WS.ListenEventFunc(NewBlock, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(events.NewBlock, func(res rpc.RPCResponse) {
 		var result Block
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
@@ -61,7 +63,7 @@ func (w *WebSocket) TransactionAddedInMempoolChannel() (chan Transaction, chan e
 	chanTransaction := make(chan Transaction)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(TransactionAddedInMempool, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(events.TransactionAddedInMempool, func(res rpc.RPCResponse) {
 		var result Transaction
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -75,7 +77,7 @@ func (w *WebSocket) TransactionAddedInMempoolChannel() (chan Transaction, chan e
 }
 
 func (w *WebSocket) TransactionAddedInMempoolFunc(onData func(Transaction, error)) error {
-	return w.WS.ListenEventFunc(TransactionAddedInMempool, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(events.TransactionAddedInMempool, func(res rpc.RPCResponse) {
 		var result Transaction
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
@@ -86,7 +88,7 @@ func (w *WebSocket) BlockOrderedChannel() (chan Block, chan error, error) {
 	chanBlock := make(chan Block)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(BlockOrdered, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(events.BlockOrdered, func(res rpc.RPCResponse) {
 		var result Block
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -100,7 +102,7 @@ func (w *WebSocket) BlockOrderedChannel() (chan Block, chan error, error) {
 }
 
 func (w *WebSocket) BlockOrderedFunc(onData func(Block, error)) error {
-	return w.WS.ListenEventFunc(BlockOrdered, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(events.BlockOrdered, func(res rpc.RPCResponse) {
 		var result Block
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
@@ -111,7 +113,7 @@ func (w *WebSocket) TransactionExecutedChannel() (chan TransactionExecutedResult
 	chanTransactionExecutedResult := make(chan TransactionExecutedResult)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(TransactionExecuted, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(events.TransactionExecuted, func(res rpc.RPCResponse) {
 		var result TransactionExecutedResult
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -125,7 +127,7 @@ func (w *WebSocket) TransactionExecutedChannel() (chan TransactionExecutedResult
 }
 
 func (w *WebSocket) TransactionExecutedFunc(onData func(TransactionExecutedResult, error)) error {
-	return w.WS.ListenEventFunc(TransactionExecuted, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(events.TransactionExecuted, func(res rpc.RPCResponse) {
 		var result TransactionExecutedResult
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
@@ -136,7 +138,7 @@ func (w *WebSocket) PeerConnectedChannel() (chan Peer, chan error, error) {
 	chanPeer := make(chan Peer)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(PeerConnected, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(events.PeerConnected, func(res rpc.RPCResponse) {
 		var result Peer
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -150,7 +152,7 @@ func (w *WebSocket) PeerConnectedChannel() (chan Peer, chan error, error) {
 }
 
 func (w *WebSocket) PeerConnectedFunc(onData func(Peer, error)) error {
-	return w.WS.ListenEventFunc(PeerConnected, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(events.PeerConnected, func(res rpc.RPCResponse) {
 		var result Peer
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
@@ -161,7 +163,7 @@ func (w *WebSocket) PeerDisconnectedChannel() (chan uint64, chan error, error) {
 	chanPeerId := make(chan uint64)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(PeerDisconnected, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(events.PeerDisconnected, func(res rpc.RPCResponse) {
 		var result uint64
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -175,7 +177,7 @@ func (w *WebSocket) PeerDisconnectedChannel() (chan uint64, chan error, error) {
 }
 
 func (w *WebSocket) PeerDisconnectedFunc(onData func(uint64, error)) error {
-	return w.WS.ListenEventFunc(PeerDisconnected, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(events.PeerDisconnected, func(res rpc.RPCResponse) {
 		var peerId uint64
 		err := rpc.JsonFormatResponse(res, nil, &peerId)
 		onData(peerId, err)
@@ -186,7 +188,7 @@ func (w *WebSocket) PeerStateUpdatedChannel() (chan Peer, chan error, error) {
 	chanPeer := make(chan Peer)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(PeerStateUpdated, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(events.PeerStateUpdated, func(res rpc.RPCResponse) {
 		var result Peer
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -200,7 +202,7 @@ func (w *WebSocket) PeerStateUpdatedChannel() (chan Peer, chan error, error) {
 }
 
 func (w *WebSocket) PeerStateUpdatedFunc(onData func(Peer, error)) error {
-	return w.WS.ListenEventFunc(PeerStateUpdated, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(events.PeerStateUpdated, func(res rpc.RPCResponse) {
 		var result Peer
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
@@ -208,292 +210,358 @@ func (w *WebSocket) PeerStateUpdatedFunc(onData func(Peer, error)) error {
 }
 
 func (w *WebSocket) GetVersion() (version string, err error) {
-	res, err := w.WS.Call(w.Prefix+GetVersion, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetVersion, nil)
 	err = rpc.JsonFormatResponse(res, err, &version)
 	return
 }
 
 func (w *WebSocket) GetInfo() (result GetInfoResult, err error) {
-	res, err := w.WS.Call(w.Prefix+GetInfo, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetInfo, nil)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) GetHeight() (height uint64, err error) {
-	res, err := w.WS.Call(w.Prefix+GetHeight, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetHeight, nil)
 	err = rpc.JsonFormatResponse(res, err, &height)
 	return
 }
 
 func (w *WebSocket) GetTopoheight() (topoheight uint64, err error) {
-	res, err := w.WS.Call(w.Prefix+GetTopoHeight, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetTopoHeight, nil)
 	err = rpc.JsonFormatResponse(res, err, &topoheight)
 	return
 }
 
 func (w *WebSocket) GetStableHeight() (stableheight uint64, err error) {
-	res, err := w.WS.Call(w.Prefix+GetStableHeight, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetStableHeight, nil)
 	err = rpc.JsonFormatResponse(res, err, &stableheight)
 	return
 }
 
 func (w *WebSocket) GetStableTopoheight() (topoheight uint64, err error) {
-	res, err := w.WS.Call(w.Prefix+GetStableTopoheight, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetStableTopoheight, nil)
 	err = rpc.JsonFormatResponse(res, err, &topoheight)
 	return
 }
 
 func (w *WebSocket) GetStableBalance(params GetBalanceParams) (result GetStableBalanceResult, err error) {
-	res, err := w.WS.Call(w.Prefix+GetStableBalance, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetStableBalance, nil)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) GetBlockTemplate(addr string) (result GetBlockTemplateResult, err error) {
 	params := map[string]string{"address": addr}
-	res, err := w.WS.Call(w.Prefix+GetBlockTemplate, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetBlockTemplate, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) GetBlockAtTopoheight(params GetBlockAtTopoheightParams) (block Block, err error) {
-	res, err := w.WS.Call(w.Prefix+GetBlockAtTopoheight, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetBlockAtTopoheight, params)
 	err = rpc.JsonFormatResponse(res, err, &block)
 	return
 }
 
 func (w *WebSocket) GetBlocksAtHeight(params GetBlockAtTopoheightParams) (blocks []Block, err error) {
-	res, err := w.WS.Call(w.Prefix+GetBlocksAtHeight, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetBlocksAtHeight, params)
 	err = rpc.JsonFormatResponse(res, err, &blocks)
 	return
 }
 
 func (w *WebSocket) GetBlockByHash(params GetBlockByHashParams) (block Block, err error) {
-	res, err := w.WS.Call(w.Prefix+GetBlockByHash, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetBlockByHash, params)
 	err = rpc.JsonFormatResponse(res, err, &block)
 	return
 }
 
 func (w *WebSocket) GetTopBlock(params GetTopBlockParams) (block Block, err error) {
-	res, err := w.WS.Call(w.Prefix+GetTopBlock, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetTopBlock, params)
 	err = rpc.JsonFormatResponse(res, err, &block)
 	return
 }
 
 func (w *WebSocket) GetNonce(addr string) (nonce GetNonceResult, err error) {
 	params := map[string]string{"address": addr}
-	res, err := w.WS.Call(w.Prefix+GetNonce, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetNonce, params)
 	err = rpc.JsonFormatResponse(res, err, &nonce)
 	return
 }
 
 func (w *WebSocket) GetNonceAtTopoheight(params GetNonceAtTopoheightParams) (nonce VersionedNonce, err error) {
-	res, err := w.WS.Call(w.Prefix+GetNonceAtTopoheight, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetNonceAtTopoheight, params)
 	err = rpc.JsonFormatResponse(res, err, &nonce)
 	return
 }
 
 func (w *WebSocket) HasNonce(addr string) (hasNonce bool, err error) {
 	params := map[string]string{"address": addr}
-	res, err := w.WS.Call(w.Prefix+HasNonce, params)
+	res, err := w.WS.Call(w.Prefix+methods.HasNonce, params)
 	err = rpc.JsonFormatResponse(res, err, &hasNonce)
 	return
 }
 
 func (w *WebSocket) GetBalance(params GetBalanceParams) (balance GetBalanceResult, err error) {
-	res, err := w.WS.Call(w.Prefix+GetBalance, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetBalance, params)
 	err = rpc.JsonFormatResponse(res, err, &balance)
 	return
 }
 
 func (w *WebSocket) HasBalance(params GetBalanceParams) (hasBalance bool, err error) {
-	res, err := w.WS.Call(w.Prefix+HasBalance, params)
+	res, err := w.WS.Call(w.Prefix+methods.HasBalance, params)
 	err = rpc.JsonFormatResponse(res, err, &hasBalance)
 	return
 }
 
 func (w *WebSocket) GetBalanceAtTopoheight(params GetBalanceAtTopoheightParams) (balance VersionedBalance, err error) {
-	res, err := w.WS.Call(w.Prefix+GetBalanceAtTopoheight, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetBalanceAtTopoheight, params)
 	err = rpc.JsonFormatResponse(res, err, &balance)
 	return
 }
 
 func (w *WebSocket) GetAsset(assetId string) (asset Asset, err error) {
 	params := map[string]string{"asset": assetId}
-	res, err := w.WS.Call(w.Prefix+GetAsset, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetAsset, params)
 	err = rpc.JsonFormatResponse(res, err, &asset)
 	return
 }
 
 func (w *WebSocket) GetAssets(params GetAssetsParams) (assets []AssetWithData, err error) {
-	res, err := w.WS.Call(w.Prefix+GetAssets, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetAssets, params)
 	err = rpc.JsonFormatResponse(res, err, &assets)
 	return
 }
 
 func (w *WebSocket) CountAssets() (count uint64, err error) {
-	res, err := w.WS.Call(w.Prefix+CountAssets, nil)
+	res, err := w.WS.Call(w.Prefix+methods.CountAssets, nil)
 	err = rpc.JsonFormatResponse(res, err, &count)
 	return
 }
 
 func (w *WebSocket) CountTransactions() (count uint64, err error) {
-	res, err := w.WS.Call(w.Prefix+CountTransactions, nil)
+	res, err := w.WS.Call(w.Prefix+methods.CountTransactions, nil)
 	err = rpc.JsonFormatResponse(res, err, &count)
 	return
 }
 
 func (w *WebSocket) CountAccounts() (count uint64, err error) {
-	res, err := w.WS.Call(w.Prefix+CountAccounts, nil)
+	res, err := w.WS.Call(w.Prefix+methods.CountAccounts, nil)
 	err = rpc.JsonFormatResponse(res, err, &count)
 	return
 }
 
 func (w *WebSocket) GetTips() (tips []string, err error) {
-	res, err := w.WS.Call(w.Prefix+GetTips, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetTips, nil)
 	err = rpc.JsonFormatResponse(res, err, &tips)
 	return
 }
 
 func (w *WebSocket) P2PStatus() (status P2PStatusResult, err error) {
-	res, err := w.WS.Call(w.Prefix+P2PStatus, nil)
+	res, err := w.WS.Call(w.Prefix+methods.P2PStatus, nil)
 	err = rpc.JsonFormatResponse(res, err, &status)
 	return
 }
 
 func (w *WebSocket) GetDAGOrder(params GetTopoheightRangeParams) (hashes []string, err error) {
-	res, err := w.WS.Call(w.Prefix+GetDAGOrder, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetDAGOrder, params)
 	err = rpc.JsonFormatResponse(res, err, &hashes)
 	return
 }
 
 func (w *WebSocket) SubmitBlock(params SubmitBlockParams) (result bool, err error) {
-	res, err := w.WS.Call(w.Prefix+SubmitBlock, params)
+	res, err := w.WS.Call(w.Prefix+methods.SubmitBlock, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) SubmitTransaction(hexData string) (result bool, err error) {
 	params := map[string]string{"data": hexData}
-	res, err := w.WS.Call(w.Prefix+SubmitTransaction, params)
+	res, err := w.WS.Call(w.Prefix+methods.SubmitTransaction, params)
 	err = rpc.JsonFormatResponse(res, err, &hexData)
 	return
 }
 
 func (w *WebSocket) GetMempool() (txs []Transaction, err error) {
-	res, err := w.WS.Call(w.Prefix+GetMempool, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetMempool, nil)
 	err = rpc.JsonFormatResponse(res, err, &txs)
 	return
 }
 
 func (w *WebSocket) GetTransaction(hash string) (tx Transaction, err error) {
 	params := map[string]string{"hash": hash}
-	res, err := w.WS.Call(w.Prefix+GetTransaction, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetTransaction, params)
 	err = rpc.JsonFormatResponse(res, err, &tx)
 	return
 }
 
 func (w *WebSocket) GetTransactions(params GetTransactionsParams) (txs []Transaction, err error) {
-	res, err := w.WS.Call(w.Prefix+GetTransactions, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetTransactions, params)
 	err = rpc.JsonFormatResponse(res, err, &txs)
 	return
 }
 
 func (w *WebSocket) GetBlocksRangeByTopoheight(params GetTopoheightRangeParams) (blocks []Block, err error) {
-	res, err := w.WS.Call(w.Prefix+GetBlocksRangeByTopoheight, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetBlocksRangeByTopoheight, params)
 	err = rpc.JsonFormatResponse(res, err, &blocks)
 	return
 }
 
 func (w *WebSocket) GetBlocksRangeByHeight(params GetHeightRangeParams) (blocks []Block, err error) {
-	res, err := w.WS.Call(w.Prefix+GetBlocksRangeByHeight, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetBlocksRangeByHeight, params)
 	err = rpc.JsonFormatResponse(res, err, &blocks)
 	return
 }
 
 func (w *WebSocket) GetAccounts(params GetAccountsParams) (addresses []string, err error) {
-	res, err := w.WS.Call(w.Prefix+GetAccounts, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetAccounts, params)
 	err = rpc.JsonFormatResponse(res, err, &addresses)
 	return
 }
 
 func (w *WebSocket) GetAccountHistory(addr string) (history []AccountHistory, err error) {
 	params := map[string]string{"address": addr}
-	res, err := w.WS.Call(w.Prefix+GetAccountHistory, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetAccountHistory, params)
 	err = rpc.JsonFormatResponse(res, err, &history)
 	return
 }
 
 func (w *WebSocket) GetAccountAssets(addr string) (assets []string, err error) {
 	params := map[string]string{"address": addr}
-	res, err := w.WS.Call(w.Prefix+GetAccountAssets, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetAccountAssets, params)
 	err = rpc.JsonFormatResponse(res, err, &assets)
 	return
 }
 
 func (w *WebSocket) GetPeers() (result GetPeersResult, err error) {
-	res, err := w.WS.Call(w.Prefix+GetPeers, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetPeers, nil)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) GetDevFeeThresholds() (fees []Fee, err error) {
-	res, err := w.WS.Call(w.Prefix+GetDevFeeThresholds, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetDevFeeThresholds, nil)
 	err = rpc.JsonFormatResponse(res, err, &fees)
 	return
 }
 
 func (w *WebSocket) GetSizeOnDisk() (sizeOnDisk SizeOnDisk, err error) {
-	res, err := w.WS.Call(w.Prefix+GetSizeOnDisk, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetSizeOnDisk, nil)
 	err = rpc.JsonFormatResponse(res, err, &sizeOnDisk)
 	return
 }
 
 func (w *WebSocket) IsTxExecutedInBlock(params IsTxExecutedInBlockParams) (executed bool, err error) {
-	res, err := w.WS.Call(w.Prefix+IsTxExecutedInBlock, params)
+	res, err := w.WS.Call(w.Prefix+methods.IsTxExecutedInBlock, params)
 	err = rpc.JsonFormatResponse(res, err, &executed)
 	return
 }
 
 func (w *WebSocket) GetAccountRegistrationTopoheight(addr string) (topoheight uint64, err error) {
 	params := map[string]string{"address": addr}
-	res, err := w.WS.Call(w.Prefix+GetAccountRegistrationTopoheight, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetAccountRegistrationTopoheight, params)
 	err = rpc.JsonFormatResponse(res, err, &topoheight)
 	return
 }
 
 func (w *WebSocket) IsAccountRegistered(params IsAccountRegisteredParams) (exists bool, err error) {
-	res, err := w.WS.Call(w.Prefix+IsAccountRegistered, params)
+	res, err := w.WS.Call(w.Prefix+methods.IsAccountRegistered, params)
 	err = rpc.JsonFormatResponse(res, err, &exists)
 	return
 }
 
 func (w *WebSocket) GetDifficulty() (result GetDifficultyResult, err error) {
-	res, err := w.WS.Call(w.Prefix+GetDifficulty, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetDifficulty, nil)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) ValidateAddress(params ValidateAddressParams) (result ValidateAddressResult, err error) {
-	res, err := w.WS.Call(w.Prefix+ValidateAddress, params)
+	res, err := w.WS.Call(w.Prefix+methods.ValidateAddress, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) ExtractKeyFromAddress(params ExtractKeyFromAddressParams) (key interface{}, err error) {
-	res, err := w.WS.Call(w.Prefix+ExtractKeyFromAddress, params)
+	res, err := w.WS.Call(w.Prefix+methods.ExtractKeyFromAddress, params)
 	err = rpc.JsonFormatResponse(res, err, &key)
 	return
 }
 
 func (w *WebSocket) GetMinerWork(params GetMinerWorkParams) (result GetMinerWorkResult, err error) {
-	res, err := w.WS.Call(w.Prefix+GetMinerWork, params)
+	res, err := w.WS.Call(w.Prefix+methods.GetMinerWork, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
 
 func (w *WebSocket) SplitAddress(params SplitAddressParams) (result SplitAddressResult, err error) {
-	res, err := w.WS.Call(w.Prefix+SplitAddress, params)
+	res, err := w.WS.Call(w.Prefix+methods.SplitAddress, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetHardForks() (result []HardFork, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetHardForks, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetEstimatedFeeRates() (result []FeeRatesEstimated, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetEstimatedFeeRates, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetPrunedTopoheight() (result uint64, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetPrunedTopoheight, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetTransactionExecutor(params GetTransactionExecutorParams) (result GetTransactionExecutorResult, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetTransactionExecutor, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) HasMultisigAtTopoheight(params HasMultisigAtTopoheightParams) (result bool, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.HasMultisigAtTopoheight, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetMultisigAtTopoheight(params GetMultisigAtTopoheightParams) (result GetMultisigAtTopoHeightResult, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetMultisigAtTopoheight, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetMultisig(params GetMultisigParams) (result GetMultisigResult, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetMultisig, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) HasMultisig(params HasMultisigParams) (result bool, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.HasMultisig, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetContractOutputs(params GetContractOutputsParams) (result []interface{}, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetContractOutputs, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetContractModule(params GetContractModuleParams) (result GetContractModuleResult, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetContractModule, nil)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetContractDataWithKey(params GetContractDataWithKeyParams) (result GetContractDataWithKeyResult, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetContractDataWithKey, nil)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }

@@ -65,7 +65,17 @@ type MutliSigBuilder struct {
 	Threshold    uint8    `json:"threshold"`
 }
 
+type ContractDepositBuilder struct {
+	Amount  uint64 `json:"amount"`
+	Private bool   `json:"private"`
+}
+
 type InvokeContractBuilder struct {
+	Contract   string                            `json:"contract"`
+	MaxGas     uint64                            `json:"max_gas"`
+	ChunkId    uint16                            `json:"chunk_id"`
+	Parameters []interface{}                     `json:"parameters"`
+	Deposits   map[string]ContractDepositBuilder `json:"deposits"`
 }
 
 type SignerId struct {

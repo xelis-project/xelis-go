@@ -69,9 +69,12 @@ const (
 	HasMultisig             string = "has_multisig"
 	HasMultisigAtTopoheight string = "has_multisig_at_topoheight"
 
-	GetContractOutputs     string = "get_contract_outputs"
-	GetContractModule      string = "get_contract_module"
-	GetContractDataWithKey string = "get_contract_data_with_key"
+	GetContractOutputs             string = "get_contract_outputs"
+	GetContractModule              string = "get_contract_module"
+	GetContractData                string = "get_contract_data"
+	GetContractDataAtTopoheight    string = "get_contract_data_at_topoheight"
+	GetContractBalance             string = "get_contract_balance"
+	GetContractBalanceAtTopoheight string = "get_contract_balance_at_topoheight"
 
 	GetBlockTemplate string = "get_block_template"
 	GetMinerWork     string = "get_miner_work"

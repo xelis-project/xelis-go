@@ -560,8 +560,26 @@ func (w *WebSocket) GetContractModule(params GetContractModuleParams) (result Ge
 	return
 }
 
-func (w *WebSocket) GetContractDataWithKey(params GetContractDataWithKeyParams) (result GetContractDataWithKeyResult, err error) {
-	res, err := w.WS.Call(w.Prefix+methods.GetContractDataWithKey, params)
+func (w *WebSocket) GetContractData(params GetContractDataParams) (result interface{}, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetContractData, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetContractDataAtTopoheight(params GetContractDataAtTopoheightParams) (result interface{}, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetContractDataAtTopoheight, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetContractBalance(params GetContractBalanceParams) (result interface{}, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetContractBalance, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetContractBalanceAtTopoheight(params GetContractBalanceAtTopoheightParams) (result interface{}, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetContractBalanceAtTopoheight, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }

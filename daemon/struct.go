@@ -418,10 +418,26 @@ type GetContractModuleParams struct {
 	Contract string `json:"contract"`
 }
 
-type GetContractDataWithKeyParams struct {
+type GetContractDataParams struct {
+	Contract string      `json:"contract"`
+	Key      interface{} `json:"key"`
+}
+
+type GetContractDataAtTopoheightParams struct {
 	Contract   string      `json:"contract"`
 	Key        interface{} `json:"key"`
 	Topoheight *uint64     `json:"topoheight,omitempty"`
+}
+
+type GetContractBalanceParams struct {
+	Contract string `json:"contract"`
+	Asset    string `json:"asset"`
+}
+
+type GetContractBalanceAtTopoheightParams struct {
+	Contract   string `json:"contract"`
+	Asset      string `json:"asset"`
+	Topoheight uint64 `json:"topoheight"`
 }
 
 type ContractOutputRefundGas struct {
@@ -441,7 +457,7 @@ type GetContractModuleResult struct {
 	Data               *interface{} `json:"data"`
 }
 
-type GetContractDataWithKeyResult struct {
+type GetContractDataResult struct {
 	PreviousTopoheight *uint64      `json:"previous_topoheight"`
 	Data               *interface{} `json:"data"`
 }

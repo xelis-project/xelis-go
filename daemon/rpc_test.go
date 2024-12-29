@@ -660,13 +660,28 @@ func TestGetContractModule(t *testing.T) {
 	t.Log(result)
 }
 
-func TestGetContractDataWithKey(t *testing.T) {
+func TestGetContractData(t *testing.T) {
 	daemon, _ := prepareRPC(t)
 
-	result, err := daemon.GetContractDataWithKey(GetContractDataWithKeyParams{
+	result, err := daemon.GetContractData(GetContractDataParams{
+		Contract: "",
+		Key:      nil,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetContractDataAtTopoheight(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	topo := uint64(0)
+	result, err := daemon.GetContractDataAtTopoheight(GetContractDataAtTopoheightParams{
 		Contract:   "",
 		Key:        nil,
-		Topoheight: nil,
+		Topoheight: &topo,
 	})
 	if err != nil {
 		t.Fatal(err)

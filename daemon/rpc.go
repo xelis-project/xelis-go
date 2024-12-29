@@ -329,8 +329,23 @@ func (d *RPC) GetContractModule(params GetContractModuleParams) (result GetContr
 	return
 }
 
-func (d *RPC) GetContractDataWithKey(params GetContractDataWithKeyParams) (result GetContractDataWithKeyResult, err error) {
-	err = d.Client.CallResult(d.ctx, methods.GetContractDataWithKey, params, &result)
+func (d *RPC) GetContractData(params GetContractDataParams) (result interface{}, err error) {
+	err = d.Client.CallResult(d.ctx, methods.GetContractData, params, &result)
+	return
+}
+
+func (d *RPC) GetContractDataAtTopoheight(params GetContractDataAtTopoheightParams) (result interface{}, err error) {
+	err = d.Client.CallResult(d.ctx, methods.GetContractDataAtTopoheight, params, &result)
+	return
+}
+
+func (d *RPC) GetContractBalance(params GetContractBalanceParams) (result interface{}, err error) {
+	err = d.Client.CallResult(d.ctx, methods.GetContractBalance, params, &result)
+	return
+}
+
+func (d *RPC) GetContractBalanceAtTopoheight(params GetContractBalanceAtTopoheightParams) (result interface{}, err error) {
+	err = d.Client.CallResult(d.ctx, methods.GetContractBalanceAtTopoheight, params, &result)
 	return
 }
 

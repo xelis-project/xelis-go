@@ -63,6 +63,8 @@ const (
 	ValidateAddress       string = "validate_address"
 	SplitAddress          string = "split_address"
 	ExtractKeyFromAddress string = "extract_key_from_address"
+	MakeIntegratedAddress string = "make_integrated_address"
+	DecryptExtraData      string = "decrypt_extra_data"
 
 	GetMultisigAtTopoheight string = "get_multisig_at_topoheight"
 	GetMultisig             string = "get_multisig"

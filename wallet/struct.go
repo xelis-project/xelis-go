@@ -275,6 +275,6 @@ const (
 )
 
 type DecryptExtraDataParams struct {
-	ExtraData interface{} `json:"extra_data"`
-	Role      TxRole      `json:"role"`
+	ExtraData []byte `json:"extra_data"`
+	Role      TxRole `json:"role"`
 }

@@ -475,3 +475,13 @@ type FeeRatesEstimated struct {
 	High    uint64 `json:"high"`
 	Default uint64 `json:"default"`
 }
+
+type MakeIntegratedAddressParams struct {
+	Address        string      `json:"address"`
+	IntegratedData interface{} `json:"integrated_data"`
+}
+
+type DecryptExtraDataParams struct {
+	SharedKey []byte `json:"shared_key"`
+	ExtraData []byte `json:"extra_data"`
+}

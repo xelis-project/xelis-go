@@ -353,3 +353,13 @@ func (d *RPC) CountContracts() (result uint64, err error) {
 	err = d.Client.CallResult(d.ctx, methods.CountAccounts, nil, &result)
 	return
 }
+
+func (d *RPC) MakeIntegratedAddress(params MakeIntegratedAddressParams) (result uint64, err error) {
+	err = d.Client.CallResult(d.ctx, methods.MakeIntegratedAddress, params, &result)
+	return
+}
+
+func (d *RPC) DecryptExtraData(params DecryptExtraDataParams) (result interface{}, err error) {
+	err = d.Client.CallResult(d.ctx, methods.DecryptExtraData, params, &result)
+	return
+}

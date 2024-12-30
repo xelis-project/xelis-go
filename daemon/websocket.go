@@ -589,3 +589,15 @@ func (w *WebSocket) CountContracts() (result uint64, err error) {
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
+
+func (w *WebSocket) MakeIntegratedAddress(params MakeIntegratedAddressParams) (result interface{}, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.MakeIntegratedAddress, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) DecryptExtraData(params DecryptExtraDataParams) (result interface{}, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.DecryptExtraData, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}

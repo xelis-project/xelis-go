@@ -45,7 +45,7 @@ func NewAddressFromData(data []byte, hrp string) (addr *Address, err error) {
 	case 1:
 		integrated = true
 
-		dataValueReader := &extra_data.DataValueReader{Reader: reader}
+		dataValueReader := &extra_data.ValueReader{Reader: reader}
 		extraData, err = dataValueReader.Read()
 		if err != nil {
 			return
@@ -148,7 +148,7 @@ func (a *Address) Format() (addr string, err error) {
 		}
 
 		var extraData bytes.Buffer
-		dataValueWriter := &extra_data.DataValueWriter{Writer: &extraData}
+		dataValueWriter := &extra_data.ValueWriter{Writer: &extraData}
 		err = dataValueWriter.Write(*a.extraData)
 		if err != nil {
 			return

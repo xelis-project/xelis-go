@@ -15,11 +15,11 @@ func ErrUnsupportedValue(value Value) error {
 
 var ErrMaxStringSize = errors.New("string max limit is 255 bytes")
 
-type DataValueWriter struct {
+type ValueWriter struct {
 	Writer io.Writer
 }
 
-func (d *DataValueWriter) Write(dataElement Element) (err error) {
+func (d *ValueWriter) Write(dataElement Element) (err error) {
 	if dataElement.Value != nil {
 		err = d.writeByte(byte(ElementValue))
 		if err != nil {
@@ -78,7 +78,7 @@ func (d *DataValueWriter) Write(dataElement Element) (err error) {
 	return
 }
 
-func (d *DataValueWriter) writeByte(value byte) (err error) {
+func (d *ValueWriter) writeByte(value byte) (err error) {
 	data := make([]byte, 1)
 	data[0] = value
 
@@ -90,7 +90,7 @@ func (d *DataValueWriter) writeByte(value byte) (err error) {
 	return
 }
 
-func (d *DataValueWriter) writeBool(value bool) (err error) {
+func (d *ValueWriter) writeBool(value bool) (err error) {
 	data := make([]byte, 1)
 
 	if value {
@@ -107,7 +107,7 @@ func (d *DataValueWriter) writeBool(value bool) (err error) {
 	return
 }
 
-func (d *DataValueWriter) writeString(value string) (err error) {
+func (d *ValueWriter) writeString(value string) (err error) {
 	buf := bytes.NewBufferString(value)
 
 	if buf.Len() > 255 {
@@ -129,33 +129,33 @@ func (d *DataValueWriter) writeString(value string) (err error) {
 	return
 }
 
-func (d *DataValueWriter) writeU16(value uint16) (err error) {
+func (d *ValueWriter) writeU16(value uint16) (err error) {
 	data := make([]byte, 2)
 	binary.BigEndian.PutUint16(data, value)
 	_, err = d.Writer.Write(data)
 	return
 }
 
-func (d *DataValueWriter) writeU32(value uint32) (err error) {
+func (d *ValueWriter) writeU32(value uint32) (err error) {
 	data := make([]byte, 4)
 	binary.BigEndian.PutUint32(data, value)
 	_, err = d.Writer.Write(data)
 	return
 }
 
-func (d *DataValueWriter) writeU64(value uint64) (err error) {
+func (d *ValueWriter) writeU64(value uint64) (err error) {
 	data := make([]byte, 8)
 	binary.BigEndian.PutUint64(data, value)
 	_, err = d.Writer.Write(data)
 	return
 }
 
-func (d *DataValueWriter) writeU128(value big.Int) (err error) {
+func (d *ValueWriter) writeU128(value big.Int) (err error) {
 	_, err = d.Writer.Write(value.Bytes())
 	return
 }
 
-func (d *DataValueWriter) writeValue(value Value) (err error) {
+func (d *ValueWriter) writeValue(value Value) (err error) {
 	switch value := value.(type) {
 	case bool:
 		err = d.writeByte(byte(BoolType))

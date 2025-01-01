@@ -10,7 +10,7 @@ import (
 
 func writeDataElement(dataElement Element) (data []byte, err error) {
 	var buf bytes.Buffer
-	dataValueWriter := DataValueWriter{Writer: &buf}
+	dataValueWriter := ValueWriter{Writer: &buf}
 	err = dataValueWriter.Write(dataElement)
 	if err != nil {
 		return
@@ -21,7 +21,7 @@ func writeDataElement(dataElement Element) (data []byte, err error) {
 }
 
 func readDataElement(data []byte) (dataElement Element, err error) {
-	dataValueReader := DataValueReader{Reader: bytes.NewReader(data)}
+	dataValueReader := ValueReader{Reader: bytes.NewReader(data)}
 	dataElement, err = dataValueReader.Read()
 	return
 }

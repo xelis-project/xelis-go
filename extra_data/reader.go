@@ -7,11 +7,11 @@ import (
 	"math/big"
 )
 
-type DataValueReader struct {
+type ValueReader struct {
 	Reader *bytes.Reader
 }
 
-func (d *DataValueReader) Read() (dataElement Element, err error) {
+func (d *ValueReader) Read() (dataElement Element, err error) {
 	dataElementType, err := d.Reader.ReadByte()
 	if err != nil {
 		return
@@ -20,7 +20,7 @@ func (d *DataValueReader) Read() (dataElement Element, err error) {
 	switch dataElementType {
 	case byte(ElementValue): // Value
 		var value Value
-		value, err = d.readDataValue()
+		value, err = d.readValue()
 		if err != nil {
 			return
 		}
@@ -55,7 +55,7 @@ func (d *DataValueReader) Read() (dataElement Element, err error) {
 		fields := make(map[Value]Element, 0)
 		for i := 0; i < int(size); i++ {
 			var key Value
-			key, err = d.readDataValue()
+			key, err = d.readValue()
 			if err != nil {
 				return
 			}
@@ -78,7 +78,7 @@ func (d *DataValueReader) Read() (dataElement Element, err error) {
 	return
 }
 
-func (d *DataValueReader) readValueType() (valueType ValueType, err error) {
+func (d *ValueReader) readValueType() (valueType ValueType, err error) {
 	data, err := d.Reader.ReadByte()
 	if err != nil {
 		return
@@ -88,7 +88,7 @@ func (d *DataValueReader) readValueType() (valueType ValueType, err error) {
 	return
 }
 
-func (d *DataValueReader) readBool() (value bool, err error) {
+func (d *ValueReader) readBool() (value bool, err error) {
 	data, err := d.Reader.ReadByte()
 	if err != nil {
 		return
@@ -104,7 +104,7 @@ func (d *DataValueReader) readBool() (value bool, err error) {
 	return
 }
 
-func (d *DataValueReader) readString() (value string, err error) {
+func (d *ValueReader) readString() (value string, err error) {
 	size, err := d.Reader.ReadByte()
 	if err != nil {
 		return
@@ -120,7 +120,7 @@ func (d *DataValueReader) readString() (value string, err error) {
 	return
 }
 
-func (d *DataValueReader) readBytes(size int) (value []byte, err error) {
+func (d *ValueReader) readBytes(size int) (value []byte, err error) {
 	data := make([]byte, size)
 	_, err = d.Reader.Read(data)
 	if err != nil {
@@ -131,7 +131,7 @@ func (d *DataValueReader) readBytes(size int) (value []byte, err error) {
 	return
 }
 
-func (d *DataValueReader) readU8() (value uint8, err error) {
+func (d *ValueReader) readU8() (value uint8, err error) {
 	data, err := d.Reader.ReadByte()
 	if err != nil {
 		return
@@ -141,7 +141,7 @@ func (d *DataValueReader) readU8() (value uint8, err error) {
 	return
 }
 
-func (d *DataValueReader) readU16() (value uint16, err error) {
+func (d *ValueReader) readU16() (value uint16, err error) {
 	data, err := d.readBytes(2)
 	if err != nil {
 		return
@@ -151,7 +151,7 @@ func (d *DataValueReader) readU16() (value uint16, err error) {
 	return
 }
 
-func (d *DataValueReader) readU32() (value uint32, err error) {
+func (d *ValueReader) readU32() (value uint32, err error) {
 	data, err := d.readBytes(4)
 	if err != nil {
 		return
@@ -161,7 +161,7 @@ func (d *DataValueReader) readU32() (value uint32, err error) {
 	return
 }
 
-func (d *DataValueReader) readU64() (value uint64, err error) {
+func (d *ValueReader) readU64() (value uint64, err error) {
 	data, err := d.readBytes(8)
 	if err != nil {
 		return
@@ -171,7 +171,7 @@ func (d *DataValueReader) readU64() (value uint64, err error) {
 	return
 }
 
-func (d *DataValueReader) readU128() (value big.Int, err error) {
+func (d *ValueReader) readU128() (value big.Int, err error) {
 	data, err := d.readBytes(16)
 	if err != nil {
 		return
@@ -181,7 +181,7 @@ func (d *DataValueReader) readU128() (value big.Int, err error) {
 	return
 }
 
-func (d *DataValueReader) readHash() (value Hash, err error) {
+func (d *ValueReader) readHash() (value Hash, err error) {
 	data, err := d.readBytes(32)
 	if err != nil {
 		return
@@ -191,7 +191,7 @@ func (d *DataValueReader) readHash() (value Hash, err error) {
 	return
 }
 
-func (d *DataValueReader) readDataValue() (value Value, err error) {
+func (d *ValueReader) readValue() (value Value, err error) {
 	valueType, err := d.readValueType()
 	if err != nil {
 		return

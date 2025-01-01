@@ -300,3 +300,19 @@ func TestRPCSendWithFeeBuilder(t *testing.T) {
 	}
 	t.Logf("%+v", result)
 }
+
+func TestRPCDeploySC(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	hello_world_hex_program := "00000000000200090d48656c6c6f2c20576f726c64210004000000000000000000010000000c00000014540000010001001000010000"
+
+	result, err := wallet.BuildTransaction(BuildTransactionParams{
+		DeployContract: &hello_world_hex_program,
+		Broadcast:      true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result)
+}

@@ -65,6 +65,11 @@ type MutliSigBuilder struct {
 	Threshold    uint8    `json:"threshold"`
 }
 
+type MutliSigPayload struct {
+	Threshold    uint8    `json:"threshold"`
+	Participants []string `json:"participants"`
+}
+
 type ContractDepositBuilder struct {
 	Amount  uint64 `json:"amount"`
 	Private bool   `json:"private"`
@@ -109,9 +114,33 @@ type Transfer struct {
 	CTValidityProof daemon.Proof `json:"ct_validity_proof"`
 }
 
+type ContractDeposit struct {
+	Public uint64 `json:"public"`
+	// TODO: Private
+}
+
+type InvokeContractPayload struct {
+	Contract   string                     `json:"contract"`
+	Deposits   map[string]ContractDeposit `json:"deposits"`
+	ChunkId    uint16                     `json:"chunk_id"`
+	MaxGas     uint64                     `json:"max_gas"`
+	Parameters [][]byte                   `json:"parameters"`
+}
+
+type Module struct {
+	Constants     []interface{} `json:"constants"`
+	Chunks        []interface{} `json:"chunks"`
+	EntryChunkIds []uint64      `json:"entry_chunk_ids"`
+	Structs       []interface{} `json:"structs"`
+	Enums         []interface{} `json:"enums"`
+}
+
 type TransactionData struct {
-	Transfers []Transfer   `json:"transfers"`
-	Burn      *daemon.Burn `json:"burn"`
+	Transfers      []Transfer             `json:"transfers"`
+	Burn           *daemon.Burn           `json:"burn"`
+	MultiSig       *MutliSigPayload       `json:"multi_sig"`
+	InvokeContract *InvokeContractPayload `json:"invoke_contract"`
+	DeployContract *Module                `json:"deploy_contract"`
 }
 
 type TransactionResponse struct {

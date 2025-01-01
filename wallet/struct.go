@@ -255,7 +255,7 @@ type EstimateExtraDataSizeParams struct {
 }
 
 type EstimateExtraDataSizeResult struct {
-	Size uint8 `json:"size"`
+	Size uint64 `json:"size"`
 }
 
 type NetworkInfoResult struct {

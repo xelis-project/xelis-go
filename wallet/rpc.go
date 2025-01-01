@@ -218,6 +218,46 @@ func (d *RPC) DecryptCiphertext(params DecryptCiphertextParams) (result uint64, 
 	return
 }
 
+func (d *RPC) GetMatchingKeys(params GetMatchingKeysParams) (result []interface{}, err error) {
+	err = d.Client.CallResult(d.ctx, methods.GetMatchingKeys, params, &result)
+	return
+}
+
+func (d *RPC) CountMatchingEntries(params CountMatchingEntriesParams) (result uint64, err error) {
+	err = d.Client.CallResult(d.ctx, methods.CountMatchingEntries, params, &result)
+	return
+}
+
+func (d *RPC) GetValueFromKey(params GetValueFromKeyParams) (result interface{}, err error) {
+	err = d.Client.CallResult(d.ctx, methods.GetValueFromKey, params, &result)
+	return
+}
+
+func (d *RPC) Store(params StoreParams) (result bool, err error) {
+	err = d.Client.CallResult(d.ctx, methods.Store, params, &result)
+	return
+}
+
+func (d *RPC) Delete(params StoreParams) (result bool, err error) {
+	err = d.Client.CallResult(d.ctx, methods.Delete, params, &result)
+	return
+}
+
+func (d *RPC) DeleteTreeEntries(params DeleteTreeEntriesParams) (result bool, err error) {
+	err = d.Client.CallResult(d.ctx, methods.DeleteTreeEntries, params, &result)
+	return
+}
+
+func (d *RPC) HasKey(params HasKeyParams) (result bool, err error) {
+	err = d.Client.CallResult(d.ctx, methods.HasKey, params, &result)
+	return
+}
+
+func (d *RPC) QueryDB(params QueryDBParams) (result QueryResult, err error) {
+	err = d.Client.CallResult(d.ctx, methods.QueryDB, params, &result)
+	return
+}
+
 func checkFeeBuilder(fee *FeeBuilder) error {
 	if fee != nil && fee.Multiplier != nil && fee.Value != nil {
 		return fmt.Errorf("you cannot set both Multiplier and Value in FeeBuilder")

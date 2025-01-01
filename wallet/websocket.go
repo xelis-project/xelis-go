@@ -419,3 +419,51 @@ func (w *WebSocket) DecryptCiphertext(params DecryptCiphertextParams) (result ui
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return
 }
+
+func (w *WebSocket) GetMatchingKeys(params GetMatchingKeysParams) (result []interface{}, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetMatchingKeys, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) CountMatchingEntries(params CountMatchingEntriesParams) (result uint64, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.CountMatchingEntries, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) GetValueFromKey(params GetValueFromKeyParams) (result interface{}, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetValueFromKey, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) Store(params StoreParams) (result bool, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.Store, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) Delete(params DeleteParams) (result bool, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.Delete, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) DeleteTreeEntries(params DeleteTreeEntriesParams) (result bool, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.DeleteTreeEntries, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) HasKey(params HasKeyParams) (result bool, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.HasKey, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
+func (w *WebSocket) QueryDB(params QueryDBParams) (result QueryResult, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.QueryDB, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}

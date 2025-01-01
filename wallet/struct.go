@@ -278,3 +278,50 @@ type DecryptExtraDataParams struct {
 	ExtraData []byte `json:"extra_data"`
 	Role      TxRole `json:"role"`
 }
+
+type GetMatchingKeysParams struct {
+	Tree  string       `json:"tree"`
+	Query *interface{} `json:"query,omitempty"`
+}
+
+type CountMatchingEntriesParams struct {
+	Tree  string       `json:"tree"`
+	Key   *interface{} `json:"key,omitempty"`
+	Value *interface{} `json:"value,omitempty"`
+}
+
+type GetValueFromKeyParams struct {
+	Tree string      `json:"tree"`
+	Key  interface{} `json:"key"`
+}
+
+type StoreParams struct {
+	Tree  string      `json:"tree"`
+	Key   interface{} `json:"key"`
+	Value interface{} `json:"value"`
+}
+
+type DeleteParams struct {
+	Tree string      `json:"tree"`
+	Key  interface{} `json:"key"`
+}
+
+type DeleteTreeEntriesParams struct {
+	Tree string `json:"tree"`
+}
+
+type HasKeyParams struct {
+	Tree string      `json:"tree"`
+	Key  interface{} `json:"key"`
+}
+type QueryDBParams struct {
+	Tree          string       `json:"tree"`
+	Key           *interface{} `json:"key,omitempty"`
+	Value         *interface{} `json:"value,omitempty"`
+	ReturnOnFirst bool         `json:"return_on_first"`
+}
+
+type QueryResult struct {
+	Entries map[interface{}]interface{} `json:"entries"`
+	Next    *uint64                     `json:"next"`
+}

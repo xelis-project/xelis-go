@@ -3,6 +3,8 @@ package address
 import (
 	"fmt"
 	"testing"
+
+	"github.com/xelis-project/xelis-go-sdk/extra_data"
 )
 
 var MAINNET_ADDR = "xel:ys4peuzztwl67rzhsdu0yxfzwcfmgt85uu53hycpeeary7n8qvysqmxznt0"
@@ -78,7 +80,7 @@ func TestAddressExtraDataValue(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	address.SetExtraData(&DataElement{Value: true})
+	address.SetExtraData(&extra_data.Element{Value: true})
 
 	addr, err := address.Format()
 	if err != nil {
@@ -102,8 +104,8 @@ func TestAddressExtraDataArray(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	address.SetExtraData(&DataElement{
-		Array: []DataElement{
+	address.SetExtraData(&extra_data.Element{
+		Array: []extra_data.Element{
 			{Value: true},
 			{Value: "test"},
 		},
@@ -131,10 +133,10 @@ func TestAddressExtraDataFields(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fields := make(map[DataValue]DataElement, 0)
-	fields["hello"] = DataElement{Value: "world"}
+	fields := make(map[extra_data.Value]extra_data.Element, 0)
+	fields["hello"] = extra_data.Element{Value: "world"}
 
-	address.SetExtraData(&DataElement{
+	address.SetExtraData(&extra_data.Element{
 		Fields: fields,
 	})
 
@@ -162,7 +164,7 @@ func TestAddressClearExtraData(t *testing.T) {
 
 	t.Logf("%+v\n", address)
 
-	address.SetExtraData(&DataElement{Value: "test"})
+	address.SetExtraData(&extra_data.Element{Value: "test"})
 
 	addr, err := address.Format()
 	if err != nil {

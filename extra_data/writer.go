@@ -1,0 +1,222 @@
+package extra_data
+
+import (
+	"bytes"
+	"encoding/binary"
+	"errors"
+	"fmt"
+	"io"
+	"math/big"
+)
+
+func ErrUnsupportedValue(value Value) error {
+	return fmt.Errorf("unsupported value type %v", value)
+}
+
+var ErrMaxStringSize = errors.New("string max limit is 255 bytes")
+
+type DataValueWriter struct {
+	Writer io.Writer
+}
+
+func (d *DataValueWriter) Write(dataElement Element) (err error) {
+	if dataElement.Value != nil {
+		err = d.writeByte(byte(ElementValue))
+		if err != nil {
+			return
+		}
+
+		err = d.writeValue(dataElement.Value)
+		if err != nil {
+			return
+		}
+	}
+
+	if dataElement.Array != nil {
+		err = d.writeByte(byte(ElementArray))
+		if err != nil {
+			return
+		}
+
+		err = d.writeByte(byte(len(dataElement.Array)))
+		if err != nil {
+			return
+		}
+
+		for _, item := range dataElement.Array {
+			err = d.Write(item)
+			if err != nil {
+				return
+			}
+		}
+	}
+
+	if dataElement.Fields != nil {
+		err = d.writeByte(byte(ElementFields))
+		if err != nil {
+			return
+		}
+
+		err = d.writeByte(byte(len(dataElement.Fields)))
+		if err != nil {
+			return
+		}
+
+		for key, item := range dataElement.Fields {
+			err = d.writeValue(key)
+			if err != nil {
+				return
+			}
+
+			err = d.Write(item)
+			if err != nil {
+				return
+			}
+		}
+	}
+
+	return
+}
+
+func (d *DataValueWriter) writeByte(value byte) (err error) {
+	data := make([]byte, 1)
+	data[0] = value
+
+	_, err = d.Writer.Write(data)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (d *DataValueWriter) writeBool(value bool) (err error) {
+	data := make([]byte, 1)
+
+	if value {
+		data[0] = 1
+	} else {
+		data[0] = 0
+	}
+
+	_, err = d.Writer.Write(data)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (d *DataValueWriter) writeString(value string) (err error) {
+	buf := bytes.NewBufferString(value)
+
+	if buf.Len() > 255 {
+		err = ErrMaxStringSize
+		return
+	}
+
+	size := byte(buf.Len())
+	err = d.writeByte(size)
+	if err != nil {
+		return
+	}
+
+	_, err = d.Writer.Write(buf.Bytes())
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (d *DataValueWriter) writeU16(value uint16) (err error) {
+	data := make([]byte, 2)
+	binary.BigEndian.PutUint16(data, value)
+	_, err = d.Writer.Write(data)
+	return
+}
+
+func (d *DataValueWriter) writeU32(value uint32) (err error) {
+	data := make([]byte, 4)
+	binary.BigEndian.PutUint32(data, value)
+	_, err = d.Writer.Write(data)
+	return
+}
+
+func (d *DataValueWriter) writeU64(value uint64) (err error) {
+	data := make([]byte, 8)
+	binary.BigEndian.PutUint64(data, value)
+	_, err = d.Writer.Write(data)
+	return
+}
+
+func (d *DataValueWriter) writeU128(value big.Int) (err error) {
+	_, err = d.Writer.Write(value.Bytes())
+	return
+}
+
+func (d *DataValueWriter) writeValue(value Value) (err error) {
+	switch value := value.(type) {
+	case bool:
+		err = d.writeByte(byte(BoolType))
+		if err != nil {
+			return
+		}
+
+		err = d.writeBool(value)
+	case string:
+		err = d.writeByte(byte(StringType))
+		if err != nil {
+			return
+		}
+
+		err = d.writeString(value)
+	case uint8:
+		err = d.writeByte(byte(U8Type))
+		if err != nil {
+			return
+		}
+
+		err = d.writeByte(byte(value))
+	case uint16:
+		err = d.writeByte(byte(U16Type))
+		if err != nil {
+			return
+		}
+
+		err = d.writeU16(value)
+	case uint32:
+		err = d.writeByte(byte(U32Type))
+		if err != nil {
+			return
+		}
+
+		err = d.writeU32(value)
+	case uint64:
+		err = d.writeByte(byte(U64Type))
+		if err != nil {
+			return
+		}
+
+		err = d.writeU64(value)
+	case big.Int:
+		err = d.writeByte(byte(U128Type))
+		if err != nil {
+			return
+		}
+
+		err = d.writeU128(value)
+	case Hash:
+		err = d.writeByte(byte(HashType))
+		if err != nil {
+			return
+		}
+
+		_, err = d.Writer.Write(value[:])
+	default:
+		err = ErrUnsupportedValue(value)
+		return
+	}
+
+	return
+}

@@ -1,4 +1,4 @@
-package address
+package extra_data
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func writeDataElement(dataElement DataElement) (data []byte, err error) {
+func writeDataElement(dataElement Element) (data []byte, err error) {
 	var buf bytes.Buffer
 	dataValueWriter := DataValueWriter{Writer: &buf}
 	err = dataValueWriter.Write(dataElement)
@@ -20,14 +20,14 @@ func writeDataElement(dataElement DataElement) (data []byte, err error) {
 	return
 }
 
-func readDataElement(data []byte) (dataElement DataElement, err error) {
+func readDataElement(data []byte) (dataElement Element, err error) {
 	dataValueReader := DataValueReader{Reader: bytes.NewReader(data)}
 	dataElement, err = dataValueReader.Read()
 	return
 }
 
 func TestDataElementBoolValue(t *testing.T) {
-	dataElement := DataElement{Value: true}
+	dataElement := Element{Value: true}
 	data, err := writeDataElement(dataElement)
 	if err != nil {
 		t.Fatal(err)
@@ -45,7 +45,7 @@ func TestDataElementBoolValue(t *testing.T) {
 }
 
 func TestDataElementStringValue(t *testing.T) {
-	dataElement := DataElement{Value: "test"}
+	dataElement := Element{Value: "test"}
 	data, err := writeDataElement(dataElement)
 	if err != nil {
 		t.Fatal(err)
@@ -63,7 +63,7 @@ func TestDataElementStringValue(t *testing.T) {
 }
 
 func TestDataElementU8Value(t *testing.T) {
-	dataElement := DataElement{Value: uint8(122)}
+	dataElement := Element{Value: uint8(122)}
 	data, err := writeDataElement(dataElement)
 	if err != nil {
 		t.Fatal(err)
@@ -81,7 +81,7 @@ func TestDataElementU8Value(t *testing.T) {
 }
 
 func TestDataElementU16Value(t *testing.T) {
-	dataElement := DataElement{Value: uint16(34566)}
+	dataElement := Element{Value: uint16(34566)}
 	data, err := writeDataElement(dataElement)
 	if err != nil {
 		t.Fatal(err)
@@ -99,7 +99,7 @@ func TestDataElementU16Value(t *testing.T) {
 }
 
 func TestDataElementU32Value(t *testing.T) {
-	dataElement := DataElement{Value: uint32(6767456)}
+	dataElement := Element{Value: uint32(6767456)}
 	data, err := writeDataElement(dataElement)
 	if err != nil {
 		t.Fatal(err)
@@ -117,7 +117,7 @@ func TestDataElementU32Value(t *testing.T) {
 }
 
 func TestDataElementU64Value(t *testing.T) {
-	dataElement := DataElement{Value: uint64(345765875678)}
+	dataElement := Element{Value: uint64(345765875678)}
 	data, err := writeDataElement(dataElement)
 	if err != nil {
 		t.Fatal(err)
@@ -138,7 +138,7 @@ func TestDataElementU128Value(t *testing.T) {
 	var nbr big.Int
 	nbr.SetString("35467456745674956794567", 10)
 
-	dataElement := DataElement{Value: nbr}
+	dataElement := Element{Value: nbr}
 	data, err := writeDataElement(dataElement)
 	if err != nil {
 		t.Fatal(err)
@@ -164,7 +164,7 @@ func TestDataElementHashValue(t *testing.T) {
 	shaHash := sha256.Sum256([]byte("asd"))
 	copy(hash[:], shaHash[:])
 
-	dataElement := DataElement{Value: hash}
+	dataElement := Element{Value: hash}
 	data, err := writeDataElement(dataElement)
 	if err != nil {
 		t.Fatal(err)
@@ -185,12 +185,12 @@ func TestDataElementHashValue(t *testing.T) {
 }
 
 func TestDataElementArray(t *testing.T) {
-	array := []DataElement{
+	array := []Element{
 		{Value: true},
 		{Value: "test"},
 	}
 
-	dataElement := DataElement{Array: array}
+	dataElement := Element{Array: array}
 
 	data, err := writeDataElement(dataElement)
 	if err != nil {
@@ -211,10 +211,10 @@ func TestDataElementArray(t *testing.T) {
 }
 
 func TestDataElementFields(t *testing.T) {
-	fields := make(map[DataValue]DataElement, 0)
-	fields["hello"] = DataElement{Value: "world"}
+	fields := make(map[Value]Element, 0)
+	fields["hello"] = Element{Value: "world"}
 
-	dataElement := DataElement{Fields: fields}
+	dataElement := Element{Fields: fields}
 
 	data, err := writeDataElement(dataElement)
 	if err != nil {
@@ -236,7 +236,7 @@ func TestDataElementFields(t *testing.T) {
 
 func TestLongStringMaxLimit(t *testing.T) {
 	// max 255 bytes for string
-	_, err := writeDataElement(DataElement{Value: "woenrbowirentboiejwrntbpoijewnrtbpenrptbjnepritjbnperijtnbpijewnrtbpjnerptbnjperkjtbnperkjtnbpsdfgsergwngio453gn45oign345iogjnwosiwejrngwpo34i5ny3[45oyhi3n4p5[hokn3p4o5nhekjrntbpkjewnrtpbkjnwerptkbjnpwkrjntbperkjntbpkwerntpbjkenrptbkjnwpekjnrwkpenrfpbknweprkbjnwperkbjn"})
+	_, err := writeDataElement(Element{Value: "woenrbowirentboiejwrntbpoijewnrtbpenrptbjnepritjbnperijtnbpijewnrtbpjnerptbnjperkjtbnperkjtnbpsdfgsergwngio453gn45oign345iogjnwosiwejrngwpo34i5ny3[45oyhi3n4p5[hokn3p4o5nhekjrntbpkjewnrtpbkjnwerptkbjnpwkrjntbperkjntbpkwerntpbjkenrptbkjnwpekjnrwkpenrfpbknweprkbjnwperkbjn"})
 	if err != nil {
 		t.Log(err)
 		t.Fail()
@@ -252,9 +252,9 @@ func TestToMap(t *testing.T) {
 	var bigNumber big.Int
 	bigNumber.SetString("2093458230498572039452039485702938475", 10)
 
-	dataElement := DataElement{
+	dataElement := Element{
 		Value: bigNumber,
-		Array: []DataElement{
+		Array: []Element{
 			{Value: true},
 			{Value: "test"},
 			{Value: uint8(34)},
@@ -262,12 +262,12 @@ func TestToMap(t *testing.T) {
 			{Value: uint32(3452305469)},
 			{Value: uint64(3452305469567567456)},
 			{
-				Array: []DataElement{
+				Array: []Element{
 					{Value: "sub_array"},
 				},
 			},
 		},
-		Fields: map[DataValue]DataElement{
+		Fields: map[Value]Element{
 			true:                        {Value: false},
 			"hello":                     {Value: "world"},
 			uint8(21):                   {Value: hash},
@@ -276,7 +276,7 @@ func TestToMap(t *testing.T) {
 			uint64(8796789678967899678): {Value: "64"},
 			hash:                        {Value: "test_hash"},
 			"sub_map": {
-				Fields: map[DataValue]DataElement{
+				Fields: map[Value]Element{
 					"test": {Value: "test"},
 				},
 			},

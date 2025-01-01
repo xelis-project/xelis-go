@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+
+	"github.com/xelis-project/xelis-go-sdk/extra_data"
 )
 
 var PrefixAddress string = "xel"
@@ -17,7 +19,7 @@ type Address struct {
 	publicKey    []byte
 	isMainnet    bool
 	isIntegrated bool
-	extraData    *DataElement
+	extraData    *extra_data.Element
 }
 
 func NewAddressFromData(data []byte, hrp string) (addr *Address, err error) {
@@ -35,7 +37,7 @@ func NewAddressFromData(data []byte, hrp string) (addr *Address, err error) {
 	}
 
 	integrated := false
-	var extraData DataElement
+	var extraData extra_data.Element
 
 	switch addrType {
 	case 0:
@@ -43,7 +45,7 @@ func NewAddressFromData(data []byte, hrp string) (addr *Address, err error) {
 	case 1:
 		integrated = true
 
-		dataValueReader := &DataValueReader{Reader: reader}
+		dataValueReader := &extra_data.DataValueReader{Reader: reader}
 		extraData, err = dataValueReader.Read()
 		if err != nil {
 			return
@@ -112,11 +114,11 @@ func (a *Address) GetPublicKey() []byte {
 	return a.publicKey
 }
 
-func (a *Address) GetExtraData() *DataElement {
+func (a *Address) GetExtraData() *extra_data.Element {
 	return a.extraData
 }
 
-func (a *Address) SetExtraData(data *DataElement) {
+func (a *Address) SetExtraData(data *extra_data.Element) {
 	if data != nil {
 		a.isIntegrated = true
 		a.extraData = data
@@ -146,7 +148,7 @@ func (a *Address) Format() (addr string, err error) {
 		}
 
 		var extraData bytes.Buffer
-		dataValueWriter := &DataValueWriter{Writer: &extraData}
+		dataValueWriter := &extra_data.DataValueWriter{Writer: &extraData}
 		err = dataValueWriter.Write(*a.extraData)
 		if err != nil {
 			return

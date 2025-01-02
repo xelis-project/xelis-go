@@ -638,7 +638,7 @@ func TestGetContractOutputs(t *testing.T) {
 	daemon, _ := prepareRPC(t)
 
 	result, err := daemon.GetContractOutputs(GetContractOutputsParams{
-		Transaction: "6586a3b4adce222e421f43aecc47aa4e4c91eb9044e79de8860c0b74c6f008cd",
+		Transaction: "3519b8c72356b8ea4af98b01c1c7e607ccf3770b6ef5bad88634d08a4a58e40f",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -691,6 +691,35 @@ func TestGetContractDataAtTopoheight(t *testing.T) {
 		Contract:   "dfed8218ba12cc5e155d3bbbbcff8a2060c2bf0eea0a52e7a33a8a81336b84ab",
 		Key:        nil,
 		Topoheight: &topo,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetContractBalance(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetContractBalance(GetContractBalanceParams{
+		Contract: "dfed8218ba12cc5e155d3bbbbcff8a2060c2bf0eea0a52e7a33a8a81336b84ab",
+		Asset:    config.XELIS_ASSET,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(result)
+}
+
+func TestGetContractBalanceAtTopoheight(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	result, err := daemon.GetContractBalanceAtTopoheight(GetContractBalanceAtTopoheightParams{
+		Contract:   "dfed8218ba12cc5e155d3bbbbcff8a2060c2bf0eea0a52e7a33a8a81336b84ab",
+		Asset:      config.XELIS_ASSET,
+		Topoheight: 0,
 	})
 	if err != nil {
 		t.Fatal(err)

@@ -329,7 +329,9 @@ func TestRPCInvokeSC(t *testing.T) {
 				ConstantDefaultU64(1),
 				ConstantDefault(ConstantValueU64, 2),
 			},
-			Deposits: map[string]ContractDepositBuilder{},
+			Deposits: map[string]ContractDepositBuilder{
+				config.XELIS_ASSET: {Amount: 100, Private: false},
+			},
 		},
 		Broadcast: true,
 	})

@@ -274,6 +274,18 @@ func TestRPCSendExtraData(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("%+v", result)
+
+	first_transfer := (*result.Data.Transfers)[0]
+
+	result2, err := wallet.DecryptExtraData(DecryptExtraDataParams{
+		ExtraData: *first_transfer.ExtraData,
+		Role:      TxSenderRole,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result2)
 }
 
 func TestRPCSendWithFeeBuilder(t *testing.T) {

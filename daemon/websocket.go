@@ -548,9 +548,11 @@ func (w *WebSocket) HasMultisig(params HasMultisigParams) (result bool, err erro
 	return
 }
 
-func (w *WebSocket) GetContractOutputs(params GetContractOutputsParams) (result []interface{}, err error) {
+func (w *WebSocket) GetContractOutputs(params GetContractOutputsParams) (result []ContractOutput, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetContractOutputs, params)
-	err = rpc.JsonFormatResponse(res, err, &result)
+	var outputs []interface{}
+	err = rpc.JsonFormatResponse(res, err, &outputs)
+	result = parseContractOutputs(outputs)
 	return
 }
 

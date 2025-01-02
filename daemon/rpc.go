@@ -319,8 +319,10 @@ func (d *RPC) HasMultisig(params HasMultisigParams) (result bool, err error) {
 	return
 }
 
-func (d *RPC) GetContractOutputs(params GetContractOutputsParams) (result []interface{}, err error) {
-	err = d.Client.CallResult(d.ctx, methods.GetContractOutputs, params, &result)
+func (d *RPC) GetContractOutputs(params GetContractOutputsParams) (result []ContractOutput, err error) {
+	var outputs []interface{}
+	err = d.Client.CallResult(d.ctx, methods.GetContractOutputs, params, &outputs)
+	result = parseContractOutputs(outputs)
 	return
 }
 
@@ -361,5 +363,68 @@ func (d *RPC) MakeIntegratedAddress(params MakeIntegratedAddressParams) (result 
 
 func (d *RPC) DecryptExtraData(params DecryptExtraDataParams) (result interface{}, err error) {
 	err = d.Client.CallResult(d.ctx, methods.DecryptExtraData, params, &result)
+	return
+}
+
+func parseContractOutputs(outputs []interface{}) (result []ContractOutput) {
+	for _, output := range outputs {
+		outs := output.(map[string]interface{})
+		for key, value := range outs {
+			switch key {
+			case "exit_code":
+				exit_code, ok := value.(float64)
+				if !ok {
+					break
+				}
+
+				result = append(result, ContractOutputExitCode{
+					ExitCode: uint64(exit_code),
+				})
+			case "refund_gas":
+				refund_gas, ok := value.(map[string]interface{})
+				if !ok {
+					break
+				}
+
+				amount, ok := refund_gas["amount"].(float64)
+				if !ok {
+					break
+				}
+
+				result = append(result, ContractOutputRefundGas{
+					Amount: uint64(amount),
+				})
+			case "transfer":
+				transfer, ok := value.(map[string]interface{})
+				if !ok {
+					break
+				}
+
+				amount, ok := transfer["amount"].(float64)
+				if !ok {
+					break
+				}
+
+				asset, ok := transfer["asset"].(string)
+				if !ok {
+					break
+				}
+
+				destination, ok := transfer["destination"].(string)
+				if !ok {
+					break
+				}
+
+				result = append(result, ContractOutputTransfer{
+					Amount:      uint64(amount),
+					Asset:       asset,
+					Destination: destination,
+				})
+			case "refund_deposits":
+				// TODO
+			}
+		}
+	}
+
 	return
 }

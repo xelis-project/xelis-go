@@ -638,10 +638,19 @@ func TestGetContractOutputs(t *testing.T) {
 	daemon, _ := prepareRPC(t)
 
 	result, err := daemon.GetContractOutputs(GetContractOutputsParams{
-		Transaction: "",
+		Transaction: "6586a3b4adce222e421f43aecc47aa4e4c91eb9044e79de8860c0b74c6f008cd",
 	})
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	for _, output := range result {
+		switch out := output.(type) {
+		case ContractOutputExitCode:
+			t.Log("Exit code", out.ExitCode)
+		case ContractOutputRefundGas:
+			t.Log("Refund gas", out.Amount)
+		}
 	}
 
 	t.Log(result)
@@ -651,7 +660,7 @@ func TestGetContractModule(t *testing.T) {
 	daemon, _ := prepareRPC(t)
 
 	result, err := daemon.GetContractModule(GetContractModuleParams{
-		Contract: "",
+		Contract: "dfed8218ba12cc5e155d3bbbbcff8a2060c2bf0eea0a52e7a33a8a81336b84ab",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -664,7 +673,7 @@ func TestGetContractData(t *testing.T) {
 	daemon, _ := prepareRPC(t)
 
 	result, err := daemon.GetContractData(GetContractDataParams{
-		Contract: "",
+		Contract: "dfed8218ba12cc5e155d3bbbbcff8a2060c2bf0eea0a52e7a33a8a81336b84ab",
 		Key:      nil,
 	})
 	if err != nil {
@@ -679,7 +688,7 @@ func TestGetContractDataAtTopoheight(t *testing.T) {
 
 	topo := uint64(0)
 	result, err := daemon.GetContractDataAtTopoheight(GetContractDataAtTopoheightParams{
-		Contract:   "",
+		Contract:   "dfed8218ba12cc5e155d3bbbbcff8a2060c2bf0eea0a52e7a33a8a81336b84ab",
 		Key:        nil,
 		Topoheight: &topo,
 	})

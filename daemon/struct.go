@@ -441,16 +441,20 @@ type GetContractBalanceAtTopoheightParams struct {
 }
 
 type ContractOutputRefundGas struct {
-	Amount uint64 `json:"amount"`
+	Amount uint64
 }
 
 type ContractOutputTransfer struct {
-	Amount      uint64 `json:"amount"`
-	Asset       string `json:"asset"`
-	Destination string `json:"destination"`
+	Amount      uint64
+	Asset       string
+	Destination string
 }
 
-type ContractOutputExitCode uint64
+type ContractOutputExitCode struct {
+	ExitCode uint64
+}
+
+type ContractOutput interface{}
 
 type GetContractModuleResult struct {
 	PreviousTopoheight *uint64      `json:"previous_topoheight"`

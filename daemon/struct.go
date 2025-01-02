@@ -203,6 +203,7 @@ type GetInfoResult struct {
 	MaximumSupply     uint64 `json:"maximum_supply"`
 	Difficulty        string `json:"difficulty"`
 	BlockTimeTarget   uint64 `json:"block_time_target"`
+	AverageBlockTime  uint64 `json:"average_block_time"`
 	BlockReward       uint64 `json:"block_reward"`
 	DevReward         uint64 `json:"dev_reward"`
 	MinerReward       uint64 `json:"miner_reward"`

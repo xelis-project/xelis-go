@@ -2,6 +2,8 @@ package wallet
 
 import "github.com/xelis-project/xelis-go-sdk/daemon"
 
+// use []uint instead of []byte or []uint8 to avoid json.Marshal base64 encoding on params
+
 type GetAddressParams struct {
 	IntegratedData *interface{} `json:"integrated_data,omitempty"`
 }
@@ -38,7 +40,7 @@ type TransferIn struct {
 }
 
 type PlaintextExtraData struct {
-	SharedKey *[]byte      `json:"shared_key"`
+	SharedKey *[]uint      `json:"shared_key"`
 	Data      *interface{} `json:"data"`
 }
 
@@ -86,7 +88,7 @@ type InvokeContractBuilder struct {
 
 type SignerId struct {
 	Id         uint8  `json:"id"`
-	PrivateKey []byte `json:"private_key"`
+	PrivateKey []uint `json:"private_key"`
 }
 
 type BuildTransactionParams struct {
@@ -104,14 +106,14 @@ type BuildTransactionParams struct {
 }
 
 // !!! not the same as daemon.Transfer
-// the destination is []byte and the other it's string
+// the destination is []uint8 and the other it's string
 type Transfer struct {
 	Asset           string       `json:"asset"`
-	ExtraData       *[]byte      `json:"extra_data"`
-	Destination     []byte       `json:"destination"`
-	Commitment      []byte       `json:"commitment"`
-	SenderHandle    []byte       `json:"sender_handle"`
-	ReceiverHandle  []byte       `json:"receiver_handle"`
+	ExtraData       *[]uint      `json:"extra_data"`
+	Destination     []uint       `json:"destination"`
+	Commitment      []uint       `json:"commitment"`
+	SenderHandle    []uint       `json:"sender_handle"`
+	ReceiverHandle  []uint       `json:"receiver_handle"`
 	CTValidityProof daemon.Proof `json:"ct_validity_proof"`
 }
 
@@ -125,7 +127,7 @@ type InvokeContractPayload struct {
 	Deposits   map[string]ContractDeposit `json:"deposits"`
 	ChunkId    uint16                     `json:"chunk_id"`
 	MaxGas     uint64                     `json:"max_gas"`
-	Parameters [][]byte                   `json:"parameters"`
+	Parameters []uint                     `json:"parameters"`
 }
 
 type TransactionData struct {
@@ -141,10 +143,10 @@ type TransactionResponse struct {
 	Fee               uint64                    `json:"fee"`
 	Hash              string                    `json:"hash"`
 	Nonce             uint64                    `json:"nonce"`
-	RangeProof        []byte                    `json:"range_proof"`
+	RangeProof        []uint                    `json:"range_proof"`
 	Reference         daemon.Reference          `json:"reference"`
 	Signature         string                    `json:"signature"`
-	Source            []byte                    `json:"source"`
+	Source            []uint                    `json:"source"`
 	SourceCommitments []daemon.SourceCommitment `json:"source_commitments"`
 	TxAsHex           string                    `json:"tx_as_hex"`
 	Version           uint64                    `json:"version"`
@@ -227,13 +229,13 @@ type InnerProductProof struct {
 }
 
 type RangeProof struct {
-	A            []byte            `json:"A"`
-	S            []byte            `json:"S"`
-	T_1          []byte            `json:"T_1"`
-	T_2          []byte            `json:"T_2"`
-	T_X          []byte            `json:"t_x"`
-	T_X_Blinding []byte            `json:"t_x_blinding"`
-	E_Blinding   []byte            `json:"e_blinding"`
+	A            []uint            `json:"A"`
+	S            []uint            `json:"S"`
+	T_1          []uint            `json:"T_1"`
+	T_2          []uint            `json:"T_2"`
+	T_X          []uint            `json:"t_x"`
+	T_X_Blinding []uint            `json:"t_x_blinding"`
+	E_Blinding   []uint            `json:"e_blinding"`
 	IppProof     InnerProductProof `json:"ipp_proof"`
 }
 
@@ -317,7 +319,7 @@ const (
 )
 
 type DecryptExtraDataParams struct {
-	ExtraData []byte `json:"extra_data"`
+	ExtraData []uint `json:"extra_data"`
 	Role      TxRole `json:"role"`
 }
 

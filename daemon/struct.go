@@ -38,8 +38,8 @@ var (
 )
 
 type EncryptedBalance struct {
-	Commitment []byte `json:"commitment"`
-	Handle     []byte `json:"handle"`
+	Commitment []uint `json:"commitment"`
+	Handle     []uint `json:"handle"`
 }
 
 type VersionedBalance struct {
@@ -122,11 +122,11 @@ type Block struct {
 
 type Transfer struct {
 	Asset           string  `json:"asset"`
-	ExtraData       *[]byte `json:"extra_data"`
+	ExtraData       *[]uint `json:"extra_data"`
 	Destination     string  `json:"destination"`
-	Commitment      []byte  `json:"commitment"`
-	SenderHandle    []byte  `json:"sender_handle"`
-	ReceiverHandle  []byte  `json:"receiver_handle"`
+	Commitment      []uint  `json:"commitment"`
+	SenderHandle    []uint  `json:"sender_handle"`
+	ReceiverHandle  []uint  `json:"receiver_handle"`
 	CTValidityProof Proof   `json:"ct_validity_proof"`
 }
 
@@ -152,23 +152,23 @@ type Reference struct {
 }
 
 type Proof struct {
-	Y_0 []byte `json:"Y_0"`
-	Y_1 []byte `json:"Y_1"`
-	Z_R []byte `json:"z_r"`
-	Z_X []byte `json:"z_x"`
+	Y_0 []uint `json:"Y_0"`
+	Y_1 []uint `json:"Y_1"`
+	Z_R []uint `json:"z_r"`
+	Z_X []uint `json:"z_x"`
 }
 
 type EqProof struct {
-	Y_0 []byte `json:"Y_0"`
-	Y_1 []byte `json:"Y_1"`
-	Y_2 []byte `json:"Y_2"`
-	Z_R []byte `json:"z_r"`
-	Z_S []byte `json:"z_s"`
-	Z_X []byte `json:"z_x"`
+	Y_0 []uint `json:"Y_0"`
+	Y_1 []uint `json:"Y_1"`
+	Y_2 []uint `json:"Y_2"`
+	Z_R []uint `json:"z_r"`
+	Z_S []uint `json:"z_s"`
+	Z_X []uint `json:"z_x"`
 }
 
 type SourceCommitment struct {
-	Commitment []byte  `json:"commitment"`
+	Commitment []uint  `json:"commitment"`
 	Proof      EqProof `json:"proof"`
 	Asset      string  `json:"asset"`
 }
@@ -182,7 +182,7 @@ type Transaction struct {
 	Source            string             `json:"source"`
 	Reference         Reference          `json:"reference"`
 	SourceCommitments []SourceCommitment `json:"source_commitments"`
-	RangeProof        []byte             `json:"range_proof"`
+	RangeProof        []uint             `json:"range_proof"`
 	Signature         string             `json:"signature"`
 	ExecutedInBlock   *string            `json:"executed_in_block"`
 	Version           uint64             `json:"version"`
@@ -460,7 +460,7 @@ type ContractOutputRefundDeposits struct{}
 type ContractOutput interface{}
 
 type Chunk struct {
-	Instructions []byte `json:"instructions"`
+	Instructions []uint `json:"instructions"`
 }
 
 type Module struct {
@@ -501,6 +501,6 @@ type MakeIntegratedAddressParams struct {
 }
 
 type DecryptExtraDataParams struct {
-	SharedKey []byte `json:"shared_key"`
-	ExtraData []byte `json:"extra_data"`
+	SharedKey []uint `json:"shared_key"`
+	ExtraData []uint `json:"extra_data"`
 }

@@ -341,3 +341,19 @@ func TestRPCInvokeSC(t *testing.T) {
 
 	t.Logf("%+v", result.Hash)
 }
+
+func TestRPCEstimateFees(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	result, err := wallet.EstimateFees(EstimateFeesParams{
+		Transfers: []TransferBuilder{
+			{Amount: 100, Asset: config.XELIS_ASSET, Destination: TESTING_ADDR},
+			{Amount: 200, Asset: config.XELIS_ASSET, Destination: TESTING_ADDR},
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result)
+}

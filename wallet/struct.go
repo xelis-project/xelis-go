@@ -1,8 +1,6 @@
 package wallet
 
-import (
-	"github.com/xelis-project/xelis-go-sdk/daemon"
-)
+import "github.com/xelis-project/xelis-go-sdk/daemon"
 
 type GetAddressParams struct {
 	IntegratedData *interface{} `json:"integrated_data,omitempty"`
@@ -130,20 +128,12 @@ type InvokeContractPayload struct {
 	Parameters [][]byte                   `json:"parameters"`
 }
 
-type Module struct {
-	Constants     []interface{} `json:"constants"`
-	Chunks        []interface{} `json:"chunks"`
-	EntryChunkIds []uint64      `json:"entry_chunk_ids"`
-	Structs       []interface{} `json:"structs"`
-	Enums         []interface{} `json:"enums"`
-}
-
 type TransactionData struct {
 	Transfers      *[]Transfer            `json:"transfers"`
 	Burn           *daemon.Burn           `json:"burn"`
 	MultiSig       *MutliSigPayload       `json:"multi_sig"`
 	InvokeContract *InvokeContractPayload `json:"invoke_contract"`
-	DeployContract *Module                `json:"deploy_contract"`
+	DeployContract *daemon.Module         `json:"deploy_contract"`
 }
 
 type TransactionResponse struct {

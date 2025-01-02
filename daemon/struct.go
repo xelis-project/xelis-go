@@ -456,9 +456,21 @@ type ContractOutputExitCode struct {
 
 type ContractOutput interface{}
 
+type Chunk struct {
+	Instructions []byte `json:"instructions"`
+}
+
+type Module struct {
+	Constants     []interface{} `json:"constants"`
+	Chunks        []Chunk       `json:"chunks"`
+	EntryChunkIds []uint64      `json:"entry_chunk_ids"`
+	Structs       []interface{} `json:"structs"`
+	Enums         []interface{} `json:"enums"`
+}
+
 type GetContractModuleResult struct {
-	PreviousTopoheight *uint64      `json:"previous_topoheight"`
-	Data               *interface{} `json:"data"`
+	PreviousTopoheight *uint64 `json:"previous_topoheight"`
+	Data               *Module `json:"data"`
 }
 
 type GetContractDataResult struct {

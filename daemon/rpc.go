@@ -368,60 +368,65 @@ func (d *RPC) DecryptExtraData(params DecryptExtraDataParams) (result interface{
 
 func parseContractOutputs(outputs []interface{}) (result []ContractOutput) {
 	for _, output := range outputs {
-		outs := output.(map[string]interface{})
-		for key, value := range outs {
-			switch key {
-			case "exit_code":
-				exit_code, ok := value.(float64)
-				if !ok {
-					break
-				}
+		switch out := output.(type) {
+		case map[string]interface{}:
+			for key, value := range out {
+				switch key {
+				case "exit_code":
+					exit_code, ok := value.(float64)
+					if !ok {
+						break
+					}
 
-				result = append(result, ContractOutputExitCode{
-					ExitCode: uint64(exit_code),
-				})
-			case "refund_gas":
-				refund_gas, ok := value.(map[string]interface{})
-				if !ok {
-					break
-				}
+					result = append(result, ContractOutputExitCode{
+						ExitCode: uint64(exit_code),
+					})
+				case "refund_gas":
+					refund_gas, ok := value.(map[string]interface{})
+					if !ok {
+						break
+					}
 
-				amount, ok := refund_gas["amount"].(float64)
-				if !ok {
-					break
-				}
+					amount, ok := refund_gas["amount"].(float64)
+					if !ok {
+						break
+					}
 
-				result = append(result, ContractOutputRefundGas{
-					Amount: uint64(amount),
-				})
-			case "transfer":
-				transfer, ok := value.(map[string]interface{})
-				if !ok {
-					break
-				}
+					result = append(result, ContractOutputRefundGas{
+						Amount: uint64(amount),
+					})
+				case "transfer":
+					transfer, ok := value.(map[string]interface{})
+					if !ok {
+						break
+					}
 
-				amount, ok := transfer["amount"].(float64)
-				if !ok {
-					break
-				}
+					amount, ok := transfer["amount"].(float64)
+					if !ok {
+						break
+					}
 
-				asset, ok := transfer["asset"].(string)
-				if !ok {
-					break
-				}
+					asset, ok := transfer["asset"].(string)
+					if !ok {
+						break
+					}
 
-				destination, ok := transfer["destination"].(string)
-				if !ok {
-					break
-				}
+					destination, ok := transfer["destination"].(string)
+					if !ok {
+						break
+					}
 
-				result = append(result, ContractOutputTransfer{
-					Amount:      uint64(amount),
-					Asset:       asset,
-					Destination: destination,
-				})
+					result = append(result, ContractOutputTransfer{
+						Amount:      uint64(amount),
+						Asset:       asset,
+						Destination: destination,
+					})
+				}
+			}
+		case string:
+			switch out {
 			case "refund_deposits":
-				// TODO
+				result = append(result, ContractOutputRefundDeposits{})
 			}
 		}
 	}

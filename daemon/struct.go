@@ -454,6 +454,8 @@ type ContractOutputExitCode struct {
 	ExitCode uint64
 }
 
+type ContractOutputRefundDeposits struct{}
+
 type ContractOutput interface{}
 
 type Chunk struct {

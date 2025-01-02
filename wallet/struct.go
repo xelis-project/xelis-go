@@ -185,8 +185,11 @@ type ListTransactionsParams struct {
 }
 
 type EstimateFeesParams struct {
-	Transfers *[]TransferOut `json:"transfers"`
-	Burn      *daemon.Burn   `json:"burn"`
+	Transfers      []TransferBuilder      `json:"transfers"`
+	Burn           *daemon.Burn           `json:"burn,omitempty"`
+	MultiSig       *MutliSigBuilder       `json:"multi_sig,omitempty"`
+	InvokeContract *InvokeContractBuilder `json:"invoke_contract,omitempty"`
+	DeployContract *string                `json:"deploy_contract,omitempty"`
 }
 
 type BalanceChangedResult struct {

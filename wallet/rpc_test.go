@@ -380,3 +380,14 @@ func TestRPCNetworkInfo(t *testing.T) {
 
 	t.Logf("%+v", result)
 }
+
+func TestRPCClearTxCache(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	result, err := wallet.ClearTxCache()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result)
+}

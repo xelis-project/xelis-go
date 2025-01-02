@@ -34,21 +34,24 @@ type GetAssetPrecisionParams struct {
 }
 
 type TransferIn struct {
-	Amount    uint64       `json:"amount"`
-	Asset     string       `json:"asset"`
-	ExtraData *interface{} `json:"extra_data"`
+	Amount    uint64              `json:"amount"`
+	Asset     string              `json:"asset"`
+	ExtraData *PlaintextExtraData `json:"extra_data"`
 }
 
-/*
-// we use *interface{} instead of DataElement so user can serialize/deserialize how he wants
-type DataElement struct {
-	Value  interface{}     `json:"value,omitempty"`
-	Array  []DataElement   `json:"array,omitempty"`
-	Fields json.RawMessage `json:"fields,omitempty"` // can't do map[interface{}]DataElement json unsupported parsing
+type PlaintextExtraData struct {
+	SharedKey *[]byte      `json:"shared_key"`
+	Data      *interface{} `json:"data"`
 }
-*/
 
 type TransferOut struct {
+	Amount      uint64              `json:"amount"`
+	Asset       string              `json:"asset"`
+	Destination string              `json:"destination"`
+	ExtraData   *PlaintextExtraData `json:"extra_data,omitempty"`
+}
+
+type TransferBuilder struct {
 	Amount      uint64       `json:"amount"`
 	Asset       string       `json:"asset"`
 	Destination string       `json:"destination"`
@@ -79,7 +82,7 @@ type InvokeContractBuilder struct {
 	Contract   string                            `json:"contract"`
 	MaxGas     uint64                            `json:"max_gas"`
 	ChunkId    uint16                            `json:"chunk_id"`
-	Parameters []interface{}                     `json:"parameters"`
+	Parameters []Constant                        `json:"parameters"`
 	Deposits   map[string]ContractDepositBuilder `json:"deposits"`
 }
 
@@ -89,7 +92,7 @@ type SignerId struct {
 }
 
 type BuildTransactionParams struct {
-	Transfers      []TransferOut          `json:"transfers"`
+	Transfers      []TransferBuilder      `json:"transfers"`
 	Burn           *daemon.Burn           `json:"burn,omitempty"`
 	MultiSig       *MutliSigBuilder       `json:"multi_sig,omitempty"`
 	InvokeContract *InvokeContractBuilder `json:"invoke_contract,omitempty"`
@@ -136,7 +139,7 @@ type Module struct {
 }
 
 type TransactionData struct {
-	Transfers      []Transfer             `json:"transfers"`
+	Transfers      *[]Transfer            `json:"transfers"`
 	Burn           *daemon.Burn           `json:"burn"`
 	MultiSig       *MutliSigPayload       `json:"multi_sig"`
 	InvokeContract *InvokeContractPayload `json:"invoke_contract"`

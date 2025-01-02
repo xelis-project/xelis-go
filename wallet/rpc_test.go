@@ -216,8 +216,8 @@ func TestRPCListTransactions(t *testing.T) {
 	txs, err := wallet.ListTransactions(ListTransactionsParams{
 		AcceptOutgoing: true,
 		AcceptIncoming: true,
-		AcceptCoinbase: true,
-		AcceptBurn:     true,
+		AcceptCoinbase: false,
+		AcceptBurn:     false,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -246,7 +246,7 @@ func TestRPCTransfer(t *testing.T) {
 	wallet, _ := prepareRPC(t)
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
-		Transfers: []TransferOut{
+		Transfers: []TransferBuilder{
 			{Amount: 1, Asset: config.XELIS_ASSET, Destination: MAINNET_ADDR},
 		},
 		Broadcast: false,
@@ -264,10 +264,10 @@ func TestRPCSendExtraData(t *testing.T) {
 	var extraData interface{} = map[string]interface{}{"hello": "world"}
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
-		Transfers: []TransferOut{
-			{Amount: 0, Asset: config.XELIS_ASSET, Destination: MAINNET_ADDR, ExtraData: &extraData},
+		Transfers: []TransferBuilder{
+			{Amount: 0, Asset: config.XELIS_ASSET, Destination: TESTING_ADDR, ExtraData: &extraData},
 		},
-		Broadcast: false,
+		Broadcast: true,
 		TxAsHex:   true,
 	})
 	if err != nil {
@@ -285,7 +285,7 @@ func TestRPCSendWithFeeBuilder(t *testing.T) {
 	feeValue := uint64(1)
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
-		Transfers: []TransferOut{
+		Transfers: []TransferBuilder{
 			{Amount: 0, Asset: config.XELIS_ASSET, Destination: MAINNET_ADDR},
 		},
 		Fee: &FeeBuilder{
@@ -304,15 +304,38 @@ func TestRPCSendWithFeeBuilder(t *testing.T) {
 func TestRPCDeploySC(t *testing.T) {
 	wallet, _ := prepareRPC(t)
 
-	hello_world_hex_program := "00000000000200090d48656c6c6f2c20576f726c64210004000000000000000000010000000c00000014540000010001001000010000"
+	hex_program := "00000000000000010000000e0200000201000100000101001a1000010000"
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
-		DeployContract: &hello_world_hex_program,
+		DeployContract: &hex_program,
 		Broadcast:      true,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	t.Logf("%+v", result)
+	t.Logf("%+v", result.Hash)
+}
+
+func TestRPCInvokeSC(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	result, err := wallet.BuildTransaction(BuildTransactionParams{
+		InvokeContract: &InvokeContractBuilder{
+			Contract: "dfed8218ba12cc5e155d3bbbbcff8a2060c2bf0eea0a52e7a33a8a81336b84ab",
+			MaxGas:   50,
+			ChunkId:  0,
+			Parameters: []Constant{
+				ConstantDefaultU64(1),
+				ConstantDefault(ConstantValueU64, 2),
+			},
+			Deposits: map[string]ContractDepositBuilder{},
+		},
+		Broadcast: true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result.Hash)
 }

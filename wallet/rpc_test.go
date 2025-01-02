@@ -267,7 +267,7 @@ func TestRPCSendExtraData(t *testing.T) {
 		Transfers: []TransferBuilder{
 			{Amount: 0, Asset: config.XELIS_ASSET, Destination: TESTING_ADDR, ExtraData: &extraData},
 		},
-		Broadcast: true,
+		Broadcast: false,
 		TxAsHex:   true,
 	})
 	if err != nil {

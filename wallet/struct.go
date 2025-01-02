@@ -40,8 +40,8 @@ type TransferIn struct {
 }
 
 type PlaintextExtraData struct {
-	SharedKey *[]uint      `json:"shared_key"`
-	Data      *interface{} `json:"data"`
+	SharedKey string      `json:"shared_key"`
+	Data      interface{} `json:"data"`
 }
 
 type TransferOut struct {

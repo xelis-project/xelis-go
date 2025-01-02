@@ -208,7 +208,7 @@ func (d *RPC) NetworkInfo() (result NetworkInfoResult, err error) {
 	return
 }
 
-func (d *RPC) DecryptExtraData(params DecryptExtraDataParams) (result interface{}, err error) {
+func (d *RPC) DecryptExtraData(params DecryptExtraDataParams) (result PlaintextExtraData, err error) {
 	err = d.Client.CallResult(d.ctx, methods.DecryptExtraData, params, &result)
 	return
 }

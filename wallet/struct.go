@@ -284,8 +284,25 @@ type EstimateExtraDataSizeResult struct {
 }
 
 type NetworkInfoResult struct {
-	// TODO
-	ConnectedTo string `json:"connected_to"`
+	Height            uint64 `json:"height"`
+	Topoheight        uint64 `json:"topoheight"`
+	Stableheight      uint64 `json:"stableheight"`
+	PrunedTopoheight  uint64 `json:"pruned_topoheight"`
+	TopBlockHash      string `json:"top_block_hash"`
+	CirculatingSupply uint64 `json:"circulating_supply"`
+	BurnedSupply      uint64 `json:"burned_supply"`
+	EmittedSupply     uint64 `json:"emitted_supply"`
+	MaximumSupply     uint64 `json:"maximum_supply"`
+	Difficulty        string `json:"difficulty"`
+	BlockTimeTarget   uint64 `json:"block_time_target"`
+	AverageBlockTime  uint64 `json:"average_block_time"`
+	BlockReward       uint64 `json:"block_reward"`
+	DevReward         uint64 `json:"dev_reward"`
+	MinerReward       uint64 `json:"miner_reward"`
+	MempoolSize       uint64 `json:"mempool_size"`
+	Version           string `json:"version"`
+	Network           string `json:"network"`
+	ConnectedTo       string `json:"connected_to"`
 }
 
 type DecryptCiphertextParams struct {

@@ -357,3 +357,14 @@ func TestRPCEstimateFees(t *testing.T) {
 
 	t.Logf("%+v", result)
 }
+
+func TestRPCNetworkInfo(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	result, err := wallet.NetworkInfo()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result)
+}

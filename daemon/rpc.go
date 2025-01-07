@@ -128,13 +128,13 @@ func (d *RPC) GetBalanceAtTopoheight(params GetBalanceAtTopoheightParams) (balan
 	return
 }
 
-func (d *RPC) GetAsset(assetId string) (asset Asset, err error) {
+func (d *RPC) GetAsset(assetId string) (asset AssetData, err error) {
 	params := map[string]string{"asset": assetId}
 	err = d.Client.CallResult(d.ctx, methods.GetAsset, params, &asset)
 	return
 }
 
-func (d *RPC) GetAssets(params GetAssetsParams) (assets []AssetWithData, err error) {
+func (d *RPC) GetAssets(params GetAssetsParams) (assets []AssetData, err error) {
 	err = d.Client.CallResult(d.ctx, methods.GetAssets, params, &assets)
 	return
 }

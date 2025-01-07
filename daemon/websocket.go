@@ -320,14 +320,14 @@ func (w *WebSocket) GetBalanceAtTopoheight(params GetBalanceAtTopoheightParams) 
 	return
 }
 
-func (w *WebSocket) GetAsset(assetId string) (asset Asset, err error) {
+func (w *WebSocket) GetAsset(assetId string) (asset AssetData, err error) {
 	params := map[string]string{"asset": assetId}
 	res, err := w.WS.Call(w.Prefix+methods.GetAsset, params)
 	err = rpc.JsonFormatResponse(res, err, &asset)
 	return
 }
 
-func (w *WebSocket) GetAssets(params GetAssetsParams) (assets []AssetWithData, err error) {
+func (w *WebSocket) GetAssets(params GetAssetsParams) (assets []AssetData, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetAssets, params)
 	err = rpc.JsonFormatResponse(res, err, &assets)
 	return

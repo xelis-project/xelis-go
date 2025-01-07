@@ -67,12 +67,12 @@ func (w *WebSocket) NewTopoheightFunc(onData func(uint64, error)) error {
 	})
 }
 
-func (w *WebSocket) NewAssetChannel() (chan daemon.AssetWithData, chan error, error) {
-	chanAssetWithData := make(chan daemon.AssetWithData)
+func (w *WebSocket) NewAssetChannel() (chan daemon.AssetData, chan error, error) {
+	chanAssetWithData := make(chan daemon.AssetData)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.NewAsset, func(res rpc.RPCResponse) {
-		var result daemon.AssetWithData
+		var result daemon.AssetData
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
 			chanErr <- err
@@ -84,9 +84,9 @@ func (w *WebSocket) NewAssetChannel() (chan daemon.AssetWithData, chan error, er
 	return chanAssetWithData, chanErr, err
 }
 
-func (w *WebSocket) NewAssetFunc(onData func(daemon.AssetWithData, error)) error {
+func (w *WebSocket) NewAssetFunc(onData func(daemon.AssetData, error)) error {
 	return w.WS.ListenEventFunc(events.NewAsset, func(res rpc.RPCResponse) {
-		var result daemon.AssetWithData
+		var result daemon.AssetData
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
 	})
@@ -294,13 +294,13 @@ func (w *WebSocket) GetAssetPrecision(params GetAssetPrecisionParams) (decimals 
 	return
 }
 
-func (w *WebSocket) GetAssets() (assets []string, err error) {
+func (w *WebSocket) GetAssets() (assets map[string]Asset, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetAssets, nil)
 	err = rpc.JsonFormatResponse(res, err, &assets)
 	return
 }
 
-func (w *WebSocket) GetAsset(params GetAssetPrecisionParams) (asset string, err error) {
+func (w *WebSocket) GetAsset(params GetAssetPrecisionParams) (asset Asset, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetAsset, nil)
 	err = rpc.JsonFormatResponse(res, err, &asset)
 	return

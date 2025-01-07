@@ -441,3 +441,27 @@ func TestRPCDecryptCiphertext(t *testing.T) {
 
 	t.Logf("%+v", result)
 }
+
+func TestRPCGetAsset(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	asset, err := wallet.GetAsset(GetAssetParams{
+		Asset: config.XELIS_ASSET,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", asset)
+}
+
+func TestRPCGetAssets(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	assets, err := wallet.GetAssets()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", assets)
+}

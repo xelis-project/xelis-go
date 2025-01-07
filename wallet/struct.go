@@ -368,3 +368,11 @@ type QueryResult struct {
 	Entries map[interface{}]interface{} `json:"entries"`
 	Next    *uint64                     `json:"next"`
 }
+
+type Asset struct {
+	Decimals  int     `json:"decimals"`
+	Name      string  `json:"name"`
+	MaxSupply *uint64 `json:"max_supply"`
+}
+
+type GetAssetParams = GetAssetPrecisionParams

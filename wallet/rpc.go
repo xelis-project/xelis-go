@@ -119,12 +119,12 @@ func (d *RPC) GetAssetPrecision(params GetAssetPrecisionParams) (decimals int, e
 	return
 }
 
-func (d *RPC) GetAssets() (assets []string, err error) {
+func (d *RPC) GetAssets() (assets map[string]Asset, err error) {
 	err = d.Client.CallResult(d.ctx, methods.GetAssets, nil, &assets)
 	return
 }
 
-func (d *RPC) GetAsset(params GetAssetPrecisionParams) (asset string, err error) {
+func (d *RPC) GetAsset(params GetAssetParams) (asset Asset, err error) {
 	err = d.Client.CallResult(d.ctx, methods.GetAsset, params, &asset)
 	return
 }

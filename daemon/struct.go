@@ -265,15 +265,13 @@ type IncomingHistory struct {
 	From string `json:"from"`
 }
 
-type Asset struct {
-	Topoheight uint64 `json:"topoheight"`
-	Decimals   int    `json:"decimals"`
-}
-
-type AssetWithData struct {
-	Asset      string `json:"asset"`
-	Topoheight uint64 `json:"topoheight"`
-	Decimals   int    `json:"decimals"`
+type AssetData struct {
+	Asset      string  `json:"asset"`
+	Topoheight uint64  `json:"topoheight"`
+	Decimals   int     `json:"decimals"`
+	Name       string  `json:"name"`
+	MaxSupply  *uint64 `json:"max_supply"`
+	Contract   *string `json:"contract"`
 }
 
 type Fee struct {

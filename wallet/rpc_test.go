@@ -391,3 +391,23 @@ func TestRPCClearTxCache(t *testing.T) {
 
 	t.Logf("%+v", result)
 }
+
+func TestRPCEstimateExtraDataSize(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	var integratedData interface{} = map[string]interface{}{"hello": "world"}
+
+	addr, err := wallet.GetAddress(GetAddressParams{IntegratedData: &integratedData})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	result, err := wallet.EstimateExtraDataSize(EstimateExtraDataSizeParams{
+		Destinations: []string{addr},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result)
+}

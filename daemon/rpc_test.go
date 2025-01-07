@@ -59,6 +59,16 @@ func TestGetStableHeight(t *testing.T) {
 	t.Logf("%+v", stableheight)
 }
 
+func TestGetStableTopoheight(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	stabletopoheight, err := daemon.GetStableTopoheight()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", stabletopoheight)
+}
+
 func TestGetBlockTemplate(t *testing.T) {
 	daemon, _ := prepareRPC(t)
 
@@ -167,7 +177,16 @@ func TestCountTransactions(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("%+v", countTransactions)
+}
 
+func TestCountContracts(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	countContracts, err := daemon.CountContracts()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", countContracts)
 }
 
 func TestP2PStatus(t *testing.T) {

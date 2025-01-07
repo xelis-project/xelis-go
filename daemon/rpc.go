@@ -361,7 +361,7 @@ func (d *RPC) CountContracts() (result uint64, err error) {
 	return
 }
 
-func (d *RPC) MakeIntegratedAddress(params MakeIntegratedAddressParams) (result uint64, err error) {
+func (d *RPC) MakeIntegratedAddress(params MakeIntegratedAddressParams) (result string, err error) {
 	err = d.Client.CallResult(d.ctx, methods.MakeIntegratedAddress, params, &result)
 	return
 }

@@ -598,7 +598,7 @@ func (w *WebSocket) CountContracts() (result uint64, err error) {
 	return
 }
 
-func (w *WebSocket) MakeIntegratedAddress(params MakeIntegratedAddressParams) (result interface{}, err error) {
+func (w *WebSocket) MakeIntegratedAddress(params MakeIntegratedAddressParams) (result string, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.MakeIntegratedAddress, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return

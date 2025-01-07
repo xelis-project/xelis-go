@@ -323,6 +323,21 @@ func TestValidateAddress(t *testing.T) {
 	t.Logf("%+v", hexPublicKey)
 }
 
+func TestMakeIntegratedAddress(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	var integratedData interface{} = map[string]interface{}{"hello": "world"}
+
+	addr, err := daemon.MakeIntegratedAddress(MakeIntegratedAddressParams{
+		Address:        WALLET_ADDR,
+		IntegratedData: integratedData,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", addr)
+}
+
 func TestRPCUnknownMethod(t *testing.T) {
 	daemon, ctx := prepareRPC(t)
 	res, err := daemon.Client.Call(ctx, "UnknownMethod", nil)

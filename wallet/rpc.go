@@ -214,7 +214,7 @@ func (d *RPC) DecryptExtraData(params DecryptExtraDataParams) (result PlaintextE
 }
 
 func (d *RPC) DecryptCiphertext(params DecryptCiphertextParams) (result uint64, err error) {
-	err = d.Client.CallResult(d.ctx, methods.DecryptCiphertext, nil, &result)
+	err = d.Client.CallResult(d.ctx, methods.DecryptCiphertext, params, &result)
 	return
 }
 

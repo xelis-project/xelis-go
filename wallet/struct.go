@@ -301,8 +301,13 @@ type NetworkInfoResult struct {
 	ConnectedTo       string `json:"connected_to"`
 }
 
+type CompressedCiphertext struct {
+	Commitment []uint `json:"commitment"`
+	Handle     []uint `json:"handle"`
+}
+
 type DecryptCiphertextParams struct {
-	Ciphertext string `json:"ciphertext"`
+	Ciphertext CompressedCiphertext `json:"ciphertext"`
 }
 
 type TxRole string

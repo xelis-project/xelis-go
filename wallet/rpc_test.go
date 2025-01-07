@@ -411,3 +411,33 @@ func TestRPCEstimateExtraDataSize(t *testing.T) {
 
 	t.Logf("%+v", result)
 }
+
+func TestRPCDecryptCiphertext(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	tx, err := wallet.BuildTransaction(BuildTransactionParams{
+		Transfers: []TransferBuilder{
+			{Amount: 123, Asset: config.XELIS_ASSET, Destination: "xet:5e8entraya4v3264rdyrd33dhtj5f89mxt95s423ndyc66sr742sqaagsnv"},
+		},
+		Broadcast: false,
+		TxAsHex:   true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t1 := (*tx.Data.Transfers)[0]
+	t.Log(t1)
+
+	result, err := wallet.DecryptCiphertext(DecryptCiphertextParams{
+		Ciphertext: CompressedCiphertext{
+			Commitment: t1.Commitment,
+			Handle:     t1.SenderHandle,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result)
+}

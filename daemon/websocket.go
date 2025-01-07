@@ -388,6 +388,12 @@ func (w *WebSocket) GetMempool() (txs []Transaction, err error) {
 	return
 }
 
+func (w *WebSocket) GetMempoolCache(params GetMempoolCacheParams) (result GetMempoolCacheResult, err error) {
+	res, err := w.WS.Call(w.Prefix+methods.GetMempool, params)
+	err = rpc.JsonFormatResponse(res, err, &result)
+	return
+}
+
 func (w *WebSocket) GetTransaction(hash string) (tx Transaction, err error) {
 	params := map[string]string{"hash": hash}
 	res, err := w.WS.Call(w.Prefix+methods.GetTransaction, params)

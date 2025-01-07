@@ -185,6 +185,11 @@ func (d *RPC) GetMempool() (txs []Transaction, err error) {
 	return
 }
 
+func (d *RPC) GetMempoolCache(params GetMempoolCacheParams) (result GetMempoolCacheResult, err error) {
+	err = d.Client.CallResult(d.ctx, methods.GetMempoolCache, params, &result)
+	return
+}
+
 func (d *RPC) GetTransaction(hash string) (tx Transaction, err error) {
 	params := map[string]string{"hash": hash}
 	err = d.Client.CallResult(d.ctx, methods.GetTransaction, params, &tx)

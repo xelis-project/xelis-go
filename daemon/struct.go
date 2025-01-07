@@ -504,3 +504,14 @@ type DecryptExtraDataParams struct {
 	SharedKey []uint `json:"shared_key"`
 	ExtraData []uint `json:"extra_data"`
 }
+
+type GetMempoolCacheParams struct {
+	Address string `json:"address"`
+}
+
+type GetMempoolCacheResult struct {
+	Min      uint64                 `json:"min"`
+	Max      uint64                 `json:"max"`
+	Txs      []string               `json:"txs"`
+	Balances map[string]interface{} `json:"balances"`
+}

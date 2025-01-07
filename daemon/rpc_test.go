@@ -220,6 +220,18 @@ func TestGetMempool(t *testing.T) {
 	t.Logf("%+v", mempool)
 }
 
+func TestGetMempoolCache(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	cache, err := daemon.GetMempoolCache(GetMempoolCacheParams{
+		Address: WALLET_ADDR,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", cache)
+}
+
 func TestGetTips(t *testing.T) {
 	daemon, _ := prepareRPC(t)
 

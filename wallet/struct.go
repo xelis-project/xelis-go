@@ -271,14 +271,8 @@ type FinalizeUnsignedTransactionParams struct {
 	TxAsHex    bool          `json:"tx_as_hex"`
 }
 
-type Address struct {
-	Mainnet  string      `json:"mainnet"`
-	AddrType interface{} `json:"addr_type"`
-	Key      string      `json:"key"`
-}
-
 type EstimateExtraDataSizeParams struct {
-	Destinations []Address `json:"destinations"`
+	Destinations []string `json:"destinations"`
 }
 
 type EstimateExtraDataSizeResult struct {

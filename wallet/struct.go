@@ -127,7 +127,7 @@ type InvokeContractPayload struct {
 	Deposits   map[string]ContractDeposit `json:"deposits"`
 	ChunkId    uint16                     `json:"chunk_id"`
 	MaxGas     uint64                     `json:"max_gas"`
-	Parameters []uint                     `json:"parameters"`
+	Parameters [][]uint                   `json:"parameters"`
 }
 
 type TransactionData struct {

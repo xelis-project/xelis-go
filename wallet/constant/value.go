@@ -1,5 +1,7 @@
 package constant
 
+import "math/big"
+
 type ValueType string
 
 const (
@@ -8,6 +10,8 @@ const (
 	ValueTypeU16    ValueType = "u16"
 	ValueTypeU32    ValueType = "u32"
 	ValueTypeU64    ValueType = "u64"
+	ValueTypeU128   ValueType = "u128"
+	ValueTypeU256   ValueType = "u256"
 	ValueTypeString ValueType = "string"
 	ValueTypeBool   ValueType = "boolean"
 	ValueTypeBlob   ValueType = "blob"
@@ -48,6 +52,20 @@ func ValueU64(value uint64) Value {
 	return Value{
 		Type:  ValueTypeU64,
 		Value: value,
+	}
+}
+
+func ValueU128(value *big.Int) Value {
+	return Value{
+		Type:  ValueTypeU128,
+		Value: value.String(),
+	}
+}
+
+func ValueU256(value *big.Int) Value {
+	return Value{
+		Type:  ValueTypeU256,
+		Value: value.String(),
 	}
 }
 

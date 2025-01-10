@@ -1,6 +1,9 @@
 package constant
 
-import "reflect"
+import (
+	"math/big"
+	"reflect"
+)
 
 type ConstantType string
 
@@ -45,6 +48,14 @@ func DefaultU32(value uint32) Constant {
 
 func DefaultU64(value uint64) Constant {
 	return Default(ValueU64(value))
+}
+
+func DefaultU128(value *big.Int) Constant {
+	return Default(ValueU128(value))
+}
+
+func DefaultU256(value *big.Int) Constant {
+	return Default(ValueU256(value))
 }
 
 func DefaultString(value string) Constant {

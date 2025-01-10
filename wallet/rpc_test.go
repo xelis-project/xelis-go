@@ -3,6 +3,7 @@ package wallet
 import (
 	"context"
 	"encoding/json"
+	"math/big"
 	"testing"
 
 	"github.com/xelis-project/xelis-go-sdk/config"
@@ -357,11 +358,20 @@ func TestRPCInvokeSC(t *testing.T) {
 }
 
 func TestSCConstantArray(t *testing.T) {
+
+	u128 := new(big.Int)
+	u128.SetString("340282366920938463463374607431768211455", 10)
+
+	u256 := new(big.Int)
+	u256.SetString("115792089237316195423570985008687907853269984665640564039457584007913129659255", 10)
+
 	data, err := json.MarshalIndent(constant.Array([]constant.Constant{
 		constant.DefaultU8(100),
 		constant.DefaultU16(10023),
 		constant.DefaultU32(143255),
 		constant.DefaultU64(23452345),
+		constant.DefaultU128(u128),
+		constant.DefaultU256(u256),
 		constant.DefaultBool(false),
 		constant.DefaultString("asdasd"),
 	}), "", "  ")

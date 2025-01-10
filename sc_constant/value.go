@@ -1,4 +1,4 @@
-package constant
+package sc_constant
 
 import "math/big"
 

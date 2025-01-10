@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/xelis-project/xelis-go-sdk/config"
-	"github.com/xelis-project/xelis-go-sdk/wallet/constant"
+	"github.com/xelis-project/xelis-go-sdk/sc_constant"
 )
 
 const WALLET_ADDR = "xet:62wnkswt0rmrdd9d2lawgpzuh87fkpmp4gx9j3g4u24yrdkdxgksqnuuucf"
@@ -721,7 +721,7 @@ func TestGetContractData(t *testing.T) {
 
 	result, err := daemon.GetContractData(GetContractDataParams{
 		Contract: "a551387026ffc0b7661f1787e15a2b4f420851ec9aaccb2ae3ddaf2c51a62564",
-		Key:      constant.DefaultString("test"),
+		Key:      sc_constant.DefaultString("test"),
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -735,7 +735,7 @@ func TestGetContractDataAtTopoheight(t *testing.T) {
 
 	result, err := daemon.GetContractDataAtTopoheight(GetContractDataAtTopoheightParams{
 		Contract:   "a551387026ffc0b7661f1787e15a2b4f420851ec9aaccb2ae3ddaf2c51a62564",
-		Key:        constant.DefaultString("test"),
+		Key:        sc_constant.DefaultString("test"),
 		Topoheight: uint64(2954),
 	})
 	if err != nil {

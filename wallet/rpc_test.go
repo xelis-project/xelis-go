@@ -8,7 +8,7 @@ import (
 
 	"github.com/xelis-project/xelis-go-sdk/config"
 	"github.com/xelis-project/xelis-go-sdk/daemon"
-	"github.com/xelis-project/xelis-go-sdk/wallet/constant"
+	"github.com/xelis-project/xelis-go-sdk/sc_constant"
 )
 
 const TESTING_ADDR = "xet:qf5u2p46jpgqmypqc2xwtq25yek2t7qhnqtdhw5kpfwcrlavs5asq0r83r7"
@@ -340,9 +340,9 @@ func TestRPCInvokeSC(t *testing.T) {
 			Contract: "a551387026ffc0b7661f1787e15a2b4f420851ec9aaccb2ae3ddaf2c51a62564",
 			MaxGas:   50,
 			ChunkId:  0,
-			Parameters: []constant.Constant{
-				constant.DefaultU64(1),
-				constant.Default(constant.Value{Type: constant.ValueTypeU64, Value: 2}),
+			Parameters: []sc_constant.Constant{
+				sc_constant.DefaultU64(1),
+				sc_constant.Default(sc_constant.Value{Type: sc_constant.ValueTypeU64, Value: 2}),
 			},
 			Deposits: map[string]ContractDepositBuilder{
 				config.XELIS_ASSET: {Amount: 100, Private: false},
@@ -365,15 +365,15 @@ func TestSCConstantArray(t *testing.T) {
 	u256 := new(big.Int)
 	u256.SetString("115792089237316195423570985008687907853269984665640564039457584007913129659255", 10)
 
-	data, err := json.MarshalIndent(constant.Array([]constant.Constant{
-		constant.DefaultU8(100),
-		constant.DefaultU16(10023),
-		constant.DefaultU32(143255),
-		constant.DefaultU64(23452345),
-		constant.DefaultU128(u128),
-		constant.DefaultU256(u256),
-		constant.DefaultBool(false),
-		constant.DefaultString("asdasd"),
+	data, err := json.MarshalIndent(sc_constant.Array([]sc_constant.Constant{
+		sc_constant.DefaultU8(100),
+		sc_constant.DefaultU16(10023),
+		sc_constant.DefaultU32(143255),
+		sc_constant.DefaultU64(23452345),
+		sc_constant.DefaultU128(u128),
+		sc_constant.DefaultU256(u256),
+		sc_constant.DefaultBool(false),
+		sc_constant.DefaultString("asdasd"),
 	}), "", "  ")
 	if err != nil {
 		t.Fatal(err)
@@ -384,9 +384,9 @@ func TestSCConstantArray(t *testing.T) {
 }
 
 func TestSCConstantRange(t *testing.T) {
-	data, err := json.MarshalIndent(constant.ValueRange(
-		constant.ValueU16(100),
-		constant.ValueU16(200),
+	data, err := json.MarshalIndent(sc_constant.ValueRange(
+		sc_constant.ValueU16(100),
+		sc_constant.ValueU16(200),
 	), "", "  ")
 	if err != nil {
 		t.Fatal(err)

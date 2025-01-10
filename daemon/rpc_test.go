@@ -721,7 +721,7 @@ func TestGetContractData(t *testing.T) {
 
 	result, err := daemon.GetContractData(GetContractDataParams{
 		Contract: "a551387026ffc0b7661f1787e15a2b4f420851ec9aaccb2ae3ddaf2c51a62564",
-		Key:      constant.DefaultU16(10),
+		Key:      constant.DefaultString("test"),
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -733,11 +733,10 @@ func TestGetContractData(t *testing.T) {
 func TestGetContractDataAtTopoheight(t *testing.T) {
 	daemon, _ := prepareRPC(t)
 
-	topo := uint64(0)
 	result, err := daemon.GetContractDataAtTopoheight(GetContractDataAtTopoheightParams{
 		Contract:   "a551387026ffc0b7661f1787e15a2b4f420851ec9aaccb2ae3ddaf2c51a62564",
-		Key:        nil,
-		Topoheight: &topo,
+		Key:        constant.DefaultString("test"),
+		Topoheight: uint64(2954),
 	})
 	if err != nil {
 		t.Fatal(err)

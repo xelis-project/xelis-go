@@ -319,7 +319,7 @@ func TestRPCSendWithFeeBuilder(t *testing.T) {
 func TestRPCDeploySC(t *testing.T) {
 	wallet, _ := prepareRPC(t)
 
-	hex_program := "00000000000000010000000e0200000201000100000101001a1000010000"
+	hex_program := "00000000000200090d48656c6c6f2c20576f726c64210004000000000000000000010000001e02000002010000000014550000010100000101001a14550000010001001000010000"
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
 		DeployContract: &hex_program,
@@ -337,7 +337,7 @@ func TestRPCInvokeSC(t *testing.T) {
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
 		InvokeContract: &InvokeContractBuilder{
-			Contract: "dfed8218ba12cc5e155d3bbbbcff8a2060c2bf0eea0a52e7a33a8a81336b84ab",
+			Contract: "a551387026ffc0b7661f1787e15a2b4f420851ec9aaccb2ae3ddaf2c51a62564",
 			MaxGas:   50,
 			ChunkId:  0,
 			Parameters: []constant.Constant{

@@ -1,5 +1,7 @@
 package daemon
 
+import "github.com/xelis-project/xelis-go-sdk/sc_constant"
+
 type GetTopoheightRangeParams struct {
 	StartTopoheight uint64 `json:"start_topoheight"`
 	EndTopoheight   uint64 `json:"end_topoheight"`
@@ -418,14 +420,14 @@ type GetContractModuleParams struct {
 }
 
 type GetContractDataParams struct {
-	Contract string      `json:"contract"`
-	Key      interface{} `json:"key"`
+	Contract string               `json:"contract"`
+	Key      sc_constant.Constant `json:"key"`
 }
 
 type GetContractDataAtTopoheightParams struct {
-	Contract   string      `json:"contract"`
-	Key        interface{} `json:"key"`
-	Topoheight uint64      `json:"topoheight"`
+	Contract   string               `json:"contract"`
+	Key        sc_constant.Constant `json:"key"`
+	Topoheight uint64               `json:"topoheight"`
 }
 
 type GetContractBalanceParams struct {
@@ -462,11 +464,11 @@ type Chunk struct {
 }
 
 type Module struct {
-	Constants     []interface{} `json:"constants"`
-	Chunks        []Chunk       `json:"chunks"`
-	EntryChunkIds []uint64      `json:"entry_chunk_ids"`
-	Structs       []interface{} `json:"structs"`
-	Enums         []interface{} `json:"enums"`
+	Constants     []sc_constant.Constant `json:"constants"`
+	Chunks        []Chunk                `json:"chunks"`
+	EntryChunkIds []uint64               `json:"entry_chunk_ids"`
+	Structs       []interface{}          `json:"structs"`
+	Enums         []interface{}          `json:"enums"`
 }
 
 type GetContractModuleResult struct {

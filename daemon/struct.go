@@ -425,7 +425,7 @@ type GetContractDataParams struct {
 type GetContractDataAtTopoheightParams struct {
 	Contract   string      `json:"contract"`
 	Key        interface{} `json:"key"`
-	Topoheight *uint64     `json:"topoheight,omitempty"`
+	Topoheight uint64      `json:"topoheight"`
 }
 
 type GetContractBalanceParams struct {

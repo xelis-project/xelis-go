@@ -465,3 +465,69 @@ func TestRPCGetAssets(t *testing.T) {
 
 	t.Logf("%+v", assets)
 }
+
+func TestRPCWalletDBKeyStore(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	tree := "my_app"
+
+	result, err := wallet.Store(StoreParams{
+		Tree:  tree,
+		Key:   "test",
+		Value: 100,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result)
+
+	result2, err := wallet.HasKey(HasKeyParams{
+		Tree: tree,
+		Key:  "test",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result2)
+
+	result3, err := wallet.GetValueFromKey(GetValueFromKeyParams{
+		Tree: tree,
+		Key:  "test",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result3)
+
+	result4, err := wallet.CountMatchingEntries(CountMatchingEntriesParams{
+		Tree: tree,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result4)
+
+	result5, err := wallet.Delete(StoreParams{
+		Tree: tree,
+		Key:  "test",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result5)
+
+	result6, err := wallet.DeleteTreeEntries(DeleteTreeEntriesParams{
+		Tree: tree,
+	})
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result6)
+}

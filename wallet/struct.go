@@ -1,6 +1,9 @@
 package wallet
 
-import "github.com/xelis-project/xelis-go-sdk/daemon"
+import (
+	"github.com/xelis-project/xelis-go-sdk/daemon"
+	"github.com/xelis-project/xelis-go-sdk/wallet/constant"
+)
 
 // use []uint instead of []byte or []uint8 to avoid json.Marshal base64 encoding on params
 
@@ -82,7 +85,7 @@ type InvokeContractBuilder struct {
 	Contract   string                            `json:"contract"`
 	MaxGas     uint64                            `json:"max_gas"`
 	ChunkId    uint16                            `json:"chunk_id"`
-	Parameters []Constant                        `json:"parameters"`
+	Parameters []constant.Constant               `json:"parameters"`
 	Deposits   map[string]ContractDepositBuilder `json:"deposits"`
 }
 

@@ -2,10 +2,12 @@ package wallet
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 
 	"github.com/xelis-project/xelis-go-sdk/config"
 	"github.com/xelis-project/xelis-go-sdk/daemon"
+	"github.com/xelis-project/xelis-go-sdk/wallet/constant"
 )
 
 const TESTING_ADDR = "xet:qf5u2p46jpgqmypqc2xwtq25yek2t7qhnqtdhw5kpfwcrlavs5asq0r83r7"
@@ -337,9 +339,9 @@ func TestRPCInvokeSC(t *testing.T) {
 			Contract: "dfed8218ba12cc5e155d3bbbbcff8a2060c2bf0eea0a52e7a33a8a81336b84ab",
 			MaxGas:   50,
 			ChunkId:  0,
-			Parameters: []Constant{
-				ConstantDefaultU64(1),
-				ConstantDefault(ConstantValueU64, 2),
+			Parameters: []constant.Constant{
+				constant.DefaultU64(1),
+				constant.Default(constant.Value{Type: constant.ValueTypeU64, Value: 2}),
 			},
 			Deposits: map[string]ContractDepositBuilder{
 				config.XELIS_ASSET: {Amount: 100, Private: false},
@@ -352,6 +354,36 @@ func TestRPCInvokeSC(t *testing.T) {
 	}
 
 	t.Logf("%+v", result.Hash)
+}
+
+func TestSCConstantArray(t *testing.T) {
+	data, err := json.MarshalIndent(constant.Array([]constant.Constant{
+		constant.DefaultU8(100),
+		constant.DefaultU16(10023),
+		constant.DefaultU32(143255),
+		constant.DefaultU64(23452345),
+		constant.DefaultBool(false),
+		constant.DefaultString("asdasd"),
+	}), "", "  ")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	json := string(data)
+	t.Logf(json)
+}
+
+func TestSCConstantRange(t *testing.T) {
+	data, err := json.MarshalIndent(constant.ValueRange(
+		constant.ValueU16(100),
+		constant.ValueU16(200),
+	), "", "  ")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	json := string(data)
+	t.Logf(json)
 }
 
 func TestRPCEstimateFees(t *testing.T) {

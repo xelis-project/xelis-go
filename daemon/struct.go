@@ -513,3 +513,14 @@ type GetMempoolCacheResult struct {
 	Txs      []string               `json:"txs"`
 	Balances map[string]interface{} `json:"balances"`
 }
+
+type GetContractBalanceResult struct {
+	Topoheight         uint64  `json:"topoheight"`
+	Amount             uint64  `json:"data"`
+	PreviousTopoheight *uint64 `json:"previous_topoheight"`
+}
+
+type GetContractBalanceAtTopoheightResult struct {
+	Amount             uint64  `json:"data"`
+	PreviousTopoheight *uint64 `json:"previous_topoheight"`
+}

@@ -346,12 +346,12 @@ func (d *RPC) GetContractDataAtTopoheight(params GetContractDataAtTopoheightPara
 	return
 }
 
-func (d *RPC) GetContractBalance(params GetContractBalanceParams) (result interface{}, err error) {
+func (d *RPC) GetContractBalance(params GetContractBalanceParams) (result GetContractBalanceResult, err error) {
 	err = d.Client.CallResult(d.ctx, methods.GetContractBalance, params, &result)
 	return
 }
 
-func (d *RPC) GetContractBalanceAtTopoheight(params GetContractBalanceAtTopoheightParams) (result interface{}, err error) {
+func (d *RPC) GetContractBalanceAtTopoheight(params GetContractBalanceAtTopoheightParams) (result GetContractBalanceAtTopoheightResult, err error) {
 	err = d.Client.CallResult(d.ctx, methods.GetContractBalanceAtTopoheight, params, &result)
 	return
 }

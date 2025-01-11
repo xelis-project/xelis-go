@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"math/big"
+	"reflect"
 	"testing"
 )
 
@@ -179,6 +180,30 @@ func TestDataElementHashValue(t *testing.T) {
 	v2 := dataElementCopy.Value.(Hash)
 
 	if !bytes.Equal(v1[:], v2[:]) {
+		t.Fail()
+		t.Logf("Expected %s, got %s", dataElement.Value, dataElementCopy.Value)
+	}
+}
+
+func TestDataElementBlobValue(t *testing.T) {
+	var arr Blob
+	arr = append(arr, 0, 1, 2, 3, 4, 5)
+
+	dataElement := Element{Value: arr}
+	data, err := writeDataElement(dataElement)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dataElementCopy, err := readDataElement(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	v1 := dataElement.Value.(Blob)
+	v2 := dataElementCopy.Value.(Blob)
+
+	if !reflect.DeepEqual(v1, v2) {
 		t.Fail()
 		t.Logf("Expected %s, got %s", dataElement.Value, dataElementCopy.Value)
 	}

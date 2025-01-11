@@ -181,6 +181,22 @@ func (d *ValueReader) readU128() (value big.Int, err error) {
 	return
 }
 
+func (d *ValueReader) readBlob() (value Blob, err error) {
+	data, err := d.readBytes(4)
+	if err != nil {
+		return
+	}
+
+	size := binary.BigEndian.Uint32(data)
+
+	value, err = d.readBytes(int(size))
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 func (d *ValueReader) readHash() (value Hash, err error) {
 	data, err := d.readBytes(32)
 	if err != nil {
@@ -214,6 +230,8 @@ func (d *ValueReader) readValue() (value Value, err error) {
 		value, err = d.readU128()
 	case HashType:
 		value, err = d.readHash()
+	case BlobType:
+		value, err = d.readBlob()
 	}
 
 	return

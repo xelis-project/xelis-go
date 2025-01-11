@@ -13,7 +13,10 @@ func ErrUnsupportedValue(value Value) error {
 	return fmt.Errorf("unsupported value type %v", value)
 }
 
+var MaxStringSize = 255
 var ErrMaxStringSize = errors.New("string max limit is 255 bytes")
+var MaxBlobSize = 65535
+var ErrMaxBlobSize = errors.New("blob max size is 65535 bytes")
 
 type ValueWriter struct {
 	Writer io.Writer
@@ -90,6 +93,27 @@ func (d *ValueWriter) writeByte(value byte) (err error) {
 	return
 }
 
+func (d *ValueWriter) writeBlob(value Blob) (err error) {
+	size := uint32(len(value))
+	if size > 65535 {
+		err = ErrMaxBlobSize
+		return
+	}
+
+	err = binary.Write(d.Writer, binary.BigEndian, size)
+	if err != nil {
+		return
+	}
+
+	// blob is an array of bytes so simple write it :)
+	_, err = d.Writer.Write(value)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 func (d *ValueWriter) writeBool(value bool) (err error) {
 	data := make([]byte, 1)
 
@@ -110,7 +134,7 @@ func (d *ValueWriter) writeBool(value bool) (err error) {
 func (d *ValueWriter) writeString(value string) (err error) {
 	buf := bytes.NewBufferString(value)
 
-	if buf.Len() > 255 {
+	if buf.Len() > MaxStringSize {
 		err = ErrMaxStringSize
 		return
 	}
@@ -213,6 +237,13 @@ func (d *ValueWriter) writeValue(value Value) (err error) {
 		}
 
 		_, err = d.Writer.Write(value[:])
+	case Blob:
+		err = d.writeByte(byte(BlobType))
+		if err != nil {
+			return
+		}
+
+		err = d.writeBlob(value)
 	default:
 		err = ErrUnsupportedValue(value)
 		return

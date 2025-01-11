@@ -10,8 +10,10 @@ var U32Type ValueType = 4
 var U64Type ValueType = 5
 var U128Type ValueType = 6
 var HashType ValueType = 7
+var BlobType ValueType = 8
 
 type Hash [32]byte
+type Blob []uint8
 
 type ElementType int
 

@@ -2,8 +2,6 @@ package wallet
 
 import (
 	"context"
-	"encoding/json"
-	"math/big"
 	"testing"
 
 	"github.com/xelis-project/xelis-go-sdk/config"
@@ -355,45 +353,6 @@ func TestRPCInvokeSC(t *testing.T) {
 	}
 
 	t.Logf("%+v", result.Hash)
-}
-
-func TestSCConstantArray(t *testing.T) {
-
-	u128 := new(big.Int)
-	u128.SetString("340282366920938463463374607431768211455", 10)
-
-	u256 := new(big.Int)
-	u256.SetString("115792089237316195423570985008687907853269984665640564039457584007913129659255", 10)
-
-	data, err := json.MarshalIndent(sc_constant.Array([]sc_constant.Constant{
-		sc_constant.DefaultU8(100),
-		sc_constant.DefaultU16(10023),
-		sc_constant.DefaultU32(143255),
-		sc_constant.DefaultU64(23452345),
-		sc_constant.DefaultU128(u128),
-		sc_constant.DefaultU256(u256),
-		sc_constant.DefaultBool(false),
-		sc_constant.DefaultString("asdasd"),
-	}), "", "  ")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	json := string(data)
-	t.Logf(json)
-}
-
-func TestSCConstantRange(t *testing.T) {
-	data, err := json.MarshalIndent(sc_constant.ValueRange(
-		sc_constant.ValueU16(100),
-		sc_constant.ValueU16(200),
-	), "", "  ")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	json := string(data)
-	t.Logf(json)
 }
 
 func TestRPCEstimateFees(t *testing.T) {

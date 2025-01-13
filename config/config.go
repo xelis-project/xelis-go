@@ -17,7 +17,7 @@ var LOCAL_NODE_RPC = fmt.Sprintf("http://%s/json_rpc", LOCAL_NODE_URL)
 
 var MAINNET_NODE_WS = fmt.Sprintf("wss://%s/json_rpc", MAINNET_NODE_URL)
 var TESTNET_NODE_WS = fmt.Sprintf("wss://%s/json_rpc", TESTNET_NODE_URL)
-var LOCAL_NODE_WS = fmt.Sprintf("wss://%s/json_rpc", LOCAL_NODE_URL)
+var LOCAL_NODE_WS = fmt.Sprintf("ws://%s/json_rpc", LOCAL_NODE_URL)
 
 var MAINNET_NODE_GETWORK = fmt.Sprintf("wss://%s/getwork", MAINNET_NODE_URL)
 var TESTNET_NODE_GETWORK = fmt.Sprintf("wss://%s/getwork", TESTNET_NODE_URL)

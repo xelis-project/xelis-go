@@ -231,3 +231,21 @@ func TestNewBlockChannel(t *testing.T) {
 
 	daemon.Close()
 }
+
+func TestNewContractFunc(t *testing.T) {
+	daemon := prepareWS(t)
+
+	newContract, newContractErr, err := daemon.DeployContractChannel()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	select {
+	case contract := <-newContract:
+		t.Logf("%+v", contract)
+	case err := <-newContractErr:
+		t.Log(err)
+	}
+
+	daemon.Close()
+}

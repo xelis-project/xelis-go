@@ -178,9 +178,9 @@ func (w *WebSocket) PeerDisconnectedChannel() (chan Peer, chan error, error) {
 
 func (w *WebSocket) PeerDisconnectedFunc(onData func(Peer, error)) error {
 	return w.WS.ListenEventFunc(events.PeerDisconnected, func(res rpc.RPCResponse) {
-		var peer Peer
-		err := rpc.JsonFormatResponse(res, nil, &peer)
-		onData(peer, err)
+		var result Peer
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		onData(result, err)
 	})
 }
 

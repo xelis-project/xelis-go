@@ -136,7 +136,7 @@ func (w *WebSocket) CloseEvent(event string) error {
 	return nil
 }
 
-func (w *WebSocket) ListenEventFunc(event string, onData func(RPCResponse)) (err error) {
+func (w *WebSocket) ListenEvent(event string) (ch chan RPCResponse, err error) {
 	id, ok := w.events[event]
 	if !ok {
 		var res RPCResponse
@@ -154,10 +154,19 @@ func (w *WebSocket) ListenEventFunc(event string, onData func(RPCResponse)) (err
 		w.events[event] = id
 	}
 
-	ch, ok := w.channels[id]
+	ch, ok = w.channels[id]
 	if !ok {
 		ch = make(chan RPCResponse)
 		w.channels[id] = ch
+	}
+
+	return
+}
+
+func (w *WebSocket) ListenEventFunc(event string, onData func(RPCResponse)) (err error) {
+	ch, err := w.ListenEvent(event)
+	if err != nil {
+		return
 	}
 
 	go func() {

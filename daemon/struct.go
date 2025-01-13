@@ -551,3 +551,8 @@ type StableHeightChangedEvent struct {
 	PreviousStableHeight uint64 `json:"previous_stable_height"`
 	NewStableHeight      uint64 `json:"new_stable_height"`
 }
+
+type StableTopoHeightChangedEvent struct {
+	PreviousStableTopoheight uint64 `json:"previous_stable_topoheight"`
+	NewStableTopoheight      uint64 `json:"new_stable_topoheight"`
+}

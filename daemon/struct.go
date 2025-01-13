@@ -535,3 +535,9 @@ type GetContractBalanceAtTopoheightResult struct {
 	Amount             uint64  `json:"data"`
 	PreviousTopoheight *uint64 `json:"previous_topoheight"`
 }
+
+type BlockOrderedEvent struct {
+	BlockHash  string    `json:"block_hash"`
+	BlockType  BlockType `json:"block_type"`
+	Topoheight uint64    `json:"topoheight"`
+}

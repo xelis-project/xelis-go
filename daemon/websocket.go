@@ -84,12 +84,12 @@ func (w *WebSocket) TransactionAddedInMempoolFunc(onData func(Transaction, error
 	})
 }
 
-func (w *WebSocket) BlockOrderedChannel() (chan Block, chan error, error) {
-	chanBlock := make(chan Block)
+func (w *WebSocket) BlockOrderedChannel() (chan BlockOrderedEvent, chan error, error) {
+	chanBlock := make(chan BlockOrderedEvent)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.BlockOrdered, func(res rpc.RPCResponse) {
-		var result Block
+		var result BlockOrderedEvent
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
 			chanErr <- err
@@ -101,9 +101,9 @@ func (w *WebSocket) BlockOrderedChannel() (chan Block, chan error, error) {
 	return chanBlock, chanErr, err
 }
 
-func (w *WebSocket) BlockOrderedFunc(onData func(Block, error)) error {
+func (w *WebSocket) BlockOrderedFunc(onData func(BlockOrderedEvent, error)) error {
 	return w.WS.ListenEventFunc(events.BlockOrdered, func(res rpc.RPCResponse) {
-		var result Block
+		var result BlockOrderedEvent
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
 	})

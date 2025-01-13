@@ -3,7 +3,7 @@ package methods
 const (
 	GetVersion          string = "get_version"
 	GetHeight           string = "get_height"
-	GetTopoHeight       string = "get_topoheight"
+	GetTopoheight       string = "get_topoheight"
 	GetPrunedTopoheight string = "get_pruned_topoheight"
 	GetInfo             string = "get_info"
 	GetDifficulty       string = "get_difficulty"

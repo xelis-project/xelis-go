@@ -403,7 +403,7 @@ func (w *WebSocket) GetHeight() (height uint64, err error) {
 }
 
 func (w *WebSocket) GetTopoheight() (topoheight uint64, err error) {
-	res, err := w.WS.Call(w.Prefix+methods.GetTopoHeight, nil)
+	res, err := w.WS.Call(w.Prefix+methods.GetTopoheight, nil)
 	err = rpc.JsonFormatResponse(res, err, &topoheight)
 	return
 }

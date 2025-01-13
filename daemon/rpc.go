@@ -47,7 +47,7 @@ func (d *RPC) GetHeight() (height uint64, err error) {
 }
 
 func (d *RPC) GetTopoheight() (topoheight uint64, err error) {
-	err = d.Client.CallResult(d.ctx, methods.GetTopoHeight, nil, &topoheight)
+	err = d.Client.CallResult(d.ctx, methods.GetTopoheight, nil, &topoheight)
 	return
 }
 

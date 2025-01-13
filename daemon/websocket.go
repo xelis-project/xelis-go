@@ -159,12 +159,12 @@ func (w *WebSocket) PeerConnectedFunc(onData func(Peer, error)) error {
 	})
 }
 
-func (w *WebSocket) PeerDisconnectedChannel() (chan uint64, chan error, error) {
-	chanResult := make(chan uint64)
+func (w *WebSocket) PeerDisconnectedChannel() (chan Peer, chan error, error) {
+	chanResult := make(chan Peer)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.PeerDisconnected, func(res rpc.RPCResponse) {
-		var result uint64
+		var result Peer
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
 			chanErr <- err
@@ -176,11 +176,11 @@ func (w *WebSocket) PeerDisconnectedChannel() (chan uint64, chan error, error) {
 	return chanResult, chanErr, err
 }
 
-func (w *WebSocket) PeerDisconnectedFunc(onData func(uint64, error)) error {
+func (w *WebSocket) PeerDisconnectedFunc(onData func(Peer, error)) error {
 	return w.WS.ListenEventFunc(events.PeerDisconnected, func(res rpc.RPCResponse) {
-		var peerId uint64
-		err := rpc.JsonFormatResponse(res, nil, &peerId)
-		onData(peerId, err)
+		var peer Peer
+		err := rpc.JsonFormatResponse(res, nil, &peer)
+		onData(peer, err)
 	})
 }
 

@@ -35,7 +35,7 @@ func (w *WebSocket) ConnectionErr() chan error {
 }
 
 func (w *WebSocket) NewBlockChannel() (chan Block, chan error, error) {
-	chanBlock := make(chan Block)
+	chanResult := make(chan Block)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.NewBlock, func(res rpc.RPCResponse) {
@@ -44,11 +44,11 @@ func (w *WebSocket) NewBlockChannel() (chan Block, chan error, error) {
 		if err != nil {
 			chanErr <- err
 		} else {
-			chanBlock <- result
+			chanResult <- result
 		}
 	})
 
-	return chanBlock, chanErr, err
+	return chanResult, chanErr, err
 }
 
 func (w *WebSocket) NewBlockFunc(onData func(Block, error)) error {
@@ -60,7 +60,7 @@ func (w *WebSocket) NewBlockFunc(onData func(Block, error)) error {
 }
 
 func (w *WebSocket) TransactionAddedInMempoolChannel() (chan Transaction, chan error, error) {
-	chanTransaction := make(chan Transaction)
+	chanResult := make(chan Transaction)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.TransactionAddedInMempool, func(res rpc.RPCResponse) {
@@ -69,11 +69,11 @@ func (w *WebSocket) TransactionAddedInMempoolChannel() (chan Transaction, chan e
 		if err != nil {
 			chanErr <- err
 		} else {
-			chanTransaction <- result
+			chanResult <- result
 		}
 	})
 
-	return chanTransaction, chanErr, err
+	return chanResult, chanErr, err
 }
 
 func (w *WebSocket) TransactionAddedInMempoolFunc(onData func(Transaction, error)) error {
@@ -85,7 +85,7 @@ func (w *WebSocket) TransactionAddedInMempoolFunc(onData func(Transaction, error
 }
 
 func (w *WebSocket) BlockOrderedChannel() (chan BlockOrderedEvent, chan error, error) {
-	chanBlock := make(chan BlockOrderedEvent)
+	chanResult := make(chan BlockOrderedEvent)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.BlockOrdered, func(res rpc.RPCResponse) {
@@ -94,11 +94,11 @@ func (w *WebSocket) BlockOrderedChannel() (chan BlockOrderedEvent, chan error, e
 		if err != nil {
 			chanErr <- err
 		} else {
-			chanBlock <- result
+			chanResult <- result
 		}
 	})
 
-	return chanBlock, chanErr, err
+	return chanResult, chanErr, err
 }
 
 func (w *WebSocket) BlockOrderedFunc(onData func(BlockOrderedEvent, error)) error {
@@ -110,7 +110,7 @@ func (w *WebSocket) BlockOrderedFunc(onData func(BlockOrderedEvent, error)) erro
 }
 
 func (w *WebSocket) TransactionExecutedChannel() (chan TransactionExecutedEvent, chan error, error) {
-	chanTxExecuted := make(chan TransactionExecutedEvent)
+	chanResult := make(chan TransactionExecutedEvent)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.TransactionExecuted, func(res rpc.RPCResponse) {
@@ -119,11 +119,11 @@ func (w *WebSocket) TransactionExecutedChannel() (chan TransactionExecutedEvent,
 		if err != nil {
 			chanErr <- err
 		} else {
-			chanTxExecuted <- result
+			chanResult <- result
 		}
 	})
 
-	return chanTxExecuted, chanErr, err
+	return chanResult, chanErr, err
 }
 
 func (w *WebSocket) TransactionExecutedFunc(onData func(TransactionExecutedEvent, error)) error {
@@ -135,7 +135,7 @@ func (w *WebSocket) TransactionExecutedFunc(onData func(TransactionExecutedEvent
 }
 
 func (w *WebSocket) PeerConnectedChannel() (chan Peer, chan error, error) {
-	chanPeer := make(chan Peer)
+	chanResult := make(chan Peer)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.PeerConnected, func(res rpc.RPCResponse) {
@@ -144,11 +144,11 @@ func (w *WebSocket) PeerConnectedChannel() (chan Peer, chan error, error) {
 		if err != nil {
 			chanErr <- err
 		} else {
-			chanPeer <- result
+			chanResult <- result
 		}
 	})
 
-	return chanPeer, chanErr, err
+	return chanResult, chanErr, err
 }
 
 func (w *WebSocket) PeerConnectedFunc(onData func(Peer, error)) error {
@@ -160,7 +160,7 @@ func (w *WebSocket) PeerConnectedFunc(onData func(Peer, error)) error {
 }
 
 func (w *WebSocket) PeerDisconnectedChannel() (chan uint64, chan error, error) {
-	chanPeerId := make(chan uint64)
+	chanResult := make(chan uint64)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.PeerDisconnected, func(res rpc.RPCResponse) {
@@ -169,11 +169,11 @@ func (w *WebSocket) PeerDisconnectedChannel() (chan uint64, chan error, error) {
 		if err != nil {
 			chanErr <- err
 		} else {
-			chanPeerId <- result
+			chanResult <- result
 		}
 	})
 
-	return chanPeerId, chanErr, err
+	return chanResult, chanErr, err
 }
 
 func (w *WebSocket) PeerDisconnectedFunc(onData func(uint64, error)) error {
@@ -185,7 +185,7 @@ func (w *WebSocket) PeerDisconnectedFunc(onData func(uint64, error)) error {
 }
 
 func (w *WebSocket) PeerStateUpdatedChannel() (chan Peer, chan error, error) {
-	chanPeer := make(chan Peer)
+	chanResult := make(chan Peer)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.PeerStateUpdated, func(res rpc.RPCResponse) {
@@ -194,11 +194,11 @@ func (w *WebSocket) PeerStateUpdatedChannel() (chan Peer, chan error, error) {
 		if err != nil {
 			chanErr <- err
 		} else {
-			chanPeer <- result
+			chanResult <- result
 		}
 	})
 
-	return chanPeer, chanErr, err
+	return chanResult, chanErr, err
 }
 
 func (w *WebSocket) PeerStateUpdatedFunc(onData func(Peer, error)) error {
@@ -210,7 +210,7 @@ func (w *WebSocket) PeerStateUpdatedFunc(onData func(Peer, error)) error {
 }
 
 func (w *WebSocket) BlockOrphanedChannel() (chan BlockOrphanedEvent, chan error, error) {
-	chanBlock := make(chan BlockOrphanedEvent)
+	chanResult := make(chan BlockOrphanedEvent)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.BlockOrphaned, func(res rpc.RPCResponse) {
@@ -219,11 +219,11 @@ func (w *WebSocket) BlockOrphanedChannel() (chan BlockOrphanedEvent, chan error,
 		if err != nil {
 			chanErr <- err
 		} else {
-			chanBlock <- result
+			chanResult <- result
 		}
 	})
 
-	return chanBlock, chanErr, err
+	return chanResult, chanErr, err
 }
 
 func (w *WebSocket) BlockOrphanedFunc(onData func(BlockOrphanedEvent, error)) error {

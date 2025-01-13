@@ -1,6 +1,7 @@
 package extra_data
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/big"
 )
@@ -9,6 +10,10 @@ type Element struct {
 	Value  Value
 	Array  []Element
 	Fields map[Value]Element
+}
+
+func (d Element) MarshalJSON() ([]byte, error) {
+	return json.Marshal(d.ToMap())
 }
 
 // use this function to convert in a valid map for json.Marshal()

@@ -2,6 +2,8 @@ package wallet
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/xelis-project/xelis-go-sdk/config"
@@ -16,6 +18,7 @@ const MAINNET_ADDR = "xel:as3mgjlevw5ve6k70evzz8lwmsa5p0lgws2d60fulxylnmeqrp9qqu
 
 func prepareRPC(t *testing.T) (wallet *RPC, ctx context.Context) {
 	ctx = context.Background()
+	// wallet, err := NewRPC(ctx, "http://192.168.1.53:8081/json_rpc", "test", "test")
 	wallet, err := NewRPC(ctx, config.LOCAL_WALLET_RPC, "test", "test")
 	if err != nil {
 		t.Fatal(err)
@@ -335,7 +338,7 @@ func TestRPCInvokeSC(t *testing.T) {
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
 		InvokeContract: &InvokeContractBuilder{
-			Contract: "bbabe3b0442f3d794a2ca5208ae429781c27c26b1ee4571f62b7d40755204d63",
+			Contract: "04cb8da2caa2f7642287b244069da4fe5eadc17b5b6bb5b9fd9502dbcbb70370",
 			MaxGas:   300,
 			ChunkId:  0,
 			Parameters: []sc_constant.Constant{
@@ -531,4 +534,95 @@ func TestRPCWalletDBKeyStore(t *testing.T) {
 	}
 
 	t.Logf("%+v", result6)
+}
+
+func TestRPCWalletCountMatchingEntries(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	tree := "my_app_2"
+
+	result, err := wallet.Store(StoreParams{
+		Tree:  tree,
+		Key:   "test",
+		Value: 100,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result)
+
+	equalQuery := &Query{QueryValue: &QueryValue{Equal: 100}}
+
+	queryJson, err := json.Marshal(equalQuery)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(string(queryJson))
+
+	result2, err := wallet.CountMatchingEntries(CountMatchingEntriesParams{
+		Tree:  tree,
+		Value: equalQuery,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result2)
+
+	greaterQuery := &Query{QueryValue: &QueryValue{QueryNumber: &QueryNumber{Greater: 50}}}
+
+	queryJson, err = json.Marshal(greaterQuery)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(string(queryJson))
+
+	result3, err := wallet.CountMatchingEntries(CountMatchingEntriesParams{
+		Tree:  tree,
+		Value: greaterQuery,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result3)
+}
+
+func TestRPCWalletQueryDB(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+
+	tree := "my_app_3"
+
+	for i := 0; i < 10; i++ {
+		_, err := wallet.Store(StoreParams{
+			Tree:  tree,
+			Key:   fmt.Sprintf("i_%d", i),
+			Value: fmt.Sprintf("i_%d", i),
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		_, err = wallet.Store(StoreParams{
+			Tree:  tree,
+			Key:   i,
+			Value: fmt.Sprintf("test_%d", i),
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	result, err := wallet.QueryDB(QueryDBParams{
+		Tree: tree,
+		Key:  &Query{QueryValue: &QueryValue{ContainsValue: "test_"}},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", result)
 }

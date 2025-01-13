@@ -300,6 +300,7 @@ func TestToMap(t *testing.T) {
 			uint32(3567456756):          {Value: "32"},
 			uint64(8796789678967899678): {Value: "64"},
 			hash:                        {Value: "test_hash"},
+			"blob":                      {Value: Blob{0, 1, 2, 4, 5}},
 			"sub_map": {
 				Fields: map[Value]Element{
 					"test": {Value: "test"},

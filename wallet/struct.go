@@ -326,14 +326,14 @@ type DecryptExtraDataParams struct {
 }
 
 type GetMatchingKeysParams struct {
-	Tree  string       `json:"tree"`
-	Query *interface{} `json:"query,omitempty"`
+	Tree  string `json:"tree"`
+	Query *Query `json:"query,omitempty"`
 }
 
 type CountMatchingEntriesParams struct {
-	Tree  string       `json:"tree"`
-	Key   *interface{} `json:"key,omitempty"`
-	Value *interface{} `json:"value,omitempty"`
+	Tree  string `json:"tree"`
+	Key   *Query `json:"key,omitempty"`
+	Value *Query `json:"value,omitempty"`
 }
 
 type GetValueFromKeyParams struct {
@@ -361,15 +361,15 @@ type HasKeyParams struct {
 	Key  interface{} `json:"key"`
 }
 type QueryDBParams struct {
-	Tree          string       `json:"tree"`
-	Key           *interface{} `json:"key,omitempty"`
-	Value         *interface{} `json:"value,omitempty"`
-	ReturnOnFirst bool         `json:"return_on_first"`
+	Tree          string `json:"tree"`
+	Key           *Query `json:"key,omitempty"`
+	Value         *Query `json:"value,omitempty"`
+	ReturnOnFirst bool   `json:"return_on_first"`
 }
 
 type QueryResult struct {
-	Entries map[interface{}]interface{} `json:"entries"`
-	Next    *uint64                     `json:"next"`
+	Entries map[string]interface{} `json:"entries"`
+	Next    *uint64                `json:"next"`
 }
 
 type Asset struct {

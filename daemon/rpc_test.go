@@ -12,6 +12,7 @@ const WALLET_ADDR = "xet:62wnkswt0rmrdd9d2lawgpzuh87fkpmp4gx9j3g4u24yrdkdxgksqnu
 
 func prepareRPC(t *testing.T) (daemon *RPC, ctx context.Context) {
 	ctx = context.Background()
+	// daemon, err := NewRPC(ctx, config.TESTNET_NODE_RPC)
 	daemon, err := NewRPC(ctx, config.LOCAL_NODE_RPC)
 	if err != nil {
 		t.Fatal(err)
@@ -720,7 +721,7 @@ func TestGetContractData(t *testing.T) {
 	daemon, _ := prepareRPC(t)
 
 	result, err := daemon.GetContractData(GetContractDataParams{
-		Contract: "bbabe3b0442f3d794a2ca5208ae429781c27c26b1ee4571f62b7d40755204d63",
+		Contract: "04cb8da2caa2f7642287b244069da4fe5eadc17b5b6bb5b9fd9502dbcbb70370",
 		Key:      sc_constant.DefaultString("test"),
 	})
 	if err != nil {

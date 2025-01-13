@@ -3,10 +3,10 @@ package wallet
 import "github.com/xelis-project/xelis-go-sdk/extra_data"
 
 type QueryNumber struct {
-	Greater        uint `json:"greater"`
-	GreaterOrEqual uint `json:"greater_or_equal"`
-	Lesser         uint `json:"lesser"`
-	LesserOrEqual  uint `json:"lesser_or_equal"`
+	Greater        uint `json:"greater,omitempty"`
+	GreaterOrEqual uint `json:"greater_or_equal,omitempty"`
+	Lesser         uint `json:"lesser,omitempty"`
+	LesserOrEqual  uint `json:"lesser_or_equal,omitempty"`
 }
 
 type QueryHasKey struct {
@@ -25,28 +25,28 @@ type QueryPosition struct {
 }
 
 type QueryElement struct {
-	HasKey          QueryHasKey            `json:"has_key"`
-	AtKey           QueryAtKey             `json:"at_key"`
-	Len             QueryNumber            `json:"len"`
-	ContainsElement extra_data.Element     `json:"contains_element"`
-	AtPosition      QueryPosition          `json:"at_position"`
-	EType           extra_data.ElementType `json:"type"`
+	HasKey          *QueryHasKey           `json:"has_key,omitempty"`
+	AtKey           *QueryAtKey            `json:"at_key,omitempty"`
+	Len             QueryNumber            `json:"len,omitempty"`
+	ContainsElement extra_data.Element     `json:"contains_element,omitempty"`
+	AtPosition      *QueryPosition         `json:"at_position,omitempty"`
+	ElementType     extra_data.ElementType `json:"type,omitempty"`
 }
 
 type QueryValue struct {
-	Equal         extra_data.Value     `json:"equal"`
-	StartsWith    extra_data.Value     `json:"starts_with"`
-	EndsWith      extra_data.Value     `json:"ends_with"`
-	ContainsValue extra_data.Value     `json:"contains_value"`
-	IsOfType      extra_data.ValueType `json:"is_of_type"`
-	Matches       string               `json:"matches"`
-	NumberOp      QueryNumber          `json:"number_op"`
+	Equal         interface{}          `json:"equal,omitempty"`
+	StartsWith    interface{}          `json:"starts_with,omitempty"`
+	EndsWith      interface{}          `json:"ends_with,omitempty"`
+	ContainsValue interface{}          `json:"contains_value,omitempty"`
+	IsOfType      extra_data.ValueType `json:"is_of_type,omitempty"`
+	Matches       string               `json:"matches,omitempty"`
+	*QueryNumber
 }
 
 type Query struct {
-	Not     *Query       `json:"not,omitempty"`
-	And     []Query      `json:"and"`
-	Or      []Query      `json:"or"`
-	Element QueryElement `json:"element,omitempty"`
-	Value   QueryValue   `json:"value"`
+	Not *Query  `json:"not,omitempty"`
+	And []Query `json:"and,omitempty"`
+	Or  []Query `json:"or,omitempty"`
+	*QueryElement
+	*QueryValue
 }

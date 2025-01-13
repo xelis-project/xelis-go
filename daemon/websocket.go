@@ -359,6 +359,31 @@ func (w *WebSocket) TransactionOrphanedFunc(onData func(Transaction, error)) err
 	})
 }
 
+func (w *WebSocket) DeployContractChannel() (chan NewContractEvent, chan error, error) {
+	chanResult := make(chan NewContractEvent)
+	chanErr := make(chan error)
+
+	err := w.WS.ListenEventFunc(events.DeployContract, func(res rpc.RPCResponse) {
+		var result NewContractEvent
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		if err != nil {
+			chanErr <- err
+		} else {
+			chanResult <- result
+		}
+	})
+
+	return chanResult, chanErr, err
+}
+
+func (w *WebSocket) DeployContractFunc(onData func(NewContractEvent, error)) error {
+	return w.WS.ListenEventFunc(events.DeployContract, func(res rpc.RPCResponse) {
+		var result NewContractEvent
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		onData(result, err)
+	})
+}
+
 func (w *WebSocket) GetVersion() (version string, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetVersion, nil)
 	err = rpc.JsonFormatResponse(res, err, &version)

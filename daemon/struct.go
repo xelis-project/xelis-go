@@ -568,3 +568,9 @@ type PeerPeerDisconnectedEvent struct {
 	PeerId   uint64 `json:"peer_id"`
 	PeerAddr string `json:"peer_addr"`
 }
+
+type NewContractEvent struct {
+	Contract   string `json:"contract"`
+	BlockHash  string `json:"block_hash"`
+	Topoheight uint64 `json:"topoheight"`
+}

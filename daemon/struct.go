@@ -541,3 +541,8 @@ type BlockOrderedEvent struct {
 	BlockType  BlockType `json:"block_type"`
 	Topoheight uint64    `json:"topoheight"`
 }
+
+type BlockOrphanedEvent struct {
+	BlockHash     string `json:"block_hash"`
+	OldTopoheight uint64 `json:"old_topoheight"`
+}

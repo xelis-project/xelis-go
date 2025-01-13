@@ -209,6 +209,31 @@ func (w *WebSocket) PeerStateUpdatedFunc(onData func(Peer, error)) error {
 	})
 }
 
+func (w *WebSocket) BlockOrphanedChannel() (chan BlockOrphanedEvent, chan error, error) {
+	chanBlock := make(chan BlockOrphanedEvent)
+	chanErr := make(chan error)
+
+	err := w.WS.ListenEventFunc(events.BlockOrphaned, func(res rpc.RPCResponse) {
+		var result BlockOrphanedEvent
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		if err != nil {
+			chanErr <- err
+		} else {
+			chanBlock <- result
+		}
+	})
+
+	return chanBlock, chanErr, err
+}
+
+func (w *WebSocket) BlockOrphanedFunc(onData func(BlockOrphanedEvent, error)) error {
+	return w.WS.ListenEventFunc(events.BlockOrphaned, func(res rpc.RPCResponse) {
+		var result BlockOrphanedEvent
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		onData(result, err)
+	})
+}
+
 func (w *WebSocket) GetVersion() (version string, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetVersion, nil)
 	err = rpc.JsonFormatResponse(res, err, &version)

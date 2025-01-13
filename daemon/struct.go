@@ -100,26 +100,35 @@ type GetAccountsParams struct {
 	MaximumTopoheight uint64 `json:"maximum_topoheight,omitempty"`
 }
 
+type BlockType string
+
+const (
+	BlockSync     BlockType = "Sync"
+	BlockSide     BlockType = "Side"
+	BlockOrphaned BlockType = "Orphaned"
+	BlockNormal   BlockType = "Normal"
+)
+
 type Block struct {
-	BlockType            string   `json:"block_type"`
-	CumulativeDifficulty string   `json:"cumulative_difficulty"`
-	Difficulty           string   `json:"difficulty"`
-	ExtraNonce           string   `json:"extra_nonce"`
-	Hash                 string   `json:"hash"`
-	Height               uint64   `json:"height"`
-	Miner                string   `json:"miner"`
-	Nonce                uint64   `json:"nonce"`
-	Reward               *uint64  `json:"reward"` // full reward miner_reward + dev_reward
-	MinerReward          *uint64  `json:"miner_reward"`
-	DevReward            *uint64  `json:"dev_reward"`
-	Supply               *uint64  `json:"supply"`
-	Timestamp            uint64   `json:"timestamp"`
-	Tips                 []string `json:"tips"`
-	Topoheight           *uint64  `json:"topoheight"`
-	TotalFees            *uint64  `json:"total_fees"`
-	TotalSizeInBytes     uint64   `json:"total_size_in_bytes"`
-	TxsHashes            []string `json:"txs_hashes"`
-	Version              uint64   `json:"version"`
+	Hash                 string    `json:"hash"`
+	Topoheight           *uint64   `json:"topoheight"`
+	BlockType            BlockType `json:"block_type"`
+	Difficulty           string    `json:"difficulty"`
+	Supply               *uint64   `json:"supply"`
+	Reward               *uint64   `json:"reward"` // full reward miner_reward + dev_reward
+	MinerReward          *uint64   `json:"miner_reward"`
+	DevReward            *uint64   `json:"dev_reward"`
+	CumulativeDifficulty string    `json:"cumulative_difficulty"`
+	TotalFees            *uint64   `json:"total_fees"`
+	TotalSizeInBytes     uint64    `json:"total_size_in_bytes"`
+	Version              uint64    `json:"version"`
+	Tips                 []string  `json:"tips"`
+	Timestamp            uint64    `json:"timestamp"`
+	Height               uint64    `json:"height"`
+	Nonce                uint64    `json:"nonce"`
+	ExtraNonce           string    `json:"extra_nonce"`
+	Miner                string    `json:"miner"`
+	TxsHashes            []string  `json:"txs_hashes"`
 }
 
 type Transfer struct {

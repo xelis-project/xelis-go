@@ -334,6 +334,31 @@ func (w *WebSocket) PeerPeerDisconnectedFunc(onData func(PeerPeerDisconnectedEve
 	})
 }
 
+func (w *WebSocket) TransactionOrphanedChannel() (chan Transaction, chan error, error) {
+	chanResult := make(chan Transaction)
+	chanErr := make(chan error)
+
+	err := w.WS.ListenEventFunc(events.TransactionOrphaned, func(res rpc.RPCResponse) {
+		var result Transaction
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		if err != nil {
+			chanErr <- err
+		} else {
+			chanResult <- result
+		}
+	})
+
+	return chanResult, chanErr, err
+}
+
+func (w *WebSocket) TransactionOrphanedFunc(onData func(Transaction, error)) error {
+	return w.WS.ListenEventFunc(events.TransactionOrphaned, func(res rpc.RPCResponse) {
+		var result Transaction
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		onData(result, err)
+	})
+}
+
 func (w *WebSocket) GetVersion() (version string, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetVersion, nil)
 	err = rpc.JsonFormatResponse(res, err, &version)

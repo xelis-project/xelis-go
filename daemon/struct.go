@@ -320,25 +320,27 @@ type TransactionExecutedEvent struct {
 type PeerDirection string
 
 const (
-	PeerIn   PeerDirection = "In"
-	PeerOut  PeerDirection = "Out"
-	PeerBoth PeerDirection = "Both"
+	PeerDirectionIn   PeerDirection = "In"
+	PeerDirectionOut  PeerDirection = "Out"
+	PeerDirectionBoth PeerDirection = "Both"
 )
 
 type Peer struct {
 	Id                   uint64                   `json:"id"`
-	CumulativeDifficulty string                   `json:"cumulative_difficulty"`
-	PrunedTopoheight     uint64                   `json:"pruned_topoheight"`
-	ConnectedOn          uint64                   `json:"connected_on"`
-	Height               uint64                   `json:"height"`
-	LocalPort            int                      `json:"local_port"`
-	TopBlockHash         string                   `json:"top_block_hash"`
 	Addr                 string                   `json:"addr"`
-	LastPing             uint64                   `json:"last_ping"`
-	Tag                  string                   `json:"tag"`
-	Topoheight           uint64                   `json:"topoheight"`
-	Peers                map[string]PeerDirection `json:"peers"`
+	LocalPort            int                      `json:"local_port"`
+	Tag                  *string                  `json:"tag"`
 	Version              string                   `json:"version"`
+	TopBlockHash         string                   `json:"top_block_hash"`
+	Topoheight           uint64                   `json:"topoheight"`
+	Height               uint64                   `json:"height"`
+	LastPing             uint64                   `json:"last_ping"`
+	PrunedTopoheight     *uint64                  `json:"pruned_topoheight"`
+	Peers                map[string]PeerDirection `json:"peers"`
+	CumulativeDifficulty string                   `json:"cumulative_difficulty"`
+	ConnectedOn          uint64                   `json:"connected_on"`
+	BytesSent            uint64                   `json:"bytes_sent"`
+	BytesReceived        uint64                   `json:"bytes_recv"`
 }
 
 type GetPeersResult struct {

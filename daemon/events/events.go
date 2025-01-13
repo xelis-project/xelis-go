@@ -13,7 +13,7 @@ const (
 	DeployContract            string = `deploy_contract`
 	NewAsset                  string = `new_asset`
 	PeerConnected             string = `peer_connected`
-	PeerDisconnected          string = `peer_disconnect`
+	PeerDisconnected          string = `peer_disconnected`
 	PeerStateUpdated          string = `peer_state_updated`
 	PeerPeerListUpdated       string = `peer_peer_list_updated`
 	PeerPeerDisconnected      string = `peer_peer_disconnected`

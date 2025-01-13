@@ -378,21 +378,15 @@ func parseContractOutputs(outputs []interface{}) (result []ContractOutput) {
 			for key, value := range out {
 				switch key {
 				case "exit_code":
-					if value == nil {
-						// nil means exit code of 0 (success)
-						result = append(result, ContractOutputExitCode{
-							ExitCode: 0,
-						})
-					} else {
-						exit_code, ok := value.(float64)
-						if !ok {
-							break
-						}
-
-						result = append(result, ContractOutputExitCode{
-							ExitCode: uint64(exit_code),
-						})
+					// if the value is nil it means the code failed and did not execute
+					exit_code, ok := value.(float64)
+					if !ok {
+						break
 					}
+
+					result = append(result, ContractOutputExitCode{
+						ExitCode: uint64(exit_code),
+					})
 				case "refund_gas":
 					refund_gas, ok := value.(map[string]interface{})
 					if !ok {

@@ -170,7 +170,7 @@ func TestWSPeers(t *testing.T) {
 
 	wg.Add(1)
 	daemon.PeerDisconnectedFunc(func(p Peer, err error) {
-		t.Logf("%d", p)
+		t.Logf("%+v", p)
 		wg.Done()
 	})
 

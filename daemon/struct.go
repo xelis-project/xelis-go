@@ -546,3 +546,8 @@ type BlockOrphanedEvent struct {
 	BlockHash     string `json:"block_hash"`
 	OldTopoheight uint64 `json:"old_topoheight"`
 }
+
+type StableHeightChangedEvent struct {
+	PreviousStableHeight uint64 `json:"previous_stable_height"`
+	NewStableHeight      uint64 `json:"new_stable_height"`
+}

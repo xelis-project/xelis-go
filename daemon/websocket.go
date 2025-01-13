@@ -234,6 +234,31 @@ func (w *WebSocket) BlockOrphanedFunc(onData func(BlockOrphanedEvent, error)) er
 	})
 }
 
+func (w *WebSocket) StableHeightChangedChannel() (chan StableHeightChangedEvent, chan error, error) {
+	chanResult := make(chan StableHeightChangedEvent)
+	chanErr := make(chan error)
+
+	err := w.WS.ListenEventFunc(events.StableHeightChanged, func(res rpc.RPCResponse) {
+		var result StableHeightChangedEvent
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		if err != nil {
+			chanErr <- err
+		} else {
+			chanResult <- result
+		}
+	})
+
+	return chanResult, chanErr, err
+}
+
+func (w *WebSocket) StableHeightChangedFunc(onData func(StableHeightChangedEvent, error)) error {
+	return w.WS.ListenEventFunc(events.StableHeightChanged, func(res rpc.RPCResponse) {
+		var result StableHeightChangedEvent
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		onData(result, err)
+	})
+}
+
 func (w *WebSocket) GetVersion() (version string, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetVersion, nil)
 	err = rpc.JsonFormatResponse(res, err, &version)

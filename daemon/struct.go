@@ -311,10 +311,10 @@ type AccountHistory struct {
 	DevFee         *MiningHistory   `json:"dev_fee"`
 }
 
-type TransactionExecutedResult struct {
+type TransactionExecutedEvent struct {
 	BlockHash  string `json:"block_hash"`
-	Topoheight uint64 `json:"topoheight"`
 	TxHash     string `json:"tx_hash"`
+	Topoheight uint64 `json:"topoheight"`
 }
 
 type PeerDirection string

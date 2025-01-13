@@ -109,26 +109,26 @@ func (w *WebSocket) BlockOrderedFunc(onData func(BlockOrderedEvent, error)) erro
 	})
 }
 
-func (w *WebSocket) TransactionExecutedChannel() (chan TransactionExecutedResult, chan error, error) {
-	chanTransactionExecutedResult := make(chan TransactionExecutedResult)
+func (w *WebSocket) TransactionExecutedChannel() (chan TransactionExecutedEvent, chan error, error) {
+	chanTxExecuted := make(chan TransactionExecutedEvent)
 	chanErr := make(chan error)
 
 	err := w.WS.ListenEventFunc(events.TransactionExecuted, func(res rpc.RPCResponse) {
-		var result TransactionExecutedResult
+		var result TransactionExecutedEvent
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
 			chanErr <- err
 		} else {
-			chanTransactionExecutedResult <- result
+			chanTxExecuted <- result
 		}
 	})
 
-	return chanTransactionExecutedResult, chanErr, err
+	return chanTxExecuted, chanErr, err
 }
 
-func (w *WebSocket) TransactionExecutedFunc(onData func(TransactionExecutedResult, error)) error {
+func (w *WebSocket) TransactionExecutedFunc(onData func(TransactionExecutedEvent, error)) error {
 	return w.WS.ListenEventFunc(events.TransactionExecuted, func(res rpc.RPCResponse) {
-		var result TransactionExecutedResult
+		var result TransactionExecutedEvent
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
 	})

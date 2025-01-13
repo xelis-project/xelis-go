@@ -284,6 +284,31 @@ func (w *WebSocket) StableTopoHeightChangedFunc(onData func(StableTopoHeightChan
 	})
 }
 
+func (w *WebSocket) PeerPeerListUpdatedChannel() (chan PeerPeerListUpdatedEvent, chan error, error) {
+	chanResult := make(chan PeerPeerListUpdatedEvent)
+	chanErr := make(chan error)
+
+	err := w.WS.ListenEventFunc(events.PeerPeerListUpdated, func(res rpc.RPCResponse) {
+		var result PeerPeerListUpdatedEvent
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		if err != nil {
+			chanErr <- err
+		} else {
+			chanResult <- result
+		}
+	})
+
+	return chanResult, chanErr, err
+}
+
+func (w *WebSocket) PeerPeerListUpdatedFunc(onData func(PeerPeerListUpdatedEvent, error)) error {
+	return w.WS.ListenEventFunc(events.PeerPeerListUpdated, func(res rpc.RPCResponse) {
+		var result PeerPeerListUpdatedEvent
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		onData(result, err)
+	})
+}
+
 func (w *WebSocket) GetVersion() (version string, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetVersion, nil)
 	err = rpc.JsonFormatResponse(res, err, &version)

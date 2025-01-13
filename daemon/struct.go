@@ -558,3 +558,8 @@ type StableTopoHeightChangedEvent struct {
 	PreviousStableTopoheight uint64 `json:"previous_stable_topoheight"`
 	NewStableTopoheight      uint64 `json:"new_stable_topoheight"`
 }
+
+type PeerPeerListUpdatedEvent struct {
+	PeerId   uint64   `json:"peer_id"`
+	PeerList []string `json:"peerlist"`
+}

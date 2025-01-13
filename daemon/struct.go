@@ -563,3 +563,8 @@ type PeerPeerListUpdatedEvent struct {
 	PeerId   uint64   `json:"peer_id"`
 	PeerList []string `json:"peerlist"`
 }
+
+type PeerPeerDisconnectedEvent struct {
+	PeerId   uint64 `json:"peer_id"`
+	PeerAddr string `json:"peer_addr"`
+}

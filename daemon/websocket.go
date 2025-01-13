@@ -309,6 +309,31 @@ func (w *WebSocket) PeerPeerListUpdatedFunc(onData func(PeerPeerListUpdatedEvent
 	})
 }
 
+func (w *WebSocket) PeerPeerDisconnectedChannel() (chan PeerPeerDisconnectedEvent, chan error, error) {
+	chanResult := make(chan PeerPeerDisconnectedEvent)
+	chanErr := make(chan error)
+
+	err := w.WS.ListenEventFunc(events.PeerPeerListUpdated, func(res rpc.RPCResponse) {
+		var result PeerPeerDisconnectedEvent
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		if err != nil {
+			chanErr <- err
+		} else {
+			chanResult <- result
+		}
+	})
+
+	return chanResult, chanErr, err
+}
+
+func (w *WebSocket) PeerPeerDisconnectedFunc(onData func(PeerPeerDisconnectedEvent, error)) error {
+	return w.WS.ListenEventFunc(events.PeerPeerListUpdated, func(res rpc.RPCResponse) {
+		var result PeerPeerDisconnectedEvent
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		onData(result, err)
+	})
+}
+
 func (w *WebSocket) GetVersion() (version string, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetVersion, nil)
 	err = rpc.JsonFormatResponse(res, err, &version)

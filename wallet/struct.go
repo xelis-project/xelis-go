@@ -95,7 +95,7 @@ type SignerId struct {
 }
 
 type BuildTransactionParams struct {
-	Transfers      []TransferBuilder      `json:"transfers"`
+	Transfers      []TransferBuilder      `json:"transfers,omitempty"`
 	Burn           *daemon.Burn           `json:"burn,omitempty"`
 	MultiSig       *MutliSigBuilder       `json:"multi_sig,omitempty"`
 	InvokeContract *InvokeContractBuilder `json:"invoke_contract,omitempty"`

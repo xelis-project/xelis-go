@@ -110,25 +110,26 @@ const (
 )
 
 type Block struct {
-	Hash                 string    `json:"hash"`
-	Topoheight           *uint64   `json:"topoheight"`
-	BlockType            BlockType `json:"block_type"`
-	Difficulty           string    `json:"difficulty"`
-	Supply               *uint64   `json:"supply"`
-	Reward               *uint64   `json:"reward"` // full reward miner_reward + dev_reward
-	MinerReward          *uint64   `json:"miner_reward"`
-	DevReward            *uint64   `json:"dev_reward"`
-	CumulativeDifficulty string    `json:"cumulative_difficulty"`
-	TotalFees            *uint64   `json:"total_fees"`
-	TotalSizeInBytes     uint64    `json:"total_size_in_bytes"`
-	Version              uint64    `json:"version"`
-	Tips                 []string  `json:"tips"`
-	Timestamp            uint64    `json:"timestamp"`
-	Height               uint64    `json:"height"`
-	Nonce                uint64    `json:"nonce"`
-	ExtraNonce           string    `json:"extra_nonce"`
-	Miner                string    `json:"miner"`
-	TxsHashes            []string  `json:"txs_hashes"`
+	Hash                 string        `json:"hash"`
+	Topoheight           *uint64       `json:"topoheight"`
+	BlockType            BlockType     `json:"block_type"`
+	Difficulty           string        `json:"difficulty"`
+	Supply               *uint64       `json:"supply"`
+	Reward               *uint64       `json:"reward"` // full reward miner_reward + dev_reward
+	MinerReward          *uint64       `json:"miner_reward"`
+	DevReward            *uint64       `json:"dev_reward"`
+	CumulativeDifficulty string        `json:"cumulative_difficulty"`
+	TotalFees            *uint64       `json:"total_fees"`
+	TotalSizeInBytes     uint64        `json:"total_size_in_bytes"`
+	Version              uint64        `json:"version"`
+	Tips                 []string      `json:"tips"`
+	Timestamp            uint64        `json:"timestamp"`
+	Height               uint64        `json:"height"`
+	Nonce                uint64        `json:"nonce"`
+	ExtraNonce           string        `json:"extra_nonce"`
+	Miner                string        `json:"miner"`
+	TxsHashes            []string      `json:"txs_hashes"`
+	Transactions         []Transaction `json:"transactions"` // if include_txs is true in params
 }
 
 type Transfer struct {

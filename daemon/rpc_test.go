@@ -111,6 +111,19 @@ func TestGetBlockByHash(t *testing.T) {
 	t.Logf("%+v", block)
 }
 
+func TestGetBlockAtTopoheightWithTxs(t *testing.T) {
+	daemon, _ := prepareRPC(t)
+
+	block, err := daemon.GetBlockAtTopoheight(GetBlockAtTopoheightParams{
+		Topoheight: 533,
+		IncludeTxs: true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", block)
+}
+
 func TestGetTopBlock(t *testing.T) {
 	daemon, _ := prepareRPC(t)
 

@@ -249,3 +249,23 @@ func TestNewContractFunc(t *testing.T) {
 
 	daemon.Close()
 }
+
+func TestInvokeContractFunc(t *testing.T) {
+	daemon := prepareWS(t)
+
+	invokeContract, invokeContractErr, err := daemon.InvokeContractChannel(InvokeContractEventParams{
+		Contract: "f8ffd882e1907c501c23a86c3947b8222cc544a55d448cadcb28798e5f554be0",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	select {
+	case result := <-invokeContract:
+		t.Logf("%+v", result)
+	case err := <-invokeContractErr:
+		t.Log(err)
+	}
+
+	daemon.Close()
+}

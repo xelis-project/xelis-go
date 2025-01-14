@@ -348,9 +348,11 @@ func TestRPCDeploySC(t *testing.T) {
 func TestRPCInvokeSC(t *testing.T) {
 	wallet, _ := prepareRPC(t)
 
+	fee := float64(3)
+
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
 		InvokeContract: &InvokeContractBuilder{
-			Contract: "04cb8da2caa2f7642287b244069da4fe5eadc17b5b6bb5b9fd9502dbcbb70370",
+			Contract: "f8ffd882e1907c501c23a86c3947b8222cc544a55d448cadcb28798e5f554be0",
 			MaxGas:   300,
 			ChunkId:  0,
 			Parameters: []sc_constant.Constant{
@@ -361,6 +363,7 @@ func TestRPCInvokeSC(t *testing.T) {
 				config.XELIS_ASSET: {Amount: 100, Private: false},
 			},
 		},
+		Fee:       &FeeBuilder{Multiplier: &fee},
 		Broadcast: true,
 	})
 	if err != nil {

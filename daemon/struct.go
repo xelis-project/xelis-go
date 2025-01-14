@@ -574,3 +574,14 @@ type NewContractEvent struct {
 	BlockHash  string `json:"block_hash"`
 	Topoheight uint64 `json:"topoheight"`
 }
+
+type InvokeContractEvent struct {
+	BlockHash       string           `json:"block_hash"`
+	TxHash          string           `json:"tx_hash"`
+	Topoheight      uint64           `json:"topoheight"`
+	ContractOutputs []ContractOutput `json:"contract_outputs"`
+}
+
+type InvokeContractEventParams struct {
+	Contract string `json:"contract"`
+}

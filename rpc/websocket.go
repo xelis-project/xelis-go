@@ -3,6 +3,7 @@ package rpc
 import (
 	"encoding/json"
 	"fmt"
+	"hash/fnv"
 	"net/http"
 	"net/url"
 	"sync"
@@ -16,7 +17,7 @@ type WebSocket struct {
 	id            int64
 	conn          *websocket.Conn
 	channels      map[int64]chan RPCResponse
-	events        map[string]int64
+	events        map[uint64]int64
 	mutex         sync.Mutex
 	ConnectionErr chan error
 }
@@ -36,7 +37,7 @@ func NewWebSocket(endpoint string, header http.Header) (*WebSocket, error) {
 		CallTimeout:   3 * time.Second,
 		conn:          conn,
 		channels:      make(map[int64]chan RPCResponse),
-		events:        make(map[string]int64),
+		events:        make(map[uint64]int64),
 		ConnectionErr: make(chan error),
 	}
 
@@ -82,13 +83,13 @@ func (w *WebSocket) listen() {
 	}()
 }
 
-func (w *WebSocket) subscribeEvent(event string) (RPCResponse, error) {
+func (w *WebSocket) subscribeEvent(event interface{}) (RPCResponse, error) {
 	return w.Call("subscribe", map[string]interface{}{
 		"notify": event,
 	})
 }
 
-func (w *WebSocket) unsubscribeEvent(event string) (RPCResponse, error) {
+func (w *WebSocket) unsubscribeEvent(event interface{}) (RPCResponse, error) {
 	return w.Call("unsubscribe", map[string]interface{}{
 		"notify": event,
 	})
@@ -113,8 +114,13 @@ func (w *WebSocket) Close() error {
 	return w.conn.Close()
 }
 
-func (w *WebSocket) CloseEvent(event string) error {
-	id, ok := w.events[event]
+func (w *WebSocket) CloseEvent(event interface{}) error {
+	eventHash, err := HashEvent(event)
+	if err != nil {
+		return err
+	}
+
+	id, ok := w.events[eventHash]
 	if ok {
 		res, err := w.unsubscribeEvent(event)
 		if err != nil {
@@ -129,15 +135,20 @@ func (w *WebSocket) CloseEvent(event string) error {
 		ch := w.channels[id]
 		close(ch)
 		delete(w.channels, id)
-		delete(w.events, event)
+		delete(w.events, eventHash)
 		w.mutex.Unlock()
 	}
 
 	return nil
 }
 
-func (w *WebSocket) ListenEvent(event string) (ch chan RPCResponse, err error) {
-	id, ok := w.events[event]
+func (w *WebSocket) ListenEvent(event interface{}) (ch chan RPCResponse, err error) {
+	eventHash, err := HashEvent(event)
+	if err != nil {
+		return
+	}
+
+	id, ok := w.events[eventHash]
 	if !ok {
 		var res RPCResponse
 		res, err = w.subscribeEvent(event)
@@ -151,7 +162,7 @@ func (w *WebSocket) ListenEvent(event string) (ch chan RPCResponse, err error) {
 		}
 
 		id = res.ID
-		w.events[event] = id
+		w.events[eventHash] = id
 	}
 
 	ch, ok = w.channels[id]
@@ -163,7 +174,7 @@ func (w *WebSocket) ListenEvent(event string) (ch chan RPCResponse, err error) {
 	return
 }
 
-func (w *WebSocket) ListenEventFunc(event string, onData func(RPCResponse)) (err error) {
+func (w *WebSocket) ListenEventFunc(event interface{}, onData func(RPCResponse)) (err error) {
 	ch, err := w.ListenEvent(event)
 	if err != nil {
 		return
@@ -233,5 +244,27 @@ func JsonFormatResponse(res RPCResponse, resErr error, result any) (err error) {
 	}
 
 	err = json.Unmarshal(res.Result, &result)
+	return
+}
+
+func EventParamsWrap(event string, params interface{}) interface{} {
+	eventMap := make(map[string]interface{})
+	eventMap[event] = params
+	return eventMap
+}
+
+func HashEvent(event interface{}) (data uint64, err error) {
+	eventJson, err := json.Marshal(event)
+	if err != nil {
+		return
+	}
+
+	h := fnv.New64a()
+	_, err = h.Write(eventJson)
+	if err != nil {
+		return
+	}
+
+	data = h.Sum64()
 	return
 }

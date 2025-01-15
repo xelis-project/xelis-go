@@ -251,7 +251,7 @@ func TestRPCTransfer(t *testing.T) {
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
 		Transfers: []TransferBuilder{
-			{Amount: 1, Asset: config.XELIS_ASSET, Destination: MAINNET_ADDR},
+			{Amount: 1, Asset: config.XELIS_ASSET, Destination: TESTING_ADDR},
 		},
 		Broadcast: false,
 		TxAsHex:   true,
@@ -445,20 +445,24 @@ func TestRPCDecryptCiphertext(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	t1 := (*tx.Data.Transfers)[0]
-	t.Log(t1)
+	if tx.Data.Transfers != nil {
+		t1 := (*tx.Data.Transfers)[0]
+		t.Log(t1)
 
-	result, err := wallet.DecryptCiphertext(DecryptCiphertextParams{
-		Ciphertext: CompressedCiphertext{
-			Commitment: t1.Commitment,
-			Handle:     t1.SenderHandle,
-		},
-	})
-	if err != nil {
-		t.Fatal(err)
+		result, err := wallet.DecryptCiphertext(DecryptCiphertextParams{
+			Ciphertext: CompressedCiphertext{
+				Commitment: t1.Commitment,
+				Handle:     t1.SenderHandle,
+			},
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		t.Logf("%+v", result)
+	} else {
+		t.Fail()
 	}
-
-	t.Logf("%+v", result)
 }
 
 func TestRPCGetAsset(t *testing.T) {

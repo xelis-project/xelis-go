@@ -133,13 +133,13 @@ type Block struct {
 }
 
 type Transfer struct {
-	Asset           string  `json:"asset"`
-	ExtraData       *[]uint `json:"extra_data"`
-	Destination     string  `json:"destination"`
-	Commitment      []uint  `json:"commitment"`
-	SenderHandle    []uint  `json:"sender_handle"`
-	ReceiverHandle  []uint  `json:"receiver_handle"`
-	CTValidityProof Proof   `json:"ct_validity_proof"`
+	Asset           string      `json:"asset"`
+	ExtraData       *[]uint     `json:"extra_data"`
+	Destination     interface{} `json:"destination"` // can be []uint or string - string from daemon - []uint from wallet
+	Commitment      []uint      `json:"commitment"`
+	SenderHandle    []uint      `json:"sender_handle"`
+	ReceiverHandle  []uint      `json:"receiver_handle"`
+	CTValidityProof Proof       `json:"ct_validity_proof"`
 }
 
 type Burn struct {
@@ -169,7 +169,7 @@ type InvokeContractPayload struct {
 	Parameters [][]uint                   `json:"parameters"`
 }
 
-type TransactionData struct {
+type TransactionType struct {
 	Transfers      *[]Transfer            `json:"transfers"`
 	Burn           *Burn                  `json:"burn"`
 	MultiSig       *MutliSigPayload       `json:"multi_sig"`
@@ -204,22 +204,49 @@ type SourceCommitment struct {
 	Asset      string  `json:"asset"`
 }
 
+type SignatureId struct {
+	Id        uint8  `json:"id"`
+	Signature string `json:"signature"`
+}
+
+type MultiSig struct {
+	Signatures map[uint8]SignatureId `json:"signatures"`
+}
+
 type Transaction struct {
-	Blocks            []string           `json:"blocks"`
 	Hash              string             `json:"hash"`
-	Data              TransactionData    `json:"data"`
+	Version           uint64             `json:"version"`
+	Source            string             `json:"source"`
+	Data              TransactionType    `json:"data"`
 	Fee               uint64             `json:"fee"`
 	Nonce             uint64             `json:"nonce"`
-	Source            string             `json:"source"`
-	Reference         Reference          `json:"reference"`
 	SourceCommitments []SourceCommitment `json:"source_commitments"`
 	RangeProof        []uint             `json:"range_proof"`
+	Reference         Reference          `json:"reference"`
+	MultiSig          *MultiSig          `json:"multisig"`
 	Signature         string             `json:"signature"`
-	ExecutedInBlock   *string            `json:"executed_in_block"`
-	Version           uint64             `json:"version"`
-	FirstSeen         *uint64            `json:"first_seen"`
-	InMempool         bool               `json:"in_mempool"`
 	Size              uint64             `json:"size"`
+}
+
+// copy of Transaction with more fields
+type TransactionResponse struct {
+	Hash              string             `json:"hash"`
+	Version           uint64             `json:"version"`
+	Source            string             `json:"source"`
+	Data              TransactionType    `json:"data"`
+	Fee               uint64             `json:"fee"`
+	Nonce             uint64             `json:"nonce"`
+	SourceCommitments []SourceCommitment `json:"source_commitments"`
+	RangeProof        []uint             `json:"range_proof"`
+	Reference         Reference          `json:"reference"`
+	MultiSig          *MultiSig          `json:"multisig"`
+	Signature         string             `json:"signature"`
+	Size              uint64             `json:"size"`
+
+	Blocks          []string `json:"blocks"`
+	ExecutedInBlock *string  `json:"executed_in_block"`
+	InMempool       bool     `json:"in_mempool"`
+	FirstSeen       *uint64  `json:"first_seen"`
 }
 
 type GetInfoResult struct {

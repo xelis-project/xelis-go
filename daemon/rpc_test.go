@@ -467,7 +467,7 @@ func TestRPCGetBlocksRange(t *testing.T) {
 
 func TestRPCGetTransactions(t *testing.T) {
 	daemon, _ := prepareRPC(t)
-	txHash := "d9a6810d667c212e499ceb2acf60a8fbc0096da66b1e7a59fb3ae5d412ad58f2"
+	txHash := "ad408903671458da4df55d96d8b407c79fae126b67b92750159da4eb8a46814d"
 
 	txs, err := daemon.GetTransactions(GetTransactionsParams{
 		TxHashes: []string{txHash},
@@ -477,18 +477,11 @@ func TestRPCGetTransactions(t *testing.T) {
 	}
 
 	t.Log(txs)
-
-	tx, err := daemon.GetTransaction(txHash)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	t.Log(tx)
 }
 
 func TestRPCGetTransaction(t *testing.T) {
 	daemon, _ := prepareRPC(t)
-	txHash := "5f5e2ff1677860ee1f3e3c58ba188f427fbcb2f344dfb15dd0f7ca60b03f624c"
+	txHash := "ad408903671458da4df55d96d8b407c79fae126b67b92750159da4eb8a46814d"
 
 	tx, err := daemon.GetTransaction(txHash)
 	if err != nil {

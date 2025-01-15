@@ -115,20 +115,6 @@ type Transfer struct {
 	CTValidityProof daemon.Proof `json:"ct_validity_proof"`
 }
 
-type TransactionResponse struct {
-	Data              daemon.TransactionData    `json:"data"`
-	Fee               uint64                    `json:"fee"`
-	Hash              string                    `json:"hash"`
-	Nonce             uint64                    `json:"nonce"`
-	RangeProof        []uint                    `json:"range_proof"`
-	Reference         daemon.Reference          `json:"reference"`
-	Signature         string                    `json:"signature"`
-	Source            []uint                    `json:"source"`
-	SourceCommitments []daemon.SourceCommitment `json:"source_commitments"`
-	TxAsHex           string                    `json:"tx_as_hex"`
-	Version           uint64                    `json:"version"`
-}
-
 type Outgoing struct {
 	Fee       uint64        `json:"fee"`
 	Nonce     uint64        `json:"nonce"`
@@ -151,6 +137,23 @@ type TransactionEntry struct {
 	Burn       *daemon.Burn `json:"burn"`
 	Incoming   *Incoming    `json:"incoming"`
 	Coinbase   *Coinbase    `json:"coinbase"`
+}
+
+// copy of daemon.Transaction with TxAsHex and source as []uint
+type TransactionResponse struct {
+	Hash              string                    `json:"hash"`
+	Version           uint64                    `json:"version"`
+	Source            []uint                    `json:"source"`
+	Data              daemon.TransactionType    `json:"data"`
+	Fee               uint64                    `json:"fee"`
+	Nonce             uint64                    `json:"nonce"`
+	SourceCommitments []daemon.SourceCommitment `json:"source_commitments"`
+	RangeProof        []uint                    `json:"range_proof"`
+	Reference         daemon.Reference          `json:"reference"`
+	MultiSig          *daemon.MultiSig          `json:"multisig"`
+	Signature         string                    `json:"signature"`
+	Size              uint64                    `json:"size"`
+	TxAsHex           *string                   `json:"tx_as_hex"`
 }
 
 type ListTransactionsParams struct {
@@ -218,7 +221,7 @@ type RangeProof struct {
 
 type UnsignedTransactionResponse struct {
 	Version           uint8                     `json:"version"`
-	Source            string                    `json:"source"`
+	Source            []uint                    `json:"source"`
 	Data              interface{}               `json:"data"`
 	Fee               uint64                    `json:"fee"`
 	Nonce             uint64                    `json:"nonce"`

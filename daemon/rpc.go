@@ -180,7 +180,7 @@ func (d *RPC) SubmitTransaction(data string) (result bool, err error) {
 	return
 }
 
-func (d *RPC) GetMempool() (txs []Transaction, err error) {
+func (d *RPC) GetMempool() (txs []TransactionResponse, err error) {
 	err = d.Client.CallResult(d.ctx, methods.GetMempool, nil, &txs)
 	return
 }
@@ -190,13 +190,13 @@ func (d *RPC) GetMempoolCache(params GetMempoolCacheParams) (result GetMempoolCa
 	return
 }
 
-func (d *RPC) GetTransaction(hash string) (tx Transaction, err error) {
+func (d *RPC) GetTransaction(hash string) (tx TransactionResponse, err error) {
 	params := map[string]string{"hash": hash}
 	err = d.Client.CallResult(d.ctx, methods.GetTransaction, params, &tx)
 	return
 }
 
-func (d *RPC) GetTransactions(params GetTransactionsParams) (txs []Transaction, err error) {
+func (d *RPC) GetTransactions(params GetTransactionsParams) (txs []TransactionResponse, err error) {
 	err = d.Client.CallResult(d.ctx, methods.GetTransactions, params, &txs)
 	return
 }

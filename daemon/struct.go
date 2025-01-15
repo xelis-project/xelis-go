@@ -151,11 +151,30 @@ type CallContract struct {
 	Contract string `json:"contract"`
 }
 
+type MutliSigPayload struct {
+	Threshold    uint8    `json:"threshold"`
+	Participants []string `json:"participants"`
+}
+
+type ContractDeposit struct {
+	Public uint64 `json:"public"`
+	// TODO: Private
+}
+
+type InvokeContractPayload struct {
+	Contract   string                     `json:"contract"`
+	Deposits   map[string]ContractDeposit `json:"deposits"`
+	ChunkId    uint16                     `json:"chunk_id"`
+	MaxGas     uint64                     `json:"max_gas"`
+	Parameters [][]uint                   `json:"parameters"`
+}
+
 type TransactionData struct {
-	Transfers []Transfer `json:"transfers"`
-	Burn      *Burn      `json:"burn"`
-	// CallContract   string     `json:"call_contract"`
-	// DeployContract string     `json:"deploy_contract"`
+	Transfers      *[]Transfer            `json:"transfers"`
+	Burn           *Burn                  `json:"burn"`
+	MultiSig       *MutliSigPayload       `json:"multi_sig"`
+	InvokeContract *InvokeContractPayload `json:"invoke_contract"`
+	DeployContract *Module                `json:"deploy_contract"`
 }
 
 type Reference struct {

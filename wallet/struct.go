@@ -71,11 +71,6 @@ type MutliSigBuilder struct {
 	Threshold    uint8    `json:"threshold"`
 }
 
-type MutliSigPayload struct {
-	Threshold    uint8    `json:"threshold"`
-	Participants []string `json:"participants"`
-}
-
 type ContractDepositBuilder struct {
 	Amount  uint64 `json:"amount"`
 	Private bool   `json:"private"`
@@ -120,29 +115,8 @@ type Transfer struct {
 	CTValidityProof daemon.Proof `json:"ct_validity_proof"`
 }
 
-type ContractDeposit struct {
-	Public uint64 `json:"public"`
-	// TODO: Private
-}
-
-type InvokeContractPayload struct {
-	Contract   string                     `json:"contract"`
-	Deposits   map[string]ContractDeposit `json:"deposits"`
-	ChunkId    uint16                     `json:"chunk_id"`
-	MaxGas     uint64                     `json:"max_gas"`
-	Parameters [][]uint                   `json:"parameters"`
-}
-
-type TransactionData struct {
-	Transfers      *[]Transfer            `json:"transfers"`
-	Burn           *daemon.Burn           `json:"burn"`
-	MultiSig       *MutliSigPayload       `json:"multi_sig"`
-	InvokeContract *InvokeContractPayload `json:"invoke_contract"`
-	DeployContract *daemon.Module         `json:"deploy_contract"`
-}
-
 type TransactionResponse struct {
-	Data              TransactionData           `json:"data"`
+	Data              daemon.TransactionData    `json:"data"`
 	Fee               uint64                    `json:"fee"`
 	Hash              string                    `json:"hash"`
 	Nonce             uint64                    `json:"nonce"`

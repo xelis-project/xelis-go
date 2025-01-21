@@ -45,7 +45,7 @@ func (w *WebSocket) NewTopoheightChannel() (chan uint64, chan error, error) {
 	chanResult := make(chan uint64)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(events.NewTopoheight, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(w.Prefix+events.NewTopoheight, func(res rpc.RPCResponse) {
 		var result map[string]interface{}
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -59,7 +59,7 @@ func (w *WebSocket) NewTopoheightChannel() (chan uint64, chan error, error) {
 }
 
 func (w *WebSocket) NewTopoheightFunc(onData func(uint64, error)) error {
-	return w.WS.ListenEventFunc(events.NewTopoheight, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(w.Prefix+events.NewTopoheight, func(res rpc.RPCResponse) {
 		var result map[string]interface{}
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		topoheight := uint64(result["topoheight"].(float64))
@@ -71,7 +71,7 @@ func (w *WebSocket) NewAssetChannel() (chan daemon.AssetData, chan error, error)
 	chanResult := make(chan daemon.AssetData)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(events.NewAsset, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(w.Prefix+events.NewAsset, func(res rpc.RPCResponse) {
 		var result daemon.AssetData
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -85,7 +85,7 @@ func (w *WebSocket) NewAssetChannel() (chan daemon.AssetData, chan error, error)
 }
 
 func (w *WebSocket) NewAssetFunc(onData func(daemon.AssetData, error)) error {
-	return w.WS.ListenEventFunc(events.NewAsset, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(w.Prefix+events.NewAsset, func(res rpc.RPCResponse) {
 		var result daemon.AssetData
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
@@ -96,7 +96,7 @@ func (w *WebSocket) NewTransactionChannel() (chan TransactionEntry, chan error, 
 	chanResult := make(chan TransactionEntry)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(events.NewTransaction, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(w.Prefix+events.NewTransaction, func(res rpc.RPCResponse) {
 		var result TransactionEntry
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -110,7 +110,7 @@ func (w *WebSocket) NewTransactionChannel() (chan TransactionEntry, chan error, 
 }
 
 func (w *WebSocket) NewTransactionFunc(onData func(TransactionEntry, error)) error {
-	return w.WS.ListenEventFunc(events.NewTransaction, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(w.Prefix+events.NewTransaction, func(res rpc.RPCResponse) {
 		var result TransactionEntry
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
@@ -121,7 +121,7 @@ func (w *WebSocket) BalanceChangedChannel() (chan BalanceChangedResult, chan err
 	chanResult := make(chan BalanceChangedResult)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(events.BalanceChanged, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(w.Prefix+events.BalanceChanged, func(res rpc.RPCResponse) {
 		var result BalanceChangedResult
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -135,7 +135,7 @@ func (w *WebSocket) BalanceChangedChannel() (chan BalanceChangedResult, chan err
 }
 
 func (w *WebSocket) BalanceChangedFunc(onData func(BalanceChangedResult, error)) error {
-	return w.WS.ListenEventFunc(events.BalanceChanged, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(w.Prefix+events.BalanceChanged, func(res rpc.RPCResponse) {
 		var result BalanceChangedResult
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
@@ -146,7 +146,7 @@ func (w *WebSocket) RescanChannel() (chan uint64, chan error, error) {
 	chanResult := make(chan uint64)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(events.Rescan, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(w.Prefix+events.Rescan, func(res rpc.RPCResponse) {
 		var result map[string]interface{}
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -160,7 +160,7 @@ func (w *WebSocket) RescanChannel() (chan uint64, chan error, error) {
 }
 
 func (w *WebSocket) RescanFunc(onData func(uint64, error)) error {
-	return w.WS.ListenEventFunc(events.Rescan, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(w.Prefix+events.Rescan, func(res rpc.RPCResponse) {
 		var result map[string]interface{}
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		startTopoheight := uint64(result["start_topoheight"].(float64))
@@ -172,7 +172,7 @@ func (w *WebSocket) HistorySyncedChannel() (chan uint64, chan error, error) {
 	chanResult := make(chan uint64)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(events.HistorySynced, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(w.Prefix+events.HistorySynced, func(res rpc.RPCResponse) {
 		var result map[string]interface{}
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
@@ -186,7 +186,7 @@ func (w *WebSocket) HistorySyncedChannel() (chan uint64, chan error, error) {
 }
 
 func (w *WebSocket) HistorySyncedFunc(onData func(uint64, error)) error {
-	return w.WS.ListenEventFunc(events.HistorySynced, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(w.Prefix+events.HistorySynced, func(res rpc.RPCResponse) {
 		var result map[string]interface{}
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		startTopoheight := uint64(result["topoheight"].(float64))
@@ -198,7 +198,7 @@ func (w *WebSocket) OnlineChannel() (chan bool, chan error, error) {
 	chanResult := make(chan bool)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(events.Online, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(w.Prefix+events.Online, func(res rpc.RPCResponse) {
 		chanResult <- true
 	})
 
@@ -206,7 +206,7 @@ func (w *WebSocket) OnlineChannel() (chan bool, chan error, error) {
 }
 
 func (w *WebSocket) OnlineFunc(onData func()) error {
-	return w.WS.ListenEventFunc(events.Online, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(w.Prefix+events.Online, func(res rpc.RPCResponse) {
 		onData()
 	})
 }
@@ -215,7 +215,7 @@ func (w *WebSocket) OfflineChannel() (chan bool, chan error, error) {
 	chanResult := make(chan bool)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(events.Offline, func(res rpc.RPCResponse) {
+	err := w.WS.ListenEventFunc(w.Prefix+events.Offline, func(res rpc.RPCResponse) {
 		chanResult <- true
 	})
 
@@ -223,7 +223,7 @@ func (w *WebSocket) OfflineChannel() (chan bool, chan error, error) {
 }
 
 func (w *WebSocket) OfflineFunc(onData func()) error {
-	return w.WS.ListenEventFunc(events.Offline, func(res rpc.RPCResponse) {
+	return w.WS.ListenEventFunc(w.Prefix+events.Offline, func(res rpc.RPCResponse) {
 		onData()
 	})
 }

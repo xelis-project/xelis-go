@@ -451,7 +451,7 @@ type GetMultisigAtTopoheightParams struct {
 	Topoheight uint32 `json:"topoheight"`
 }
 
-type GetMultisigAtTopoHeightResult struct {
+type GetMultisigAtTopoheightResult struct {
 	State string `json:"state"`
 }
 
@@ -601,7 +601,7 @@ type StableHeightChangedEvent struct {
 	NewStableHeight      uint64 `json:"new_stable_height"`
 }
 
-type StableTopoHeightChangedEvent struct {
+type StableTopoheightChangedEvent struct {
 	PreviousStableTopoheight uint64 `json:"previous_stable_topoheight"`
 	NewStableTopoheight      uint64 `json:"new_stable_topoheight"`
 }

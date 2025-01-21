@@ -309,7 +309,7 @@ func (d *RPC) HasMultisigAtTopoheight(params HasMultisigAtTopoheightParams) (res
 	return
 }
 
-func (d *RPC) GetMultisigAtTopoheight(params GetMultisigAtTopoheightParams) (result GetMultisigAtTopoHeightResult, err error) {
+func (d *RPC) GetMultisigAtTopoheight(params GetMultisigAtTopoheightParams) (result GetMultisigAtTopoheightResult, err error) {
 	err = d.Client.CallResult(d.ctx, methods.GetMultisigAtTopoheight, params, &result)
 	return
 }

@@ -259,12 +259,12 @@ func (w *WebSocket) StableHeightChangedFunc(onData func(StableHeightChangedEvent
 	})
 }
 
-func (w *WebSocket) StableTopoHeightChangedChannel() (chan StableTopoHeightChangedEvent, chan error, error) {
-	chanResult := make(chan StableTopoHeightChangedEvent)
+func (w *WebSocket) StableTopoheightChangedChannel() (chan StableTopoheightChangedEvent, chan error, error) {
+	chanResult := make(chan StableTopoheightChangedEvent)
 	chanErr := make(chan error)
 
-	err := w.WS.ListenEventFunc(events.StableTopoHeightChanged, func(res rpc.RPCResponse) {
-		var result StableTopoHeightChangedEvent
+	err := w.WS.ListenEventFunc(events.StableTopoheightChanged, func(res rpc.RPCResponse) {
+		var result StableTopoheightChangedEvent
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		if err != nil {
 			chanErr <- err
@@ -276,9 +276,9 @@ func (w *WebSocket) StableTopoHeightChangedChannel() (chan StableTopoHeightChang
 	return chanResult, chanErr, err
 }
 
-func (w *WebSocket) StableTopoHeightChangedFunc(onData func(StableTopoHeightChangedEvent, error)) error {
-	return w.WS.ListenEventFunc(events.StableTopoHeightChanged, func(res rpc.RPCResponse) {
-		var result StableTopoHeightChangedEvent
+func (w *WebSocket) StableTopoheightChangedFunc(onData func(StableTopoheightChangedEvent, error)) error {
+	return w.WS.ListenEventFunc(events.StableTopoheightChanged, func(res rpc.RPCResponse) {
+		var result StableTopoheightChangedEvent
 		err := rpc.JsonFormatResponse(res, nil, &result)
 		onData(result, err)
 	})
@@ -738,7 +738,7 @@ func (w *WebSocket) HasMultisigAtTopoheight(params HasMultisigAtTopoheightParams
 	return
 }
 
-func (w *WebSocket) GetMultisigAtTopoheight(params GetMultisigAtTopoheightParams) (result GetMultisigAtTopoHeightResult, err error) {
+func (w *WebSocket) GetMultisigAtTopoheight(params GetMultisigAtTopoheightParams) (result GetMultisigAtTopoheightResult, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetMultisigAtTopoheight, params)
 	err = rpc.JsonFormatResponse(res, err, &result)
 	return

@@ -1,6 +1,7 @@
 package extra_data
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"math/big"
@@ -10,6 +11,24 @@ type Element struct {
 	Value  Value
 	Array  []Element
 	Fields map[Value]Element
+}
+
+func ElementFromBytes(data []byte) (dataElement Element, err error) {
+	reader := ValueReader{Reader: bytes.NewReader(data)}
+	dataElement, err = reader.Read()
+	return
+}
+
+func (d Element) ToBytes() (data []byte, err error) {
+	var buf bytes.Buffer
+	writer := ValueWriter{Writer: &buf}
+	err = writer.Write(d)
+	if err != nil {
+		return
+	}
+
+	data = buf.Bytes()
+	return
 }
 
 func (d Element) MarshalJSON() ([]byte, error) {

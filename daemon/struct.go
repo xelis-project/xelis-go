@@ -422,6 +422,11 @@ type ExtractKeyFromAddressParams struct {
 	AsHex   bool   `json:"as_hex"`
 }
 
+type ExtractKeyFromAddressResult struct {
+	Hex   *string   `json:"hex"`
+	Bytes *[32]byte `json:"bytes"`
+}
+
 type SplitAddressParams struct {
 	Address string `json:"address"`
 }

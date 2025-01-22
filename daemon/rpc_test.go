@@ -319,23 +319,23 @@ func TestValidateAddress(t *testing.T) {
 	}
 	t.Logf("%+v", validAddr)
 
-	bytePublicKey, err := daemon.ExtractKeyFromAddress(ExtractKeyFromAddressParams{
+	result, err := daemon.ExtractKeyFromAddress(ExtractKeyFromAddressParams{
 		Address: WALLET_ADDR,
 		AsHex:   false,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("%+v", bytePublicKey)
+	t.Logf("%+v", result.Bytes)
 
-	hexPublicKey, err := daemon.ExtractKeyFromAddress(ExtractKeyFromAddressParams{
+	result, err = daemon.ExtractKeyFromAddress(ExtractKeyFromAddressParams{
 		Address: WALLET_ADDR,
 		AsHex:   true,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("%+v", hexPublicKey)
+	t.Logf("%+v", result.Hex)
 }
 
 func TestMakeIntegratedAddress(t *testing.T) {

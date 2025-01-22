@@ -269,7 +269,7 @@ func (d *RPC) ValidateAddress(params ValidateAddressParams) (result ValidateAddr
 	return
 }
 
-func (d *RPC) ExtractKeyFromAddress(params ExtractKeyFromAddressParams) (key interface{}, err error) {
+func (d *RPC) ExtractKeyFromAddress(params ExtractKeyFromAddressParams) (key ExtractKeyFromAddressResult, err error) {
 	err = d.Client.CallResult(d.ctx, methods.ExtractKeyFromAddress, params, &key)
 	return
 }

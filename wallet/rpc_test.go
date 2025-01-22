@@ -8,7 +8,9 @@ import (
 
 	"github.com/xelis-project/xelis-go-sdk/config"
 	"github.com/xelis-project/xelis-go-sdk/daemon"
+	d "github.com/xelis-project/xelis-go-sdk/daemon"
 	"github.com/xelis-project/xelis-go-sdk/sc_constant"
+	"github.com/xelis-project/xelis-go-sdk/signature"
 )
 
 const TESTING_ADDR = "xet:qf5u2p46jpgqmypqc2xwtq25yek2t7qhnqtdhw5kpfwcrlavs5asq0r83r7"
@@ -20,6 +22,16 @@ func prepareRPC(t *testing.T) (wallet *RPC, ctx context.Context) {
 	ctx = context.Background()
 	// wallet, err := NewRPC(ctx, "http://192.168.1.53:8081/json_rpc", "test", "test")
 	wallet, err := NewRPC(ctx, config.LOCAL_WALLET_RPC, "test", "test")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return
+}
+
+func prepareDaemonRPC(t *testing.T) (daemon *d.RPC, ctx context.Context) {
+	ctx = context.Background()
+	daemon, err := d.NewRPC(ctx, config.LOCAL_NODE_RPC)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -122,6 +134,45 @@ func TestRPCSignData(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("%+v", data)
+}
+
+func TestSignature(t *testing.T) {
+	wallet, _ := prepareRPC(t)
+	daemon, _ := prepareDaemonRPC(t)
+
+	addr, err := wallet.GetAddress(GetAddressParams{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", addr)
+
+	publicKey, err := daemon.ExtractKeyFromAddress(d.ExtractKeyFromAddressParams{
+		Address: addr,
+		AsHex:   false,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", publicKey)
+
+	data := map[string]interface{}{"hello": "world"}
+	dataSigned, err := wallet.SignData(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", dataSigned)
+
+	// serialized bytes equivalent to map[string]interface{}{"hello": "world"}
+	b := []byte{2, 1, 1, 5, 104, 101, 108, 108, 111, 0, 1, 5, 119, 111, 114, 108, 100}
+
+	valid, err := signature.Verify(*publicKey.Bytes, dataSigned, b)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !valid {
+		t.Fatal("invalid verification")
+	}
 }
 
 func TestRPCBalanceAndAsset(t *testing.T) {

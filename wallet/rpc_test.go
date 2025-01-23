@@ -6,9 +6,8 @@ import (
 	"testing"
 
 	"github.com/xelis-project/xelis-go-sdk/config"
-	"github.com/xelis-project/xelis-go-sdk/daemon"
-	d "github.com/xelis-project/xelis-go-sdk/daemon"
-	"github.com/xelis-project/xelis-go-sdk/extra_data"
+	da "github.com/xelis-project/xelis-go-sdk/daemon"
+	d "github.com/xelis-project/xelis-go-sdk/data"
 	"github.com/xelis-project/xelis-go-sdk/sc_constant"
 	"github.com/xelis-project/xelis-go-sdk/signature"
 )
@@ -28,8 +27,8 @@ func prepareRPC(t *testing.T) (wallet *RPC) {
 	return
 }
 
-func prepareDaemonRPC(t *testing.T) (daemon *d.RPC) {
-	daemon, err := d.NewRPC(config.LOCAL_NODE_RPC)
+func prepareDaemonRPC(t *testing.T) (daemon *da.RPC) {
+	daemon, err := da.NewRPC(config.LOCAL_NODE_RPC)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -128,9 +127,9 @@ func TestRPCRescan(t *testing.T) {
 func TestRPCSignDataFields(t *testing.T) {
 	wallet := prepareRPC(t)
 
-	element := extra_data.Element{
-		Fields: map[extra_data.Value]extra_data.Element{
-			"hello": extra_data.Element{Value: "world"},
+	element := d.Element{
+		Fields: map[d.Value]d.Element{
+			"hello": d.Element{Value: "world"},
 		},
 	}
 
@@ -144,9 +143,9 @@ func TestRPCSignDataFields(t *testing.T) {
 func TestRPCSignDataArray(t *testing.T) {
 	wallet := prepareRPC(t)
 
-	element := extra_data.Element{
-		Array: []extra_data.Element{
-			extra_data.Element{Value: 23469234},
+	element := d.Element{
+		Array: []d.Element{
+			d.Element{Value: 23469234},
 		},
 	}
 
@@ -160,7 +159,7 @@ func TestRPCSignDataArray(t *testing.T) {
 func TestRPCSignDataValue(t *testing.T) {
 	wallet := prepareRPC(t)
 
-	element := extra_data.Element{
+	element := d.Element{
 		Value: 3456349494,
 	}
 
@@ -181,7 +180,7 @@ func TestSignature(t *testing.T) {
 	}
 	t.Logf("%+v", addr)
 
-	publicKey, err := daemon.ExtractKeyFromAddress(d.ExtractKeyFromAddressParams{
+	publicKey, err := daemon.ExtractKeyFromAddress(da.ExtractKeyFromAddressParams{
 		Address: addr,
 		AsHex:   false,
 	})
@@ -319,7 +318,7 @@ func TestRPCBurn(t *testing.T) {
 	wallet := prepareRPC(t)
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
-		Burn: &daemon.Burn{
+		Burn: &da.Burn{
 			Asset:  config.XELIS_ASSET,
 			Amount: 1,
 		},

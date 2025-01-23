@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/xelis-project/xelis-go-sdk/config"
-	"github.com/xelis-project/xelis-go-sdk/extra_data"
+	d "github.com/xelis-project/xelis-go-sdk/data"
 )
 
 func prepareWS(t *testing.T) (wallet *WebSocket) {
@@ -117,7 +117,7 @@ func TestConnectionErr(t *testing.T) {
 func TestSignData(t *testing.T) {
 	wallet := prepareWS(t)
 
-	element := extra_data.Element{
+	element := d.Element{
 		Value: 3456349494,
 	}
 

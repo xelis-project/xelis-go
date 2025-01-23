@@ -1,4 +1,4 @@
-package extra_data
+package data
 
 type ValueType int
 

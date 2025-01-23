@@ -1,6 +1,6 @@
 package wallet
 
-import "github.com/xelis-project/xelis-go-sdk/extra_data"
+import "github.com/xelis-project/xelis-go-sdk/data"
 
 type QueryNumber struct {
 	Greater        uint `json:"greater,omitempty"`
@@ -25,21 +25,21 @@ type QueryPosition struct {
 }
 
 type QueryElement struct {
-	HasKey          *QueryHasKey           `json:"has_key,omitempty"`
-	AtKey           *QueryAtKey            `json:"at_key,omitempty"`
-	Len             QueryNumber            `json:"len,omitempty"`
-	ContainsElement extra_data.Element     `json:"contains_element,omitempty"`
-	AtPosition      *QueryPosition         `json:"at_position,omitempty"`
-	ElementType     extra_data.ElementType `json:"type,omitempty"`
+	HasKey          *QueryHasKey     `json:"has_key,omitempty"`
+	AtKey           *QueryAtKey      `json:"at_key,omitempty"`
+	Len             QueryNumber      `json:"len,omitempty"`
+	ContainsElement data.Element     `json:"contains_element,omitempty"`
+	AtPosition      *QueryPosition   `json:"at_position,omitempty"`
+	ElementType     data.ElementType `json:"type,omitempty"`
 }
 
 type QueryValue struct {
-	Equal         interface{}          `json:"equal,omitempty"`
-	StartsWith    interface{}          `json:"starts_with,omitempty"`
-	EndsWith      interface{}          `json:"ends_with,omitempty"`
-	ContainsValue interface{}          `json:"contains_value,omitempty"`
-	IsOfType      extra_data.ValueType `json:"is_of_type,omitempty"`
-	Matches       string               `json:"matches,omitempty"`
+	Equal         interface{}    `json:"equal,omitempty"`
+	StartsWith    interface{}    `json:"starts_with,omitempty"`
+	EndsWith      interface{}    `json:"ends_with,omitempty"`
+	ContainsValue interface{}    `json:"contains_value,omitempty"`
+	IsOfType      data.ValueType `json:"is_of_type,omitempty"`
+	Matches       string         `json:"matches,omitempty"`
 	*QueryNumber
 }
 

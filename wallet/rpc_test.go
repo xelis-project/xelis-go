@@ -1,7 +1,6 @@
 package wallet
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"testing"
@@ -9,6 +8,7 @@ import (
 	"github.com/xelis-project/xelis-go-sdk/config"
 	"github.com/xelis-project/xelis-go-sdk/daemon"
 	d "github.com/xelis-project/xelis-go-sdk/daemon"
+	"github.com/xelis-project/xelis-go-sdk/extra_data"
 	"github.com/xelis-project/xelis-go-sdk/sc_constant"
 	"github.com/xelis-project/xelis-go-sdk/signature"
 )
@@ -18,10 +18,9 @@ const MAINNET_ADDR = "xel:as3mgjlevw5ve6k70evzz8lwmsa5p0lgws2d60fulxylnmeqrp9qqu
 
 // cargo run --bin xelis_wallet -- --wallet-path ./wallets/test --password test --network dev --rpc-password test --rpc-bind-address 127.0.0.1:8081 --rpc-username test
 
-func prepareRPC(t *testing.T) (wallet *RPC, ctx context.Context) {
-	ctx = context.Background()
-	// wallet, err := NewRPC(ctx, "http://192.168.1.53:8081/json_rpc", "test", "test")
-	wallet, err := NewRPC(ctx, config.LOCAL_WALLET_RPC, "test", "test")
+func prepareRPC(t *testing.T) (wallet *RPC) {
+	// wallet, err := NewRPC("http://192.168.1.53:8081/json_rpc", "test", "test")
+	wallet, err := NewRPC(config.LOCAL_WALLET_RPC, "test", "test")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -29,9 +28,8 @@ func prepareRPC(t *testing.T) (wallet *RPC, ctx context.Context) {
 	return
 }
 
-func prepareDaemonRPC(t *testing.T) (daemon *d.RPC, ctx context.Context) {
-	ctx = context.Background()
-	daemon, err := d.NewRPC(ctx, config.LOCAL_NODE_RPC)
+func prepareDaemonRPC(t *testing.T) (daemon *d.RPC) {
+	daemon, err := d.NewRPC(config.LOCAL_NODE_RPC)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,7 +38,7 @@ func prepareDaemonRPC(t *testing.T) (daemon *d.RPC, ctx context.Context) {
 }
 
 func TestRPCGetVersion(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	version, err := wallet.GetVersion()
 	if err != nil {
@@ -50,7 +48,7 @@ func TestRPCGetVersion(t *testing.T) {
 }
 
 func TestRPCGetNetwork(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	network, err := wallet.GetNetwork()
 	if err != nil {
@@ -60,7 +58,7 @@ func TestRPCGetNetwork(t *testing.T) {
 }
 
 func TestRPCGetNonce(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	nonce, err := wallet.GetNonce()
 	if err != nil {
@@ -70,7 +68,7 @@ func TestRPCGetNonce(t *testing.T) {
 }
 
 func TestRPCGetTopoheight(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	topo, err := wallet.GetTopoheight()
 	if err != nil {
@@ -80,7 +78,7 @@ func TestRPCGetTopoheight(t *testing.T) {
 }
 
 func TestRPCGetAddress(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	address, err := wallet.GetAddress(GetAddressParams{})
 	if err != nil {
@@ -90,7 +88,7 @@ func TestRPCGetAddress(t *testing.T) {
 }
 
 func TestRPCIsOnline(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	isOnline, err := wallet.IsOnline()
 	if err != nil {
@@ -100,7 +98,7 @@ func TestRPCIsOnline(t *testing.T) {
 }
 
 func TestRPCIntegratedAddress(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	var integratedData interface{} = map[string]interface{}{"hello": "world"}
 
@@ -120,16 +118,53 @@ func TestRPCIntegratedAddress(t *testing.T) {
 }
 
 func TestRPCRescan(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 	_, err := wallet.Rescan(RescanParams{})
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
-func TestRPCSignData(t *testing.T) {
-	wallet, _ := prepareRPC(t)
-	data, err := wallet.SignData(map[string]interface{}{"hello": "world"})
+func TestRPCSignDataFields(t *testing.T) {
+	wallet := prepareRPC(t)
+
+	element := extra_data.Element{
+		Fields: map[extra_data.Value]extra_data.Element{
+			"hello": extra_data.Element{Value: "world"},
+		},
+	}
+
+	data, err := wallet.SignData(element)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", data)
+}
+
+func TestRPCSignDataArray(t *testing.T) {
+	wallet := prepareRPC(t)
+
+	element := extra_data.Element{
+		Array: []extra_data.Element{
+			extra_data.Element{Value: 23469234},
+		},
+	}
+
+	data, err := wallet.SignData(element)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("%+v", data)
+}
+
+func TestRPCSignDataValue(t *testing.T) {
+	wallet := prepareRPC(t)
+
+	element := extra_data.Element{
+		Value: 3456349494,
+	}
+
+	data, err := wallet.SignData(element)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -137,8 +172,8 @@ func TestRPCSignData(t *testing.T) {
 }
 
 func TestSignature(t *testing.T) {
-	wallet, _ := prepareRPC(t)
-	daemon, _ := prepareDaemonRPC(t)
+	wallet := prepareRPC(t)
+	daemon := prepareDaemonRPC(t)
 
 	addr, err := wallet.GetAddress(GetAddressParams{})
 	if err != nil {
@@ -176,7 +211,7 @@ func TestSignature(t *testing.T) {
 }
 
 func TestRPCBalanceAndAsset(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	balance, err := wallet.GetBalance(GetBalanceParams{
 		Asset: config.XELIS_ASSET,
@@ -210,7 +245,7 @@ func TestRPCBalanceAndAsset(t *testing.T) {
 }
 
 func TestRPCGetTransaction(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	// Send: 50ebdb059e5c9ad0f9fc7ac5d970b17ec2fc81bf197c9e737cf2d3ca14c5ae84
 	tx, err := wallet.GetTransaction(GetTransactionParams{
@@ -253,7 +288,7 @@ func TestRPCGetTransaction(t *testing.T) {
 }
 
 func TestRPCGetTransactionWithExtraData(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	tx, err := wallet.GetTransaction(GetTransactionParams{
 		Hash: "5459a2567c7666d902fa5042db601d50b8353cd73927d6b5c3ad4f99a1368206",
@@ -266,7 +301,7 @@ func TestRPCGetTransactionWithExtraData(t *testing.T) {
 }
 
 func TestRPCListTransactions(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	txs, err := wallet.ListTransactions(ListTransactionsParams{
 		AcceptOutgoing: true,
@@ -281,7 +316,7 @@ func TestRPCListTransactions(t *testing.T) {
 }
 
 func TestRPCBurn(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
 		Burn: &daemon.Burn{
@@ -298,7 +333,7 @@ func TestRPCBurn(t *testing.T) {
 }
 
 func TestRPCTransfer(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	result, err := wallet.BuildTransaction(BuildTransactionParams{
 		Transfers: []TransferBuilder{
@@ -314,7 +349,7 @@ func TestRPCTransfer(t *testing.T) {
 }
 
 func TestRPCSendExtraData(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	var extraData interface{} = map[string]interface{}{"hello": "world"}
 
@@ -344,7 +379,7 @@ func TestRPCSendExtraData(t *testing.T) {
 }
 
 func TestRPCSendWithFeeBuilder(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	// you can only have one of both
 	// either use Multiplier or Value
@@ -369,7 +404,7 @@ func TestRPCSendWithFeeBuilder(t *testing.T) {
 }
 
 func TestRPCDeploySC(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	/*
 		entry main(a: u64, b: u64) {
@@ -397,7 +432,7 @@ func TestRPCDeploySC(t *testing.T) {
 }
 
 func TestRPCInvokeSC(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	fee := float64(3)
 
@@ -425,7 +460,7 @@ func TestRPCInvokeSC(t *testing.T) {
 }
 
 func TestRPCEstimateFees(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	result, err := wallet.EstimateFees(EstimateFeesParams{
 		Transfers: []TransferBuilder{
@@ -441,7 +476,7 @@ func TestRPCEstimateFees(t *testing.T) {
 }
 
 func TestRPCNetworkInfo(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	result, err := wallet.NetworkInfo()
 	if err != nil {
@@ -452,7 +487,7 @@ func TestRPCNetworkInfo(t *testing.T) {
 }
 
 func TestRPCClearTxCache(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	result, err := wallet.ClearTxCache()
 	if err != nil {
@@ -463,7 +498,7 @@ func TestRPCClearTxCache(t *testing.T) {
 }
 
 func TestRPCEstimateExtraDataSize(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	var integratedData interface{} = map[string]interface{}{"hello": "world"}
 
@@ -483,7 +518,7 @@ func TestRPCEstimateExtraDataSize(t *testing.T) {
 }
 
 func TestRPCDecryptCiphertext(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	tx, err := wallet.BuildTransaction(BuildTransactionParams{
 		Transfers: []TransferBuilder{
@@ -517,7 +552,7 @@ func TestRPCDecryptCiphertext(t *testing.T) {
 }
 
 func TestRPCGetAsset(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	asset, err := wallet.GetAsset(GetAssetParams{
 		Asset: config.XELIS_ASSET,
@@ -530,7 +565,7 @@ func TestRPCGetAsset(t *testing.T) {
 }
 
 func TestRPCGetAssets(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	assets, err := wallet.GetAssets()
 	if err != nil {
@@ -541,7 +576,7 @@ func TestRPCGetAssets(t *testing.T) {
 }
 
 func TestRPCWalletDBKeyStore(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	tree := "my_app"
 
@@ -607,7 +642,7 @@ func TestRPCWalletDBKeyStore(t *testing.T) {
 }
 
 func TestRPCWalletCountMatchingEntries(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	tree := "my_app_2"
 
@@ -662,7 +697,7 @@ func TestRPCWalletCountMatchingEntries(t *testing.T) {
 }
 
 func TestRPCWalletQueryDB(t *testing.T) {
-	wallet, _ := prepareRPC(t)
+	wallet := prepareRPC(t)
 
 	tree := "my_app_3"
 

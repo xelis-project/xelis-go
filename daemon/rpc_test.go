@@ -1,7 +1,6 @@
 package daemon
 
 import (
-	"context"
 	"testing"
 
 	"github.com/xelis-project/xelis-go-sdk/config"
@@ -10,10 +9,9 @@ import (
 
 const WALLET_ADDR = "xet:62wnkswt0rmrdd9d2lawgpzuh87fkpmp4gx9j3g4u24yrdkdxgksqnuuucf"
 
-func prepareRPC(t *testing.T) (daemon *RPC, ctx context.Context) {
-	ctx = context.Background()
+func prepareRPC(t *testing.T) (daemon *RPC) {
 	// daemon, err := NewRPC(ctx, config.TESTNET_NODE_RPC)
-	daemon, err := NewRPC(ctx, config.LOCAL_NODE_RPC)
+	daemon, err := NewRPC(config.LOCAL_NODE_RPC)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -22,7 +20,7 @@ func prepareRPC(t *testing.T) (daemon *RPC, ctx context.Context) {
 }
 
 func TestGetVersion(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	version, err := daemon.GetVersion()
 	if err != nil {
@@ -32,7 +30,7 @@ func TestGetVersion(t *testing.T) {
 }
 
 func TestGetHeight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	height, err := daemon.GetHeight()
 	if err != nil {
@@ -42,7 +40,7 @@ func TestGetHeight(t *testing.T) {
 }
 
 func TestGetTopoheight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	topoheight, err := daemon.GetTopoheight()
 	if err != nil {
@@ -52,7 +50,7 @@ func TestGetTopoheight(t *testing.T) {
 }
 
 func TestGetStableHeight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	stableheight, err := daemon.GetStableHeight()
 	if err != nil {
@@ -62,7 +60,7 @@ func TestGetStableHeight(t *testing.T) {
 }
 
 func TestGetStableTopoheight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	stabletopoheight, err := daemon.GetStableTopoheight()
 	if err != nil {
@@ -72,7 +70,7 @@ func TestGetStableTopoheight(t *testing.T) {
 }
 
 func TestGetBlockTemplate(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	template, err := daemon.GetBlockTemplate(WALLET_ADDR)
 	if err != nil {
@@ -82,7 +80,7 @@ func TestGetBlockTemplate(t *testing.T) {
 }
 
 func TestGetBlockAtTopoheight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	genesisBlock, err := daemon.GetBlockAtTopoheight(GetBlockAtTopoheightParams{Topoheight: 0})
 	if err != nil {
@@ -92,7 +90,7 @@ func TestGetBlockAtTopoheight(t *testing.T) {
 }
 
 func TestGetBlocksAtHeight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	blocks, err := daemon.GetBlocksAtHeight(GetBlocksAtHeightParams{Height: 0})
 	if err != nil {
@@ -102,7 +100,7 @@ func TestGetBlocksAtHeight(t *testing.T) {
 }
 
 func TestGetBlockByHash(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	block, err := daemon.GetBlockByHash(GetBlockByHashParams{Hash: `23827b240a9e6aeb0e7164a4e402838ffc383efdc92789d705921fccfed516b5`})
 	if err != nil {
@@ -112,7 +110,7 @@ func TestGetBlockByHash(t *testing.T) {
 }
 
 func TestGetBlockAtTopoheightWithTxs(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	block, err := daemon.GetBlockAtTopoheight(GetBlockAtTopoheightParams{
 		Topoheight: 533,
@@ -125,7 +123,7 @@ func TestGetBlockAtTopoheightWithTxs(t *testing.T) {
 }
 
 func TestGetTopBlock(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	topBlock, err := daemon.GetTopBlock(GetTopBlockParams{})
 	if err != nil {
@@ -135,7 +133,7 @@ func TestGetTopBlock(t *testing.T) {
 }
 
 func TestGetInfo(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	info, err := daemon.GetInfo()
 	if err != nil {
@@ -145,7 +143,7 @@ func TestGetInfo(t *testing.T) {
 }
 
 func TestGetAsset(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	asset, err := daemon.GetAsset(config.XELIS_ASSET)
 	if err != nil {
@@ -155,7 +153,7 @@ func TestGetAsset(t *testing.T) {
 }
 
 func TestGetAssets(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	assets, err := daemon.GetAssets(GetAssetsParams{})
 	if err != nil {
@@ -165,7 +163,7 @@ func TestGetAssets(t *testing.T) {
 }
 
 func TestCountAssets(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	countAssets, err := daemon.CountAssets()
 	if err != nil {
@@ -175,7 +173,7 @@ func TestCountAssets(t *testing.T) {
 }
 
 func TestCountAccounts(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	countAccounts, err := daemon.CountAccounts()
 	if err != nil {
@@ -185,7 +183,7 @@ func TestCountAccounts(t *testing.T) {
 }
 
 func TestCountTransactions(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	countTransactions, err := daemon.CountTransactions()
 	if err != nil {
@@ -195,7 +193,7 @@ func TestCountTransactions(t *testing.T) {
 }
 
 func TestCountContracts(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	countContracts, err := daemon.CountContracts()
 	if err != nil {
@@ -205,7 +203,7 @@ func TestCountContracts(t *testing.T) {
 }
 
 func TestP2PStatus(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	status, err := daemon.P2PStatus()
 	if err != nil {
@@ -215,7 +213,7 @@ func TestP2PStatus(t *testing.T) {
 }
 
 func TestGetPeers(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetPeers()
 	if err != nil {
@@ -226,7 +224,7 @@ func TestGetPeers(t *testing.T) {
 }
 
 func TestGetMempool(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	mempool, err := daemon.GetMempool()
 	if err != nil {
@@ -236,7 +234,7 @@ func TestGetMempool(t *testing.T) {
 }
 
 func TestGetMempoolCache(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	cache, err := daemon.GetMempoolCache(GetMempoolCacheParams{
 		Address: WALLET_ADDR,
@@ -248,7 +246,7 @@ func TestGetMempoolCache(t *testing.T) {
 }
 
 func TestGetTips(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	tips, err := daemon.GetTips()
 	if err != nil {
@@ -258,7 +256,7 @@ func TestGetTips(t *testing.T) {
 }
 
 func TestGetDAGOrder(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	dagOrder, err := daemon.GetDAGOrder(GetTopoheightRangeParams{})
 	if err != nil {
@@ -268,7 +266,7 @@ func TestGetDAGOrder(t *testing.T) {
 }
 
 func TestGetAccounts(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	accounts, err := daemon.GetAccounts(GetAccountsParams{Maximum: 5})
 	if err != nil {
@@ -278,7 +276,7 @@ func TestGetAccounts(t *testing.T) {
 }
 
 func TestGetDevFeeThresholds(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	fees, err := daemon.GetDevFeeThresholds()
 	if err != nil {
@@ -288,7 +286,7 @@ func TestGetDevFeeThresholds(t *testing.T) {
 }
 
 func TestGetSizeOnDisk(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	size, err := daemon.GetSizeOnDisk()
 	if err != nil {
@@ -298,7 +296,7 @@ func TestGetSizeOnDisk(t *testing.T) {
 }
 
 func TestGetDifficulty(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	diff, err := daemon.GetDifficulty()
 	if err != nil {
@@ -308,7 +306,7 @@ func TestGetDifficulty(t *testing.T) {
 }
 
 func TestValidateAddress(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	validAddr, err := daemon.ValidateAddress(ValidateAddressParams{
 		Address:         WALLET_ADDR,
@@ -339,7 +337,7 @@ func TestValidateAddress(t *testing.T) {
 }
 
 func TestMakeIntegratedAddress(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	var integratedData interface{} = map[string]interface{}{"hello": "world"}
 
@@ -354,8 +352,8 @@ func TestMakeIntegratedAddress(t *testing.T) {
 }
 
 func TestRPCUnknownMethod(t *testing.T) {
-	daemon, ctx := prepareRPC(t)
-	res, err := daemon.Client.Call(ctx, "UnknownMethod", nil)
+	daemon := prepareRPC(t)
+	res, err := daemon.http.Request("UnknownMethod", nil, nil)
 	if err == nil {
 		t.Fatal("Expected an error")
 	}
@@ -364,7 +362,7 @@ func TestRPCUnknownMethod(t *testing.T) {
 }
 
 func TestRPCNonceAndBalance(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 	has, err := daemon.HasNonce(WALLET_ADDR)
 	if err != nil {
 		t.Fatal(err)
@@ -432,7 +430,7 @@ func TestRPCNonceAndBalance(t *testing.T) {
 }
 
 func TestRPCGetBlocksRange(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	topoheight, err := daemon.GetTopoheight()
 	if err != nil {
@@ -466,7 +464,7 @@ func TestRPCGetBlocksRange(t *testing.T) {
 }
 
 func TestRPCGetTransactions(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 	txHash := "ad408903671458da4df55d96d8b407c79fae126b67b92750159da4eb8a46814d"
 
 	txs, err := daemon.GetTransactions(GetTransactionsParams{
@@ -480,7 +478,7 @@ func TestRPCGetTransactions(t *testing.T) {
 }
 
 func TestRPCGetTransaction(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 	txHash := "ad408903671458da4df55d96d8b407c79fae126b67b92750159da4eb8a46814d"
 
 	tx, err := daemon.GetTransaction(txHash)
@@ -493,7 +491,7 @@ func TestRPCGetTransaction(t *testing.T) {
 
 func TestRPCExecutedInBlock(t *testing.T) {
 	// https://testnet-explorer.xelis.io/blocks/000000001849d07bbb4165c8ba1d1fc472a0629f56895efb8689e06ce62b3ca8
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 	executed, err := daemon.IsTxExecutedInBlock(IsTxExecutedInBlockParams{
 		TxHash:    "6e4bbd77b305fb68e2cc7576b4846d2db3617e3cbc2eb851cb2ae69b879e9d0f",
 		BlockHash: "000000001849d07bbb4165c8ba1d1fc472a0629f56895efb8689e06ce62b3ca8",
@@ -510,7 +508,7 @@ func TestRPCExecutedInBlock(t *testing.T) {
 }
 
 func TestRPCAccount(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 	history, err := daemon.GetAccountHistory(WALLET_ADDR)
 	if err != nil {
 		t.Fatal(err)
@@ -536,7 +534,7 @@ func TestRPCAccount(t *testing.T) {
 func TestRPCRegistration(t *testing.T) {
 	// using mainnet for this test
 	// we need to resync the blockchain to work on testnet
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	topoheight, err := daemon.GetAccountRegistrationTopoheight(WALLET_ADDR)
 	if err != nil {
@@ -557,7 +555,7 @@ func TestRPCRegistration(t *testing.T) {
 }
 
 func TestGetMinerWork(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	var addr = "xet:w64wu066sq7jq4v9f37a5gy8hgyvc2gvt237u2457mme2m2r7avqqtmufz3"
 
@@ -578,7 +576,7 @@ func TestGetMinerWork(t *testing.T) {
 }
 
 func TestSplitAddress(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.SplitAddress(SplitAddressParams{Address: "xet:upqflhm65lmjtukavf4de93kphk4j990hw9x9hhrc8rwleduruhqzqqpqvcnydgd3plda"})
 	if err != nil {
@@ -589,7 +587,7 @@ func TestSplitAddress(t *testing.T) {
 }
 
 func TestGetEstimatedFeeRates(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetEstimatedFeeRates()
 	if err != nil {
@@ -600,7 +598,7 @@ func TestGetEstimatedFeeRates(t *testing.T) {
 }
 
 func TestGetPrunedTopoheight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetPrunedTopoheight()
 	if err != nil {
@@ -611,7 +609,7 @@ func TestGetPrunedTopoheight(t *testing.T) {
 }
 
 func TestGetHardForks(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetHardForks()
 	if err != nil {
@@ -622,7 +620,7 @@ func TestGetHardForks(t *testing.T) {
 }
 
 func TestGetTransactionExecutor(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetTransactionExecutor(GetTransactionExecutorParams{
 		Hash: "",
@@ -635,7 +633,7 @@ func TestGetTransactionExecutor(t *testing.T) {
 }
 
 func TestHasMultisigAtTopoheight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.HasMultisigAtTopoheight(HasMultisigAtTopoheightParams{
 		Address:    WALLET_ADDR,
@@ -649,7 +647,7 @@ func TestHasMultisigAtTopoheight(t *testing.T) {
 }
 
 func TestGetMultisigAtTopoheight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetMultisigAtTopoheight(GetMultisigAtTopoheightParams{
 		Address:    WALLET_ADDR,
@@ -663,7 +661,7 @@ func TestGetMultisigAtTopoheight(t *testing.T) {
 }
 
 func TestGetMultisig(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetMultisig(GetMultisigParams{
 		Address: WALLET_ADDR,
@@ -676,7 +674,7 @@ func TestGetMultisig(t *testing.T) {
 }
 
 func TestHasMultisig(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.HasMultisig(HasMultisigParams{
 		Address: WALLET_ADDR,
@@ -689,7 +687,7 @@ func TestHasMultisig(t *testing.T) {
 }
 
 func TestGetContractOutputs(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetContractOutputs(GetContractOutputsParams{
 		Transaction: "5fd92b6c61780a003f91f6c52a44de34e69e17e41602cf98cf88d08b35406150",
@@ -711,7 +709,7 @@ func TestGetContractOutputs(t *testing.T) {
 }
 
 func TestGetContractModule(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetContractModule(GetContractModuleParams{
 		Contract: "bbabe3b0442f3d794a2ca5208ae429781c27c26b1ee4571f62b7d40755204d63",
@@ -724,7 +722,7 @@ func TestGetContractModule(t *testing.T) {
 }
 
 func TestGetContractData(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetContractData(GetContractDataParams{
 		Contract: "04cb8da2caa2f7642287b244069da4fe5eadc17b5b6bb5b9fd9502dbcbb70370",
@@ -738,7 +736,7 @@ func TestGetContractData(t *testing.T) {
 }
 
 func TestGetContractDataAtTopoheight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetContractDataAtTopoheight(GetContractDataAtTopoheightParams{
 		Contract:   "bbabe3b0442f3d794a2ca5208ae429781c27c26b1ee4571f62b7d40755204d63",
@@ -753,7 +751,7 @@ func TestGetContractDataAtTopoheight(t *testing.T) {
 }
 
 func TestGetContractBalance(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetContractBalance(GetContractBalanceParams{
 		Contract: "bbabe3b0442f3d794a2ca5208ae429781c27c26b1ee4571f62b7d40755204d63",
@@ -767,7 +765,7 @@ func TestGetContractBalance(t *testing.T) {
 }
 
 func TestGetContractBalanceAtTopoheight(t *testing.T) {
-	daemon, _ := prepareRPC(t)
+	daemon := prepareRPC(t)
 
 	result, err := daemon.GetContractBalanceAtTopoheight(GetContractBalanceAtTopoheightParams{
 		Contract:   "bbabe3b0442f3d794a2ca5208ae429781c27c26b1ee4571f62b7d40755204d63",

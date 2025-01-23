@@ -165,6 +165,7 @@ func (d *RPC) SetOfflineMode() (success bool, err error) {
 }
 
 func (d *RPC) SignData(data data.Element) (signature string, err error) {
+	// note: SignData parse params null value to {}
 	_, err = d.http.Request(methods.SignData, data, &signature)
 	return
 }

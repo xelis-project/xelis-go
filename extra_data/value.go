@@ -15,10 +15,4 @@ var BlobType ValueType = 8
 type Hash [32]byte
 type Blob []uint8
 
-type ElementType int
-
-var ElementValue ElementType = 0
-var ElementArray ElementType = 1
-var ElementFields ElementType = 2
-
 type Value interface{}

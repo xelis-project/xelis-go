@@ -7,6 +7,12 @@ import (
 	"math/big"
 )
 
+type ElementType int
+
+var ElementValueType ElementType = 0
+var ElementArrayType ElementType = 1
+var ElementFieldsType ElementType = 2
+
 type Element struct {
 	Value  Value
 	Array  []Element

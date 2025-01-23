@@ -18,7 +18,7 @@ func (d *ValueReader) Read() (dataElement Element, err error) {
 	}
 
 	switch dataElementType {
-	case byte(ElementValue): // Value
+	case byte(ElementValueType): // Value
 		var value Value
 		value, err = d.readValue()
 		if err != nil {
@@ -26,7 +26,7 @@ func (d *ValueReader) Read() (dataElement Element, err error) {
 		}
 
 		dataElement = Element{Value: value}
-	case byte(ElementArray): // Array
+	case byte(ElementArrayType): // Array
 		var size byte
 		size, err = d.Reader.ReadByte()
 		if err != nil {
@@ -45,7 +45,7 @@ func (d *ValueReader) Read() (dataElement Element, err error) {
 		}
 
 		dataElement = Element{Array: values}
-	case byte(ElementFields): // Fields / Map
+	case byte(ElementFieldsType): // Fields / Map
 		var size byte
 		size, err = d.Reader.ReadByte()
 		if err != nil {

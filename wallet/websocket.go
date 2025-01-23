@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/xelis-project/xelis-go-sdk/daemon"
+	"github.com/xelis-project/xelis-go-sdk/data"
 	"github.com/xelis-project/xelis-go-sdk/rpc"
 	"github.com/xelis-project/xelis-go-sdk/wallet/events"
 	"github.com/xelis-project/xelis-go-sdk/wallet/methods"
@@ -384,7 +385,7 @@ func (w *WebSocket) SetOfflineMode() (success bool, err error) {
 	return
 }
 
-func (w *WebSocket) SignData(data interface{}) (signature string, err error) {
+func (w *WebSocket) SignData(data data.Element) (signature string, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.SignData, data)
 	err = rpc.JsonFormatResponse(res, err, &signature)
 	return

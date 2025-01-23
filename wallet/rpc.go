@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/xelis-project/xelis-go-sdk/data"
 	"github.com/xelis-project/xelis-go-sdk/rpc"
 	"github.com/xelis-project/xelis-go-sdk/wallet/methods"
 )
@@ -163,7 +164,7 @@ func (d *RPC) SetOfflineMode() (success bool, err error) {
 	return
 }
 
-func (d *RPC) SignData(data interface{}) (signature string, err error) {
+func (d *RPC) SignData(data data.Element) (signature string, err error) {
 	_, err = d.http.Request(methods.SignData, data, &signature)
 	return
 }

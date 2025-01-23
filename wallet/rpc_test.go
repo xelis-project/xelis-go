@@ -189,7 +189,11 @@ func TestSignature(t *testing.T) {
 	}
 	t.Logf("%+v", publicKey)
 
-	data := map[string]interface{}{"hello": "world"}
+	// data := map[string]interface{}{"hello": "world"}
+	data := d.Element{Fields: map[d.Value]d.Element{
+		"hello": d.Element{Value: "world"},
+	}}
+
 	dataSigned, err := wallet.SignData(data)
 	if err != nil {
 		t.Fatal(err)
@@ -197,7 +201,11 @@ func TestSignature(t *testing.T) {
 	t.Logf("%+v", dataSigned)
 
 	// serialized bytes equivalent to map[string]interface{}{"hello": "world"}
-	b := []byte{2, 1, 1, 5, 104, 101, 108, 108, 111, 0, 1, 5, 119, 111, 114, 108, 100}
+	// b := []byte{2, 1, 1, 5, 104, 101, 108, 108, 111, 0, 1, 5, 119, 111, 114, 108, 100}
+	b, err := data.ToBytes()
+	if err != nil {
+		return
+	}
 
 	valid, err := signature.Verify(*publicKey.Bytes, dataSigned, b)
 	if err != nil {

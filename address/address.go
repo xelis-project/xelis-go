@@ -147,13 +147,13 @@ func (a *Address) Format() (addr string, err error) {
 			return
 		}
 
-		var extraData bytes.Buffer
-		dataValueWriter := &extra_data.ValueWriter{Writer: &extraData}
-		err = dataValueWriter.Write(*a.extraData)
+		var extraData []byte
+		extraData, err = a.extraData.ToBytes()
 		if err != nil {
 			return
 		}
-		_, err = buf.Write(extraData.Bytes())
+
+		_, err = buf.Write(extraData)
 		if err != nil {
 			return
 		}

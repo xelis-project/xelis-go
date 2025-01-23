@@ -109,3 +109,55 @@ func TestElementValueJSON(t *testing.T) {
 
 	t.Logf("%+v", string(b))
 }
+
+func TestEmptyElement(t *testing.T) {
+	data := Element{}
+
+	jsonBytes, err := json.Marshal(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", jsonBytes)
+
+	b, err := data.ToBytes()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", b)
+}
+
+func TestElementTwoValueJSON(t *testing.T) {
+	data := Element{
+		Value: Element{Value: 10},
+		Array: []Element{
+			{Value: 10},
+			{Value: 20},
+		},
+	}
+
+	_, err := json.Marshal(data)
+	if err == nil {
+		t.Fatal("Expected an error")
+	}
+
+	t.Log(err)
+}
+
+func TestElementTwoValueBytes(t *testing.T) {
+	data := Element{
+		Value: Element{Value: 10},
+		Array: []Element{
+			{Value: 10},
+			{Value: 20},
+		},
+	}
+
+	_, err := data.ToBytes()
+	if err == nil {
+		t.Fatal("Expected an error")
+	}
+
+	t.Log(err)
+}

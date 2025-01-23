@@ -23,7 +23,13 @@ type ValueWriter struct {
 }
 
 func (d *ValueWriter) Write(dataElement Element) (err error) {
-	if dataElement.Value != nil {
+	eType, err := dataElement.validate()
+	if err != nil {
+		return
+	}
+
+	switch eType {
+	case ElementValueType:
 		err = d.writeByte(byte(ElementValueType))
 		if err != nil {
 			return
@@ -33,9 +39,7 @@ func (d *ValueWriter) Write(dataElement Element) (err error) {
 		if err != nil {
 			return
 		}
-	}
-
-	if dataElement.Array != nil {
+	case ElementArrayType:
 		err = d.writeByte(byte(ElementArrayType))
 		if err != nil {
 			return
@@ -52,9 +56,7 @@ func (d *ValueWriter) Write(dataElement Element) (err error) {
 				return
 			}
 		}
-	}
-
-	if dataElement.Fields != nil {
+	case ElementFieldsType:
 		err = d.writeByte(byte(ElementFieldsType))
 		if err != nil {
 			return

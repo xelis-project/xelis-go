@@ -3,6 +3,7 @@ package data
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math/big"
 )
@@ -38,34 +39,83 @@ func (d Element) ToBytes() (data []byte, err error) {
 }
 
 func (d Element) MarshalJSON() ([]byte, error) {
-	return json.Marshal(d.ToMap())
+	m, err := d.ToMap()
+	if err != nil {
+		return nil, err
+	}
+
+	return json.Marshal(m)
+}
+
+func (d *Element) validate() (eType ElementType, err error) {
+	count := 0
+
+	if d.Value != nil {
+		count++
+		eType = ElementValueType
+	}
+
+	if d.Array != nil {
+		count++
+		eType = ElementArrayType
+	}
+
+	if d.Fields != nil {
+		count++
+		eType = ElementFieldsType
+	}
+
+	if count > 1 {
+		err = errors.New("only one field (Value, Array, or Fields) must be set")
+		return
+	}
+
+	return
 }
 
 // use this function to convert to a valid interface for json.Marshal()
-func (d Element) ToMap() interface{} {
-	if d.Value != nil {
+func (d Element) ToMap() (data interface{}, err error) {
+	field, err := d.validate()
+	if err != nil {
+		return
+	}
+
+	switch field {
+	case ElementValueType:
 		switch value := d.Value.(type) {
 		case big.Int:
-			return value.String()
+			data = value.String()
 		default:
-			return value
+			data = value
 		}
-	} else if d.Array != nil {
+	case ElementArrayType:
 		var array []interface{}
 		for _, item := range d.Array {
-			array = append(array, item.ToMap())
+			var m interface{}
+			m, err = item.ToMap()
+			if err != nil {
+				return
+			}
+
+			array = append(array, m)
 		}
 
-		return array
-	} else if d.Fields != nil {
+		data = array
+	case ElementFieldsType:
 		fields := make(map[string]interface{})
 		for key, item := range d.Fields {
 			sKey := fmt.Sprintf("%v", key)
-			fields[sKey] = item.ToMap()
+			var m interface{}
+			m, err = item.ToMap()
+			if err != nil {
+				return
+			}
+
+			fields[sKey] = m
 		}
 
-		return fields
+		data = fields
 	}
 
-	return nil
+	return
 }

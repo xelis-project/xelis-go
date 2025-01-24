@@ -3,7 +3,7 @@ package signature
 import (
 	"encoding/hex"
 
-	ristretto255 "github.com/gtank/ristretto255"
+	"github.com/gtank/ristretto255"
 	"golang.org/x/crypto/sha3"
 )
 

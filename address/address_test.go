@@ -42,6 +42,13 @@ func TestInvalidAddress(t *testing.T) {
 		t.Fail()
 	}
 }
+func TestInvalidNetworkPrefix(t *testing.T) {
+	// test by commenting out verify checksum
+	_, err := NewAddressFromString("xea:ys4peuzztwl67rzhsdu0yxfzwcfmgt85uu53hycpeeary7n8qvysqmxznt0")
+	if err == nil {
+		t.Fail()
+	}
+}
 
 func TestIntegratedAddress(t *testing.T) {
 	address, err := NewAddressFromString("xet:6eadzwf5xdacts6fs4y3csmnsmy4mcxewqt3xyygwfx0hm0tm32szqsrqyzkjar9d4esyqgpq4ehwmmjvsqqypgpq45x2mrvduqqzpthdaexceqpq4mk7unywvqsgqqpq4yx2mrvduqqzp2hdaexceqqqyzxvun0d5qqzp2cg4xyj5ct5udlg")

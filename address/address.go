@@ -14,6 +14,7 @@ var TestnetPrefixAddress string = "xet"
 var ExtraDataLimit = 1024
 
 var ErrIntegratedDataLimit = errors.New("invalid data in integrated address, maximum size reached")
+var ErrInvalidNetworkPrefix = fmt.Errorf("invalid network prefix (%s or %s)", PrefixAddress, TestnetPrefixAddress)
 
 type Address struct {
 	publicKey    []byte
@@ -77,6 +78,7 @@ func NewAddressFromString(address string) (addr *Address, err error) {
 	}
 
 	if hrp != PrefixAddress && hrp != TestnetPrefixAddress {
+		err = ErrInvalidNetworkPrefix
 		return
 	}
 

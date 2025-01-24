@@ -34,6 +34,10 @@ func ErrInvalidValue(value byte, max int) Bech32Error {
 	return fmt.Errorf("invalid value: %d, max is %d", value, max)
 }
 
+func ErrInvalidDataRange(value uint16, from uint16) Bech32Error {
+	return fmt.Errorf("invalid data range: %d, max is %d", value, from)
+}
+
 func polymod(values []byte) uint32 {
 	chk := uint32(1)
 	for _, value := range values {
@@ -89,6 +93,7 @@ func convertBits(data []byte, from uint16, to uint16, pad bool) (result []byte, 
 	for _, v := range data {
 		value := uint16(v)
 		if value>>from != 0 {
+			err = ErrInvalidDataRange(value, from)
 			return
 		}
 

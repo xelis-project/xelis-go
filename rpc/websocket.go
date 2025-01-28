@@ -201,32 +201,33 @@ func (w *WebSocket) Call(method string, params interface{}) (res RPCResponse, er
 }
 
 func (w *WebSocket) RawCall(id int64, data []byte) (res RPCResponse, err error) {
-	ch := make(chan RPCResponse)
-	w.channels[id] = ch
-
-	var timer *time.Timer
-	if w.CallTimeout > 0 {
-		timer = time.AfterFunc(w.CallTimeout, func() {
-			defer w.mutex.Unlock()
-			w.mutex.Lock()
-
-			ch, ok := w.channels[w.id]
-			if ok {
-				close(ch)
-				delete(w.channels, w.id)
-				err = fmt.Errorf("timeout waiting for response")
-			}
-		})
-	}
+	resChan := make(chan RPCResponse)
+	w.channels[id] = resChan
 
 	err = w.conn.WriteMessage(websocket.TextMessage, data)
 	if err != nil {
 		return
 	}
 
-	res = <-ch
-	if timer != nil {
-		timer.Stop()
+	var timerChan <-chan time.Time
+	if w.CallTimeout > 0 {
+		timerChan = time.After(w.CallTimeout)
+	}
+
+	select {
+	case res = <-resChan:
+		break
+	case <-timerChan:
+		defer w.mutex.Unlock()
+		w.mutex.Lock()
+
+		ch, ok := w.channels[w.id]
+		if ok {
+			close(ch)
+			delete(w.channels, w.id)
+			err = fmt.Errorf("timeout waiting for response")
+		}
+		break
 	}
 
 	return

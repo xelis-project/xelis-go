@@ -110,7 +110,7 @@ func TestWSOnlineOffline(t *testing.T) {
 func TestConnectionErr(t *testing.T) {
 	wallet := prepareWS(t)
 
-	err := <-wallet.ConnectionErr()
+	err := <-wallet.ConnectionErr() // Close the wallet connection to test
 	t.Log(err)
 }
 

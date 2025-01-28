@@ -65,15 +65,7 @@ func (w *WebSocket) listen() {
 				// Close channel if it's not an event.
 				// We will never receive data from that channel ever again, because the id is incremented each call.
 				// I'm not sure if it's OK to leave a channel open. Maybe it's picked up by GC, but I prefer to close manually and avoid leak.
-				isEvent := false
-				for _, eventId := range w.events {
-					if eventId == id {
-						isEvent = true
-						break
-					}
-				}
-
-				if !isEvent {
+				if !w.isEventId(id) {
 					close(ch)
 					delete(w.channels, id)
 				}
@@ -81,6 +73,16 @@ func (w *WebSocket) listen() {
 			w.mutex.Unlock()
 		}
 	}()
+}
+
+func (w *WebSocket) isEventId(id int64) (isEvent bool) {
+	for _, eventId := range w.events {
+		if eventId == id {
+			isEvent = true
+			break
+		}
+	}
+	return
 }
 
 func (w *WebSocket) subscribeEvent(event interface{}) (RPCResponse, error) {

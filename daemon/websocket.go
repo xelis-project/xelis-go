@@ -411,6 +411,31 @@ func (w *WebSocket) InvokeContractFunc(params InvokeContractEventParams, onData 
 	})
 }
 
+func (w *WebSocket) NewBlockTemplateFunc(onData func(GetBlockTemplateResult, error)) error {
+	return w.WS.ListenEventFunc(w.Prefix+events.NewBlockTemplate, func(r rpc.RPCResponse) {
+		var result GetBlockTemplateResult
+		err := rpc.JsonFormatResponse(r, nil, &result)
+		onData(result, err)
+	})
+}
+
+func (w *WebSocket) NewBlockTemplateChannel() (chan GetBlockTemplateResult, chan error, error) {
+	chanResult := make(chan GetBlockTemplateResult)
+	chanErr := make(chan error)
+
+	err := w.WS.ListenEventFunc(w.Prefix+events.NewBlockTemplate, func(res rpc.RPCResponse) {
+		var result GetBlockTemplateResult
+		err := rpc.JsonFormatResponse(res, nil, &result)
+		if err != nil {
+			chanErr <- err
+		} else {
+			chanResult <- result
+		}
+	})
+
+	return chanResult, chanErr, err
+}
+
 func (w *WebSocket) GetVersion() (version string, err error) {
 	res, err := w.WS.Call(w.Prefix+methods.GetVersion, nil)
 	err = rpc.JsonFormatResponse(res, err, &version)

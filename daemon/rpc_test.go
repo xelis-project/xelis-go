@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/xelis-project/xelis-go-sdk/config"
+	"github.com/xelis-project/xelis-go-sdk/daemon/methods"
+	"github.com/xelis-project/xelis-go-sdk/rpc"
 	"github.com/xelis-project/xelis-go-sdk/sc_constant"
 )
 
@@ -777,4 +779,71 @@ func TestGetContractBalanceAtTopoheight(t *testing.T) {
 	}
 
 	t.Log(result)
+}
+
+func TestBatchRequest(t *testing.T) {
+	daemon := prepareRPC(t)
+
+	requests := []rpc.RPCRequest{
+		{ID: 0, Method: methods.GetTopoheight},
+		{ID: 1, Method: methods.GetTopBlock},
+	}
+
+	result := make(map[int64]interface{})
+
+	var topoheight uint64
+	result[0] = &topoheight
+
+	var topBlock Block
+	result[1] = &topBlock
+
+	res, errs := daemon.BatchRequest(requests, result)
+	if errs != nil {
+		t.Fatal(errs)
+	}
+
+	t.Logf("%+v", res)
+	t.Log(topoheight)
+	t.Logf("%+v", topBlock)
+}
+
+func TestInvalidBatchRequest(t *testing.T) {
+	daemon := prepareRPC(t)
+
+	requests := []rpc.RPCRequest{
+		{ID: 0, Method: methods.GetTopoheight},
+		{ID: 1, Method: "invalid"},
+	}
+
+	result := make(map[int64]interface{})
+
+	var topoheight uint64
+	result[0] = &topoheight
+
+	var height uint64
+	result[1] = &height
+
+	_, errs := daemon.BatchRequest(requests, result)
+	if errs == nil {
+		t.Fail()
+	}
+
+	t.Logf("%+v", errs)
+}
+
+func TestInvalidBatchRequestMapping(t *testing.T) {
+	daemon := prepareRPC(t)
+
+	requests := []rpc.RPCRequest{
+		{ID: 0, Method: methods.GetTopoheight},
+	}
+
+	result := make(map[int64]interface{})
+
+	_, errs := daemon.BatchRequest(requests, result)
+	if errs == nil {
+		t.Fail()
+	}
+
+	t.Logf("%+v", errs)
 }

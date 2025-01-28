@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -33,6 +34,75 @@ func NewHttp(endpoint string, header http.Header) (*Http, error) {
 	}
 
 	return h, nil
+}
+
+func (h *Http) BatchRequest(requests []RPCRequest, result map[int64]interface{}) (res *http.Response, errs []error) {
+	h.client.Timeout = h.RequestTimeout
+
+	for i, v := range requests {
+		if v.JSONRPC == "" {
+			v.JSONRPC = "2.0"
+			requests[i] = v
+		}
+	}
+
+	jsonParams, err := json.Marshal(requests)
+	if err != nil {
+		errs = append(errs, err)
+		return
+	}
+
+	req, err := http.NewRequest("POST", h.Endpoint.String(), bytes.NewBuffer(jsonParams))
+	if err != nil {
+		errs = append(errs, err)
+		return
+	}
+
+	if h.Header != nil {
+		req.Header = h.Header
+	}
+
+	res, err = h.client.Do(req)
+	if err != nil {
+		errs = append(errs, err)
+		return
+	}
+
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		errs = append(errs, err)
+		return
+	}
+
+	var rpcResponses []RPCResponse
+	err = json.Unmarshal(body, &rpcResponses)
+	if err != nil {
+		errs = append(errs, err)
+		return
+	}
+
+	for _, v := range rpcResponses {
+		m, ok := result[v.ID]
+		if !ok {
+			errs = append(errs, fmt.Errorf("can't find map item for request with ID: %d", v.ID))
+			continue
+		}
+
+		if v.Error != nil {
+			errs = append(errs, fmt.Errorf("%d: %s", v.ID, v.Error.Message))
+			continue
+		}
+
+		dataErr := json.Unmarshal(v.Result, m)
+		if dataErr != nil {
+			errs = append(errs, fmt.Errorf("%d: %s", v.ID, dataErr))
+			continue
+		}
+	}
+
+	return
 }
 
 func (h *Http) Request(method string, params interface{}, result interface{}) (res *http.Response, err error) {

@@ -88,13 +88,13 @@ func (w *WebSocket) isEventId(id int64) (isEvent bool) {
 func (w *WebSocket) subscribeEvent(event interface{}) (RPCResponse, error) {
 	return w.Call("subscribe", map[string]interface{}{
 		"notify": event,
-	})
+	}, nil)
 }
 
 func (w *WebSocket) unsubscribeEvent(event interface{}) (RPCResponse, error) {
 	return w.Call("unsubscribe", map[string]interface{}{
 		"notify": event,
-	})
+	}, nil)
 }
 
 func (w *WebSocket) Close() error {
@@ -117,7 +117,7 @@ func (w *WebSocket) Close() error {
 }
 
 func (w *WebSocket) CloseEvent(event interface{}) error {
-	eventHash, err := HashEvent(event)
+	eventHash, err := w.hashEvent(event)
 	if err != nil {
 		return err
 	}
@@ -145,7 +145,7 @@ func (w *WebSocket) CloseEvent(event interface{}) error {
 }
 
 func (w *WebSocket) ListenEvent(event interface{}) (ch chan RPCResponse, err error) {
-	eventHash, err := HashEvent(event)
+	eventHash, err := w.hashEvent(event)
 	if err != nil {
 		return
 	}
@@ -191,7 +191,7 @@ func (w *WebSocket) ListenEventFunc(event interface{}, onData func(RPCResponse))
 	return
 }
 
-func (w *WebSocket) Call(method string, params interface{}) (res RPCResponse, err error) {
+func (w *WebSocket) Call(method string, params interface{}, result interface{}) (res RPCResponse, err error) {
 	w.id++
 	rpcRequest := RPCRequest{ID: w.id, JSONRPC: "2.0", Method: method, Params: params}
 	data, err := json.Marshal(rpcRequest)
@@ -199,7 +199,13 @@ func (w *WebSocket) Call(method string, params interface{}) (res RPCResponse, er
 		return
 	}
 
-	return w.RawCall(w.id, data)
+	res, err = w.RawCall(w.id, data)
+	if err != nil {
+		return
+	}
+
+	err = ParseResponseResult(res, result)
+	return
 }
 
 func (w *WebSocket) RawCall(id int64, data []byte) (res RPCResponse, err error) {
@@ -235,12 +241,7 @@ func (w *WebSocket) RawCall(id int64, data []byte) (res RPCResponse, err error) 
 	return
 }
 
-func JsonFormatResponse(res RPCResponse, resErr error, result any) (err error) {
-	if resErr != nil {
-		err = resErr
-		return
-	}
-
+func ParseResponseResult(res RPCResponse, result any) (err error) {
 	if res.Error != nil {
 		err = fmt.Errorf(res.Error.Message)
 		return
@@ -256,7 +257,7 @@ func EventParamsWrap(event string, params interface{}) interface{} {
 	return eventMap
 }
 
-func HashEvent(event interface{}) (data uint64, err error) {
+func (w *WebSocket) hashEvent(event interface{}) (data uint64, err error) {
 	eventJson, err := json.Marshal(event)
 	if err != nil {
 		return

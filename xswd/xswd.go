@@ -68,8 +68,16 @@ func (x *XSWD) Authorize(app ApplicationData) (res rpc.RPCResponse, err error) {
 	}
 
 	// id of 0 is reserved and not use in Call().
-	res, err = x.WS.RawCall(0, data)
+	r, err := x.WS.RawCall(0, data)
 	if err != nil {
+		return
+	}
+
+	switch r := r.(type) {
+	case rpc.RPCResponse:
+		res = r
+	default:
+		err = fmt.Errorf("cant parse response")
 		return
 	}
 

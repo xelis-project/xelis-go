@@ -30,6 +30,10 @@ func NewWebSocket(endpoint string, username string, password string) (*WebSocket
 	return daemonWS, nil
 }
 
+func (w *WebSocket) BatchCall(requests []rpc.RPCRequest, result []interface{}) (res []rpc.RPCResponse, errs []error) {
+	return w.WS.BatchCall(requests, result)
+}
+
 func (w *WebSocket) Close() error {
 	return w.WS.Close()
 }

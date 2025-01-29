@@ -6,6 +6,7 @@ import (
 
 	"github.com/xelis-project/xelis-go-sdk/config"
 	"github.com/xelis-project/xelis-go-sdk/daemon/events"
+	"github.com/xelis-project/xelis-go-sdk/daemon/methods"
 	"github.com/xelis-project/xelis-go-sdk/rpc"
 )
 
@@ -268,4 +269,30 @@ func TestInvokeContractFunc(t *testing.T) {
 	}
 
 	daemon.Close()
+}
+
+func TestWSBatchCall(t *testing.T) {
+	daemon := prepareWS(t)
+
+	requests := []rpc.RPCRequest{
+		{Method: methods.GetVersion},
+		{Method: methods.GetTopoheight},
+	}
+
+	result := make([]interface{}, 2)
+
+	var version string
+	result[0] = &version
+
+	var topoheight uint64
+	result[1] = &topoheight
+
+	res, err := daemon.WS.BatchCall(requests, result)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("%+v", res)
+	t.Log(version)
+	t.Log(topoheight)
 }

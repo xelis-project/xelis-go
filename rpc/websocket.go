@@ -16,7 +16,7 @@ type WebSocket struct {
 	CallTimeout   time.Duration
 	id            int64
 	conn          *websocket.Conn
-	channels      map[int64]chan RPCResponse
+	channels      map[int64]chan interface{}
 	events        map[uint64]int64
 	mutex         sync.Mutex
 	ConnectionErr chan error
@@ -36,7 +36,7 @@ func NewWebSocket(endpoint string, header http.Header) (*WebSocket, error) {
 	ws := &WebSocket{
 		CallTimeout:   3 * time.Second,
 		conn:          conn,
-		channels:      make(map[int64]chan RPCResponse),
+		channels:      make(map[int64]chan interface{}),
 		events:        make(map[uint64]int64),
 		ConnectionErr: make(chan error),
 	}
@@ -55,12 +55,10 @@ func (w *WebSocket) listen() {
 			}
 
 			w.mutex.Lock()
-			var rpcResponse RPCResponse
-			json.Unmarshal(msg, &rpcResponse)
-			id := rpcResponse.ID
-			ch, ok := w.channels[rpcResponse.ID]
+			id, res := w.parseResponse(msg)
+			ch, ok := w.channels[id]
 			if ok {
-				ch <- rpcResponse
+				ch <- res
 
 				// Close channel if it's not an event.
 				// We will never receive data from that channel ever again, because the id is incremented each call.
@@ -73,6 +71,30 @@ func (w *WebSocket) listen() {
 			w.mutex.Unlock()
 		}
 	}()
+}
+
+func (w *WebSocket) parseResponse(msg []byte) (id int64, res interface{}) {
+	var rpcResponse RPCResponse
+	var rpcResponses []RPCResponse
+
+	err := json.Unmarshal(msg, &rpcResponse)
+	if err != nil {
+		// support batch response
+		err = json.Unmarshal(msg, &rpcResponses)
+		if err != nil {
+			// do nothing
+		} else {
+			if len(rpcResponses) > 0 {
+				id = rpcResponses[0].ID
+				res = rpcResponses
+			}
+		}
+	} else {
+		id = rpcResponse.ID
+		res = rpcResponse
+	}
+
+	return
 }
 
 func (w *WebSocket) isEventId(id int64) (isEvent bool) {
@@ -144,7 +166,7 @@ func (w *WebSocket) CloseEvent(event interface{}) error {
 	return nil
 }
 
-func (w *WebSocket) ListenEvent(event interface{}) (ch chan RPCResponse, err error) {
+func (w *WebSocket) ListenEvent(event interface{}) (ch chan interface{}, err error) {
 	eventHash, err := w.hashEvent(event)
 	if err != nil {
 		return
@@ -169,7 +191,7 @@ func (w *WebSocket) ListenEvent(event interface{}) (ch chan RPCResponse, err err
 
 	ch, ok = w.channels[id]
 	if !ok {
-		ch = make(chan RPCResponse)
+		ch = make(chan interface{})
 		w.channels[id] = ch
 	}
 
@@ -183,10 +205,51 @@ func (w *WebSocket) ListenEventFunc(event interface{}, onData func(RPCResponse))
 	}
 
 	go func() {
-		for res := range ch {
-			onData(res)
+		for r := range ch {
+			switch r := r.(type) {
+			case RPCResponse:
+				onData(r)
+			}
 		}
 	}()
+
+	return
+}
+
+func (w *WebSocket) BatchCall(requests []RPCRequest, result []interface{}) (res []RPCResponse, errs []error) {
+	w.id++
+	for i, v := range requests {
+		v.ID = w.id
+		v.JSONRPC = "2.0"
+		requests[i] = v
+	}
+
+	data, err := json.Marshal(requests)
+	if err != nil {
+		errs = append(errs, err)
+		return
+	}
+
+	r, err := w.RawCall(w.id, data)
+	if err != nil {
+		errs = append(errs, err)
+		return
+	}
+
+	switch r := r.(type) {
+	case []RPCResponse:
+		res = r
+	default:
+		errs = append(errs, fmt.Errorf("cant parse response"))
+		return
+	}
+
+	for i, v := range res {
+		err = ParseResponseResult(v, result[i])
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
 
 	return
 }
@@ -199,8 +262,16 @@ func (w *WebSocket) Call(method string, params interface{}, result interface{}) 
 		return
 	}
 
-	res, err = w.RawCall(w.id, data)
+	r, err := w.RawCall(w.id, data)
 	if err != nil {
+		return
+	}
+
+	switch r := r.(type) {
+	case RPCResponse:
+		res = r
+	default:
+		err = fmt.Errorf("cant parse response")
 		return
 	}
 
@@ -208,8 +279,8 @@ func (w *WebSocket) Call(method string, params interface{}, result interface{}) 
 	return
 }
 
-func (w *WebSocket) RawCall(id int64, data []byte) (res RPCResponse, err error) {
-	resChan := make(chan RPCResponse)
+func (w *WebSocket) RawCall(id int64, data []byte) (res interface{}, err error) {
+	resChan := make(chan interface{})
 	w.channels[id] = resChan
 
 	err = w.conn.WriteMessage(websocket.TextMessage, data)

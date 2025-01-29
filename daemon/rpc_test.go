@@ -785,11 +785,11 @@ func TestBatchRequest(t *testing.T) {
 	daemon := prepareRPC(t)
 
 	requests := []rpc.RPCRequest{
-		{ID: 0, Method: methods.GetTopoheight},
-		{ID: 1, Method: methods.GetTopBlock},
+		{Method: methods.GetTopoheight},
+		{Method: methods.GetTopBlock},
 	}
 
-	result := make(map[int64]interface{})
+	result := make([]interface{}, 2)
 
 	var topoheight uint64
 	result[0] = &topoheight
@@ -811,11 +811,11 @@ func TestInvalidBatchRequest(t *testing.T) {
 	daemon := prepareRPC(t)
 
 	requests := []rpc.RPCRequest{
-		{ID: 0, Method: methods.GetTopoheight},
-		{ID: 1, Method: "invalid"},
+		{Method: methods.GetTopoheight},
+		{Method: "invalid"},
 	}
 
-	result := make(map[int64]interface{})
+	result := make([]interface{}, 2)
 
 	var topoheight uint64
 	result[0] = &topoheight
@@ -831,14 +831,14 @@ func TestInvalidBatchRequest(t *testing.T) {
 	t.Logf("%+v", errs)
 }
 
-func TestInvalidBatchRequestMapping(t *testing.T) {
+func TestInvalidBatchRequestArray(t *testing.T) {
 	daemon := prepareRPC(t)
 
 	requests := []rpc.RPCRequest{
-		{ID: 0, Method: methods.GetTopoheight},
+		{Method: methods.GetTopoheight},
 	}
 
-	result := make(map[int64]interface{})
+	result := make([]interface{}, 0)
 
 	_, errs := daemon.BatchRequest(requests, result)
 	if errs == nil {

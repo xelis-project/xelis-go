@@ -24,7 +24,7 @@ func NewRPC(url string) (*RPC, error) {
 	return daemon, nil
 }
 
-func (d *RPC) BatchRequest(requests []rpc.RPCRequest, result map[int64]interface{}) (res *http.Response, errs []error) {
+func (d *RPC) BatchRequest(requests []rpc.RPCRequest, result []interface{}) (res *http.Response, errs []error) {
 	return d.http.BatchRequest(requests, result)
 }
 

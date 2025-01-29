@@ -36,14 +36,13 @@ func NewHttp(endpoint string, header http.Header) (*Http, error) {
 	return h, nil
 }
 
-func (h *Http) BatchRequest(requests []RPCRequest, result map[int64]interface{}) (res *http.Response, errs []error) {
+func (h *Http) BatchRequest(requests []RPCRequest, result []interface{}) (res *http.Response, errs []error) {
 	h.client.Timeout = h.RequestTimeout
 
 	for i, v := range requests {
-		if v.JSONRPC == "" {
-			v.JSONRPC = "2.0"
-			requests[i] = v
-		}
+		v.ID = int64(i)
+		v.JSONRPC = "2.0"
+		requests[i] = v
 	}
 
 	jsonParams, err := json.Marshal(requests)
@@ -83,12 +82,13 @@ func (h *Http) BatchRequest(requests []RPCRequest, result map[int64]interface{})
 		return
 	}
 
-	for _, v := range rpcResponses {
-		m, ok := result[v.ID]
-		if !ok {
-			errs = append(errs, fmt.Errorf("can't find map item for request with ID: %d", v.ID))
+	for i, v := range rpcResponses {
+		if i >= len(result) {
+			errs = append(errs, fmt.Errorf("result array no index at: %d", i))
 			continue
 		}
+
+		m := result[i]
 
 		if v.Error != nil {
 			errs = append(errs, fmt.Errorf("%d: %s", v.ID, v.Error.Message))
